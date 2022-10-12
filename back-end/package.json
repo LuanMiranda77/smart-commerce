@@ -1,0 +1,35 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/LuanMiranda77/smart-commerce.git",
+  "author": "Luan Miranda <luanprof30@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon --exec ts-node-dev server.ts",
+    "typerom": "ts-node-dev ./node_modules/typeorm/cli.js",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/node": "^18.7.23",
+    "@types/uuid": "^8.3.1",
+    "nodemon": "^2.0.20",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "correios-brasil": "^2.2.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.17.1",
+    "pg": "^8.8.0",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.3.10",
+    "uuid": "^8.3.2"
+  }
+}
