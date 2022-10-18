@@ -1,4 +1,6 @@
 //export default
+export { InputIcon } from './Inputs/InputIcon';
+export { InputDefault } from './Inputs/InputDefault';
 export { Summary } from './Summary';
 export { DialogPoupInfo } from './DialogPoup/DialogPoupInfo';
 export { DialogPoupConfirme } from './DialogPoup/DialogPoupConfirme';

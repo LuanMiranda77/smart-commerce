@@ -3,14 +3,12 @@ import { createGlobalStyle } from "styled-components";
 export const GlobalStyle = createGlobalStyle`
 :root{
   //variaveis do tema de cores
-  --background: #1C1C1C;
+  --background: ${color => color.theme.colors.background};
   --white: #FFF;
   --text-label: #fff;
  
-
-
   //variaveis de tamanho
-  --max-height-button:40px;
+  --max-height-button:35px;
 }
 
 *{
@@ -66,7 +64,6 @@ button {
 
 .card-local{
   background: var(--white);
-  margin: 2%;
   border-radius: 5px;
 }
 

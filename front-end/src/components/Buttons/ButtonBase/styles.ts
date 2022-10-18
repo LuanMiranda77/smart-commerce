@@ -55,7 +55,7 @@ export const Container  = styled.div`
   text-align: center;
   overflow: hidden;
 
-  border-radius: 5px;
+  border-radius: 8px;
   box-shadow: 0 6px 30px -10px rgba(#CCCCCC, 1);
   
   &:hover {

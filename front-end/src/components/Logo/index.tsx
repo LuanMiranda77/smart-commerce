@@ -1,7 +1,6 @@
 import React from 'react';
+import logo from '../../assets/Logo/logo.svg';
 import { Container } from './styles';
-import logo from '../../assets/logo.svg';
-import {SizeLogo} from '../../types/enums/size-logo';
 
 interface LogoProps{
   //adicionar os props

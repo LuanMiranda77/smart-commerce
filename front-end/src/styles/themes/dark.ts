@@ -3,26 +3,26 @@ export default{
     title: 'dark',
 
     colors:{
-        primary:'#15172C',
-        secondary:'#252A48',
-        tertiary:'#313862',
+        primary:'#1E1E1E',
+        secondary:'#2C2C2C',
+        tertiary:'#383838',
         
-        background:'#1b1f38',
+        background:'#1c1c1c',
 
         textLabel: '#FFF',
 
         white: '#FFF',
         black: '#000',
-        gray: '#D2D2D2',
+        gray: '#B4B8C5',
 
-        success:'#1ABC9C',
+        success:'#15AB8D',
         info:'#2C73D2',
-        warning:'#FF4500',
+        warning:'#EDAB00',
         error:'#8B0000',
 
         dns_success:'#66CDAA',
         dns_info:'#87CEFA',
-        dns_warning:'#FF7F50',
+        dns_warning:'#EDDE5A',
         dns_error:'#F08080',
     }
 

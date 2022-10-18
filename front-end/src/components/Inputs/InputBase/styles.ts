@@ -54,12 +54,13 @@ export const Container  = styled.div`
   font-family: inherit;
   width: 100%;
   border: 0;
-  border-bottom: 2px solid ${color => color.theme.colors.primary};;
+  border-bottom: 2px solid ${color => color.theme.colors.primary};
+  border-radius: 0px 5px 5px 5px;
   outline: 0;
   /* font-size: 1.3rem; */
   color: ${color => color.theme.colors.black};;
-  padding: 7px 0;
-  background: transparent;
+  padding: 6px 0;
+  background: ${color => color.theme.colors.gray};
   transition: border-color 0.2s;
 
   &::placeholder {
