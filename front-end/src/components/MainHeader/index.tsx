@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { Container } from "./styles";
 import { ThemeContext } from "styled-components";
+import { FaBars } from "react-icons/fa";
 interface Props {
   //adicionar os props
   alterTheme(): void;
@@ -21,7 +22,7 @@ export const MainHeader: React.FC<Props> = ({ alterTheme, onClickMenu }) => {
         }}
         onClick={onClickMenu}
       >
-        <AiOutlineMenu />
+        <FaBars />
       </button>
       <h1>MH</h1>
       <button onClick={alterTheme}>SetTema</button>

@@ -47,7 +47,7 @@ function Login() {
           <ButtonBase label="ENTRAR" model="btn_base" className="primary-color mb-3" size="small" onClick={login}/>
           <Link to={'/recupera-senha'}>
             <label htmlFor="entrar" className="font-bold label-senha"
-              style={{color: theme.title === 'light' ? theme.colors.primary : theme.colors.textLabel}}>Esqueceu a senha?
+              style={{color: theme.title === 'light' ? theme.colors.primary : theme.colors.black}}>Esqueceu a senha?
             </label>
           </Link>
         </div>

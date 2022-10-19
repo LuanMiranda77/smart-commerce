@@ -1,4 +1,5 @@
 //export default
+export { ButtonIcon } from './Buttons/ButtonIcon';
 export { InputIcon } from './Inputs/InputIcon';
 export { InputDefault } from './Inputs/InputDefault';
 export { Summary } from './Summary';

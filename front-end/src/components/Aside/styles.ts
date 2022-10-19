@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Container  = styled.div`
     //adicionar stylos
     grid-area: AS;
-    background-color:${props => props.theme.colors.secondary};
+    background-color:${props => props.theme.colors.tertiary};
     border-right: 1px solid ${props => props.theme.colors.gray};
     transition: grid-template-columns 3s;
 

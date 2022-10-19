@@ -10,7 +10,7 @@ interface LogoProps{
 export const Logo: React.FC< LogoProps> = (props) => {
   const setSize = () =>{
     if(props.size === "LARGE"){
-      return <img src={logo} alt="" style={{height:"50%", width:"75%"}} />
+      return <img src={logo} alt="" style={{height:"50%", width:"75%"} } />
     }else if (props.size === "MEDIUM"){
       return <img src={logo} alt="" style={{height:"25%", width:"33%"}} />
     }else if (props.size === "SMALL"){

@@ -27,6 +27,7 @@ const AppRoutes: React.FC<Props> = ({setDefaultTheme}) => {
       >
         <Routes>
         <Route path="/home" element={<Login />} />
+        <Route path="/venda" element={<Login />} />
           {/* <Route path="/home" element={<PrivateRoute component={Login} />} /> */}
         <Route path="*" element={<Notfound />} />
         </Routes>
