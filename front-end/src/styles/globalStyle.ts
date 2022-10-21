@@ -89,4 +89,20 @@ button {
   }
 }
 
+::-webkit-scrollbar{
+        width:10px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color:${props => props.theme.colors.secondary};
+    border-radius:5px;
+}
+
+::-webkit-scrollbar-track{
+    background-color:${props => props.theme.colors.tertiary};
+    border-radius:5px;
+    margin:0rem;
+}
+
+
 `

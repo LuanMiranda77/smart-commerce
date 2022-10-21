@@ -13,10 +13,10 @@ interface Props {
 
 export const Layout: React.FC<Props> = (props) => {
   const { colors, title } = useContext(ThemeContext);
-  const [sizeAside, setSizeAside] = useState("200px");
+  const [sizeAside, setSizeAside] = useState("71px");
 
   const visibleAside = () => {
-    let aside = sizeAside === "200px" ? "0px" : "200px";
+    let aside = sizeAside === "71px" ? "200px" : "71px";
     setSizeAside(aside);
     console.log(sizeAside);
   };

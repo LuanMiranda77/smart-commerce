@@ -5,6 +5,7 @@ import {ThemeContext} from './hooks/theme';
 import  './styles/global.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
+import 'react-dropdown/style.css';
 
 Modal.setAppElement('#root');
 
