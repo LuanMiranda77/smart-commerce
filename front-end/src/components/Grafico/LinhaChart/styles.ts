@@ -1,11 +1,9 @@
 import styled from "styled-components";
 
 export const Container  = styled.div`
-
     //adicionar stylos
-    .card-local{
-        background-color: ${color => color.theme.colors.gray};
-    }
+    width: 100%;
+    height: 100%;
 
 @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
