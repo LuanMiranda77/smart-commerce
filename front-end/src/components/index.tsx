@@ -1,4 +1,5 @@
 //export default
+export { ButtonPdv } from './Buttons/ButtonPdv';
 export { SummaryDefault } from './Summary/SummaryDefault';
 export { LinhaChart } from './Grafico/LinhaChart';
 export { BarraChart } from './Grafico/BarraChart';

@@ -33,7 +33,7 @@ export const Container  = styled.div`
 }
 
 .input-label {
-  color: ${color => color.theme.colors.primary};
+  color: ${color => (color.title ==='dark'? color.theme.colors.white : color.theme.colors.primary)};
   font-weight:bold;
 }
 

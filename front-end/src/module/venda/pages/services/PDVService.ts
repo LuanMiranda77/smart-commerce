@@ -4,10 +4,10 @@ import { api } from "../../../../config/api";
 *@Author
 *@Issue
 */
-export class {{pascalCase (getName name)}}Service {
+export class VendaService {
 
     //end-point da api
-    url='api/{{getPasta name}}';
+    url='api/PDV';
 
     //modelo de request post
     async post(pEntity: String){

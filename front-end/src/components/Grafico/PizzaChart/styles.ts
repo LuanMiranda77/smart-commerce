@@ -11,7 +11,8 @@ export const Container  = styled.div`
     height: 100%;
 
 @media screen and (max-width: 40em) {
-    //adicionar o stylo responsivo
+    width:100%;
+    height: 100%;
 }
 
 `;

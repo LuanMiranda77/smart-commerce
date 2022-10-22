@@ -3,6 +3,7 @@ import {
   BrowserRouter, Route, Routes
 } from "react-router-dom";
 //nossos imports
+import Pdv from '../module/venda/pages/Pdv';
 import { Layout } from "../components/Layout";
 import Dashboard from "../module/financeiro/pages/Dashboard";
 import { Notfound } from "../module/Notfound";
@@ -10,7 +11,6 @@ import { Notfound } from "../module/Notfound";
 interface Props {
   setDefaultTheme(): void;
 }
-
 
 const AppRoutes: React.FC<Props> = ({ setDefaultTheme }) => {
   return (
@@ -20,10 +20,11 @@ const AppRoutes: React.FC<Props> = ({ setDefaultTheme }) => {
           fallback={<div className="">Carregando....</div>}
         >
           <Routes>
+
             <Route path="/" element={<Dashboard />} />
+            {/* nossas rotas */}
+            <Route path="/venda" element={<Pdv />} />
             <Route path="/financeiro" element={<Dashboard />} />
-            {/* <Route path="/venda" element={<Login />} /> */}
-            {/* <Route path="/home" element={<PrivateRoute component={Login} />} /> */}
             <Route path="*" element={<Notfound />} />
           </Routes>
         </Suspense>

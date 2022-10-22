@@ -1,16 +1,11 @@
 import React from 'react';
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { Container, Legend, LegendContainer, SideLeft, SideRight } from './styles';
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
-
+import { DataPizzaChartType } from './types';
 interface PizzaChartProps {
   //adicionar os props
   label: string;
-  data: {
-    name: string;
-    value: string;
-    percent: number;
-    color: string;
-  }[];
+  data: Array<DataPizzaChartType>;
 }
 
 export const PizzaChart: React.FC<PizzaChartProps> = (props) => {
@@ -35,7 +30,7 @@ export const PizzaChart: React.FC<PizzaChartProps> = (props) => {
             data={props.data}
             labelLine={false}
             label={renderCustomizedLabel}
-            outerRadius={80}
+            // outerRadius={80}
             // fill="#8884d8"
             dataKey="percent"
           >
@@ -49,8 +44,8 @@ export const PizzaChart: React.FC<PizzaChartProps> = (props) => {
     <SideLeft>
       <LegendContainer className='grid grid-cols-2 gap-0 overflow-y-auto max-h-12' >
         {props.data.map((value, index) => (
-          <Legend className='flex text-center mb-1' color={value.color}>
-            <div style={{ color: value.color }}>p</div>
+          <Legend key={index} className='flex text-center mb-1' color={value.color}>
+            <div style={{ color: value.color }}></div>
             <label className='ml-1 font-bold text-xs' htmlFor="">{value.name}</label>
           </Legend>
         ))}

@@ -135,20 +135,20 @@ module.exports = (plop) => {
       //   path: '../src/stores/{{pascalCase (getName name)}}Store.ts',
       //   templateFile: 'templates/store-page.ts.hbs',
       // },
-      // {
-      //   type: 'add',
-      //   path: '../src/services/{{pascalCase (getName name)}}Service/{{getPasta name}}Service.ts',
-      //   templateFile: 'templates/service-page.ts.hbs',
-      // },
+      {
+        type: 'add',
+        path: '../src/module/{{lowerCase (getName name)}}/pages/services/{{getPasta name}}Service.ts',
+        templateFile: 'templates/service-page.ts.hbs',
+      },
       {
         type: 'append',
-        path: '../src/routes.tsx',
-        pattern: '} />',
+        path: '../src/routes//app.routes.tsx',
+        pattern: '{/* nossas rotas */}',
         templateFile: 'templates/addRoutes.ts.hbs',
       },
       {
         type: 'append',
-        path: '../src/routes.tsx',
+        path: '../src/routes/app.routes.tsx',
         pattern: '//nossos imports',
         templateFile: 'templates/addimportRoute.ts.hbs',
       },
