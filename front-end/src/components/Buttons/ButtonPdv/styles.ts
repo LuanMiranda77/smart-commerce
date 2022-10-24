@@ -14,6 +14,8 @@ export const Container  = styled.button<styleButton>`
     border-radius: 8px;
     box-shadow: 0px 2px 5px  black;
     padding: 0.3rem;
+    width: 100%;
+    height: 100%;
 
     &:hover {
         transform: translateX(5px) translateY(-7px);

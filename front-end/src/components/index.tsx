@@ -1,4 +1,7 @@
 //export default
+export { DataGridDefault } from './Grid/DataGridDefault';
+export { InputNumber } from './Inputs/InputNumber';
+export { InputMask } from './Inputs/InputMask';
 export { ButtonPdv } from './Buttons/ButtonPdv';
 export { SummaryDefault } from './Summary/SummaryDefault';
 export { LinhaChart } from './Grafico/LinhaChart';

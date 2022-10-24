@@ -4,7 +4,7 @@ export const Container  = styled.div`
     //adicionar stylos
     grid-area: CT;
     background:${props => props.theme.colors.background};
-    padding: 25px;
+    padding: 10px;
 
     height:calc(100vh -50px);
     overflow-y:scroll;

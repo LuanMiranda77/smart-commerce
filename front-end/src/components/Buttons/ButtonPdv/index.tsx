@@ -11,13 +11,13 @@ interface ButtonPdvProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const ButtonPdv: React.FC<ButtonPdvProps> = (props) => {
   return <Container tipo={props.labelSuperior}>
-    <div>
+    <div className='text-xs'>
       <label htmlFor="">{props.labelSuperior}</label>
     </div>
-    <div className='w-full flex justify-center' style={{color: props.labelSuperior==='ESC' ?"#FFF":'#1c1c1c' }}>
+    <div className='flex justify-center' style={{color: props.labelSuperior==='ESC' ?"#FFF":'#1c1c1c' }}>
       <i>{props.icon}</i>
     </div>
-    <div className='mt-2 text-sm'>
+    <div className='mt-2 text-xs'>
       <label htmlFor="">{props.labelInferior}</label>
     </div>
   </Container>;

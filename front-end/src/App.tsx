@@ -1,3 +1,5 @@
+import 'devextreme/dist/css/dx.common.css';
+import 'devextreme/dist/css/dx.light.css';
 import { GlobalStyle } from "./styles/globalStyle";
 import Routes from "./routes/index";
 import {ThemeProvider} from 'styled-components';
@@ -6,12 +8,14 @@ import  './styles/global.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
 import 'react-dropdown/style.css';
+import 'devextreme/dist/css/dx.material.blue.light.compact.css' ; 
 
 Modal.setAppElement('#root');
 
 
 function App() {
   const root = ThemeContext.ThemeProvider();
+    
   return (
     <ThemeProvider theme={root.theme}>
       <Routes setDefaultTheme={root.setDefaultTheme}/>

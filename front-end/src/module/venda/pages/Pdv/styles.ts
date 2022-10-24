@@ -1,3 +1,4 @@
+import { SideLeft } from './../../../../components/Grafico/PizzaChart/styles';
 import { Header } from './../../../../components/Aside/styles';
 import styled from "styled-components";
 
@@ -45,15 +46,112 @@ export const Container  = styled.div`
         }
     }
 
+    .side-right{
+
+    }
+
+    .sideLeft{
+
+    }
+
 @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
 }
 
 `;
 
-export const ContainerProduto  = styled.div`
+export const Table = styled.table`
+    width: 100%;
+    max-height:100%;
+    border-collapse: collapse;
+    overflow-y:scroll;
+
+
+    text-align: right;
+
+    /* thead th  {
+    position:absolute;   
+    top:30px;
+    z-index:2;
+    height:20px;
+    width:70%;
+    border:1px solid red;
+    } */
+    thead{
+        position: fixed;
+        width:70%;
+        margin-left:-1px;
+        margin-top:-30px;
+    }
+
+    tr{
+        color: ${props =>props.theme.colors.primary};
+        font-size: 12px;
+        background-color: ${props =>props.theme.colors.white};
+        height: 30px;
+        width:100%;
+    }
+
+    th{
+        border: 1px solid #dddddd;
+        width:10%;
+    }
+
+    td{
+        border: 1px solid #dddddd;
+        padding: 8px;
+        color: ${props =>props.theme.colors.primary};
+    }
+
+    tr:nth-child(even) {
+    background-color: #d2d2d2;
+    }
+
+    //adicionar o stylo responsivo
+    @media screen and (max-width: 40em) {
+
+    }
+
+`;
+
+export const ContainerLeft = styled.div`
     background-color: ${color => color.theme.colors.gray};
+    height: calc(100vh - 340px);
+    width: 70%;
+
+    @media screen and (max-width: 40em) {
+    //adicionar o stylo responsivo
+    height: calc(100vh - 187px);
+    }
+
+`;
+
+export const ContainerRight = styled.div`
+    background-color: ${color => color.theme.colors.gray};
+    /* height: calc(100vh - 310px); */
+    width: 30%;
+
+    input[type=number]::-webkit-inner-spin-button { 
+    -webkit-appearance: none;
+    }
+    
+    input[type=number] { 
+    -moz-appearance: textfield;
+    appearance: textfield;
+
+    }
+
+    @media screen and (max-width: 40em) {
+    //adicionar o stylo responsivo
+    height: calc(100vh - 187px);
+    }
+
+`;
+
+export const ContainerProduto  = styled.div`
+    background-color: ${color => color.theme.colors.white};
     height: calc(100vh - 241px);
+    /* overflow-y:scroll; */
 
     @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
@@ -66,10 +164,12 @@ export const ContainerMenu  = styled.div`
     padding: 1rem;
     background-color: ${color => color.theme.colors.tertiary};
     height: calc(100vh - 300px);
+    max-height: max-content;
+    /* overflow-y: scroll; */
 
     @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
-    height: calc(100vh - 270px);
+    /* height: calc(100vh - 270px); */
     overflow-y: scroll;
     font-size: 12px;
     }

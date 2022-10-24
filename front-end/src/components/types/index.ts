@@ -1,0 +1,1 @@
+export type { ColumnsDataGridType } from '../Grid/DataGridDefault/types';

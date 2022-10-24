@@ -1,9 +1,13 @@
 import React, { useContext, useEffect, useState } from "react"
 import { FaArchive, FaBarcode, FaBox, FaBoxOpen, FaFileInvoice, FaHandHoldingMedical, FaHandHoldingUsd, FaIdCard, FaIdCardAlt, FaLongArrowAltLeft, FaMinusCircle, FaMoneyBillAlt, FaMoneyCheck, FaMoneyCheckAlt, FaPercent, FaSlideshare, FaSync, FaTeamspeak, FaUserTie } from "react-icons/fa";
 import { ThemeContext } from 'styled-components';
-import { ButtonPdv } from "../../../../components";
+import { ButtonPdv, DataGridDefault, InputMask, InputNumber } from "../../../../components";
+import { Link } from "react-router-dom";
+import {UtilsConvert} from '../../../../utils/utils_convert';
 
-import { Container, ContainerMenu, ContainerProduto } from './styles';
+import { Container, ContainerLeft, ContainerMenu, ContainerProduto, ContainerRight, Table } from './styles';
+import { NumericFormat } from "react-number-format";
+import { ColumnsDataGridType } from "../../../../components/types";
 
 /**
 *@Author
@@ -12,6 +16,31 @@ import { Container, ContainerMenu, ContainerProduto } from './styles';
 
 function Pdv() {
   const theme = useContext(ThemeContext);
+  const columns = new Array<ColumnsDataGridType>();
+  columns.push({dataField:'item', caption:'ITEM', alignment:'left', dataType:'', width:70, cssClass:'font-bold'});
+  columns.push({dataField:'descricao', caption:'DESCRIÇÃO', alignment:'', dataType:'', cssClass:'font-bold'});
+  columns.push({dataField:'quantidade', caption:'QUANTIDADE', alignment:'center', dataType:'number', format:{type: 'fixedPoint',  precision: 3}, width:110});
+  columns.push({dataField:'valor', caption:'VALOR', alignment:'center', dataType:'number', format:{type: 'fixedPoint',  precision: 2}, width:110});
+  columns.push({dataField:'desconto', caption:'DESCONTO', alignment:'center', dataType:'number', format:{type: 'fixedPoint',  precision: 2}, width:110});
+  columns.push({dataField:'total', caption:'TOTAL', alignment:'right', dataType:'number',cssClass:'font-bold', format:{type: 'fixedPoint',  precision: 2},width:150});
+
+  const data = [
+   {item:1, descricao: 'produto', quantidade: 10.00, valor: 1502, desconto: 12.00, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+   {item:1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
+  ]
   return <Container>
     <header>
       <div className="flex items-center text-left font-bold text-xs" style={{ color: theme.colors.textLabel }}>
@@ -43,8 +72,8 @@ function Pdv() {
         </div>
       </div>
     </header>
-    <body className="flex font-bold" style={{ color: theme.colors.textLabel, backgroundColor: theme.colors.background, height: '93.5%' }}>
-      <div className="" style={{ width: '70%' }}>
+    <div className="flex font-bold" style={{ color: theme.colors.textLabel, backgroundColor: theme.colors.background }}>
+      <ContainerLeft>
         <div className="h-22 p-2 flex" style={{ backgroundColor: theme.colors.tertiary }}>
           <div className="w-full">
             <label className="text-xs">DESCRIÇÃO DO ITEM  OU CÓDIGO</label>
@@ -56,59 +85,78 @@ function Pdv() {
           <div className="linha-vertical h-14 m-2"></div>
           <div className="p-1">
             <label htmlFor="" className="text-sm">QUANTIDADE</label>
-            <input className="w-32 text-4xl focus:outline-none" type="text" style={{ background: 'transparent', border: 'none' }} />
+            <NumericFormat 
+                className="w-32 text-4xl focus:outline-none" style={{ background: 'transparent', border: 'none'}}   
+                type={'text'}
+                thousandSeparator={false} 
+                decimalSeparator={','}
+                prefix={''} 
+                fixedDecimalScale={true}
+                decimalScale={3}
+              />
           </div>
         </div>
         <ContainerProduto>
-
+          <DataGridDefault columns={columns} dataSource={data} allowSorting={false}></DataGridDefault>
         </ContainerProduto>
         <footer className="flex h-22 p-2" style={{ backgroundColor: '#B4B8C5', borderTop: '1px solid black' }}>
           <div className="w-32 text-left mr-10">
             <p className="text-xs text-black">ITEMS</p>
-            <p className="text-3xl" style={{ color: theme.colors.info }}>02</p>
+            <p className="text-3xl" style={{ color: theme.colors.info }}>{data.length<9 ? '0'+data.length: data.length}</p>
           </div>
           <div className="w-full text-right">
             <p className="text-xs text-black">TOTAL A PAGAR</p>
-            <p className="text-6xl" style={{ color: theme.colors.error }}>R$ 999.000,00</p>
+            <p className="text-6xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(585.22)}</p>
           </div>
         </footer>
-      </div>
-      <div className="" style={{ width: '30%' }}>
+      </ContainerLeft>
+      <ContainerRight>
         <header className="h-12" style={{ backgroundColor: theme.colors.info }}>
           <div className="w-full flex items-center justify-between">
             <label htmlFor="">SALDO À PAGAR</label>
-            <label htmlFor="">R$ 999.000,00</label>
+            <label htmlFor="">{UtilsConvert.formatCurrency(585.22)}</label>
           </div>
         </header>
-        <body className="shadow-lg">
+        <div className="shadow-lg">
           <div className="h-32 shadow-lg" style={{ backgroundColor: theme.colors.primary }}>
             <div className="text-center p-3">
               <label className="text-xs">INFORME O VALOR PAGO E  CLIQUE NA FORMA DE PAGAMENTO</label>
-              <input className="w-full h-10" type="text" />
+              <NumericFormat 
+                className="w-full h-10 focus:outline-none text-center text-3xl" style={{ background: 'transparent', border: 'none'}}   
+                type={'text'}
+                thousandSeparator={'.'} 
+                decimalSeparator={','}
+                prefix={''} 
+                fixedDecimalScale={true}
+                decimalScale={2}
+              />
+              {/* <InputMask className="w-full h-10 text-black focus:outline-none text-center text-3xl" label='teste' mask='999,99' style={{ background: 'transparent', border: 'none' }}></InputMask> */}
             </div>
-            <div className="flex items-center justify-between text-left p-1">
-              <label className="text-xs mr-2">TROCO</label>
-              <input className="w-full" type="text" />
+            <div className="flex items-center justify-between text-center p-1">
+              <label className="text-xs mr-2" style={{ color: theme.colors.warning }}>TROCO</label>
+              <label className="w-full text-3xl" style={{ color: theme.colors.warning }}>R$ 130,00</label>
             </div>
           </div>
-          <ContainerMenu>
-            <div className="lg:grid lg:grid-cols-3 lg:gap-4 font-bold mb-3">
-              <ButtonPdv labelSuperior="F1" icon={<FaArchive className="text-3xl" />} labelInferior="CONSULTAR PRODUTOS" />
-              <ButtonPdv labelSuperior="F2" icon={<FaBoxOpen className="text-4xl" />} labelInferior="ABRIR CAIXA" />
-              <ButtonPdv labelSuperior="F3" icon={<FaBox className="text-3xl" />} labelInferior="FECHAR CAIXA" />
-              <ButtonPdv labelSuperior="F4" icon={<FaHandHoldingUsd className="text-3xl" />} labelInferior="DINHEIRO" />
-              <ButtonPdv labelSuperior="F5" icon={<FaIdCard className="text-3xl" />} labelInferior="VALE" />
-              <ButtonPdv labelSuperior="F6" icon={<FaMoneyCheckAlt className="text-3xl" />} labelInferior="CARTÃO DÉBITO" />
-              <ButtonPdv labelSuperior="F7" icon={<FaMoneyCheck className="text-3xl" />} labelInferior="CARTÃO CRÉDITO" />
-              <ButtonPdv labelSuperior="F8" icon={<FaMoneyBillAlt className="text-3xl" />} labelInferior="VENDA DIRETA" />
-              <ButtonPdv labelSuperior="F9" icon={<FaSync className="text-3xl" />} labelInferior="ALTERAR PREÇO" />
-              <ButtonPdv labelSuperior="F10" icon={<FaFileInvoice className="text-4xl" />} labelInferior="VENDAS" />
-              <ButtonPdv labelSuperior="F11" icon={<FaHandHoldingMedical className="text-4xl" />} labelInferior="ADICIONAL" />
-              <ButtonPdv labelSuperior="DEL" icon={<FaMinusCircle className="text-3xl" />} labelInferior="CANCELAR PRODUTOS" />
-              <ButtonPdv labelSuperior="ESC" icon={<FaLongArrowAltLeft className="text-4xl" />} labelInferior="SAIR" />
+          <ContainerMenu className="">
+            <div className="max-h-max lg:grid lg:grid-cols-4 lg:gap-3 font-bold mb-3">
+              <ButtonPdv labelSuperior="F1" icon={<FaArchive className="text-xl" />} labelInferior="CONSULTAR PRODUTOS" />
+              <ButtonPdv labelSuperior="F2" icon={<FaBoxOpen className="text-2xl" />} labelInferior="ABRIR CAIXA" />
+              <ButtonPdv labelSuperior="F3" icon={<FaBox className="text-xl" />} labelInferior="FECHAR CAIXA" />
+              <ButtonPdv labelSuperior="F4" icon={<FaHandHoldingUsd className="text-2xl" />} labelInferior="DINHEIRO" />
+              <ButtonPdv labelSuperior="F5" icon={<FaIdCard className="text-xl" />} labelInferior="VALE" />
+              {/* <ButtonPdv labelSuperior="F6" icon={<FaMoneyCheckAlt className="text-xl" />} labelInferior="CARTÃO DÉBITO" /> */}
+              <ButtonPdv labelSuperior="F7" icon={<FaMoneyCheck className="text-xl" />} labelInferior="CARTÃO" />
+              <ButtonPdv labelSuperior="F8" icon={<FaMoneyBillAlt className="text-xl" />} labelInferior="VENDA DIRETA" />
+              <ButtonPdv labelSuperior="F9" icon={<FaSync className="text-xl" />} labelInferior="ALTERAR PREÇO" />
+              <ButtonPdv labelSuperior="F10" icon={<FaFileInvoice className="text-xl" />} labelInferior="VENDAS" />
+              <ButtonPdv labelSuperior="F11" icon={<FaHandHoldingMedical className="text-xl" />} labelInferior="ADICIONAL" />
+              <ButtonPdv labelSuperior="DEL" icon={<FaMinusCircle className="text-xl" />} labelInferior="CANCELAR PRODUTOS" />
+              <Link to={'/'}>
+                <ButtonPdv labelSuperior="ESC" icon={<FaLongArrowAltLeft className="text-xl" />} labelInferior="SAIR" />
+              </Link>
             </div>
           </ContainerMenu>
-        </body>
+        </div>
         <footer className="flex h-16">
           <div className="w-3/5 p-2" style={{ backgroundColor: theme.colors.info }}>
             <p className="text-xs lg:text-lg">DINHEIRO</p>
@@ -120,9 +168,9 @@ function Pdv() {
           </button>
         </footer>
 
-      </div>
+      </ContainerRight>
 
-    </body>
+    </div>
 
 
   </Container>;
