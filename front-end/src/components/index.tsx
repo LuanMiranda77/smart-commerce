@@ -1,5 +1,5 @@
 //export default
-export { DataGridDefault } from './Grid/DataGridDefault';
+export { DataGridDefault } from './DataTable/DataGridDefault';
 export { InputNumber } from './Inputs/InputNumber';
 export { InputMask } from './Inputs/InputMask';
 export { ButtonPdv } from './Buttons/ButtonPdv';

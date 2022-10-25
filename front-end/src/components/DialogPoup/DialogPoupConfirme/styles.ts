@@ -10,3 +10,14 @@ export const Container  = styled.div`
 
 `;
 
+export const Footer  = styled.div`
+    //adicionar stylos
+    position: relative;
+    bottom: 0;
+
+@media screen and (max-width: 40em) {
+    //adicionar o stylo responsivo
+}
+
+`;
+

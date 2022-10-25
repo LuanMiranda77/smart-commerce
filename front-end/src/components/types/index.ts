@@ -1,1 +1,1 @@
-export type { ColumnsDataGridType } from '../Grid/DataGridDefault/types';
+export type { ColumnsDataGridType } from '../DataTable/DataGridDefault/types';

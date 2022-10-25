@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Container } from "./styles";
+import { Container, Footer } from "./styles";
 import Modal from "react-modal";
 import { ThemeContext } from "styled-components";
 import { IoClose } from "react-icons/io5";
@@ -59,24 +59,24 @@ export const DialogPoupConfirme: React.FC<DialogPoupConfirmeProps> = (props) => 
           /> 
         </div>
         <div className="w-full p-1">
-          <div className="w-full p-2 h-20 text-center">{props.children}</div>
-          <div className="w-full p-2 grid grid-cols-2 gap-2 text-center">
-            <ButtonBase
-              label="Sim"
-              model="btn_base"
-              className="tertiary-color ml-20"
-              size="small"
-              onClick={props.onClickSim}
-            />
+          <div className="w-full p-2 h-32 text-center">{props.children}</div>
+          <Footer className="w-full p-2 grid grid-cols-2 gap-2 text-center">
             <ButtonBase
               label="Não"
               model="btn_base"
-              className="red-color mr-20"
+              className="red-color  ml-20"
               size="small"
-              style={{ marginLeft: "50px" }}
               onClick={props.onRequestClose}
             />
-          </div>
+            <ButtonBase
+              label="Sim"
+              model="btn_base"
+              className="primary-color mr-20"
+              size="small"
+              style={{ marginLeft: "50px" }}
+              onClick={props.onClickSim}
+            />
+          </Footer>
         </div>
       </Modal>
     </Container>

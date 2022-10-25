@@ -8,7 +8,8 @@ import  './styles/global.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
 import 'react-dropdown/style.css';
-import 'devextreme/dist/css/dx.material.blue.light.compact.css' ; 
+import 'devextreme/dist/css/dx.material.blue.light.compact.css'; 
+
 
 Modal.setAppElement('#root');
 

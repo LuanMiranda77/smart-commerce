@@ -10,7 +10,7 @@ interface ButtonPdvProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const ButtonPdv: React.FC<ButtonPdvProps> = (props) => {
-  return <Container tipo={props.labelSuperior}>
+  return <Container tipo={props.labelSuperior} {...props}>
     <div className='text-xs'>
       <label htmlFor="">{props.labelSuperior}</label>
     </div>

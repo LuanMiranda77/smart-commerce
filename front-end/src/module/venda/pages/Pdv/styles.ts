@@ -1,5 +1,3 @@
-import { SideLeft } from './../../../../components/Grafico/PizzaChart/styles';
-import { Header } from './../../../../components/Aside/styles';
 import styled from "styled-components";
 
 export const Container  = styled.div`
@@ -151,11 +149,23 @@ export const ContainerRight = styled.div`
 export const ContainerProduto  = styled.div`
     background-color: ${color => color.theme.colors.white};
     height: calc(100vh - 241px);
+
+    .column-1{
+        color: ${color => color.theme.colors.error};
+    }
+    .column-2{
+        color: ${color => color.theme.colors.primary};
+        font-size: 18px !important ;
+    }
     /* overflow-y:scroll; */
 
     @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
     height: calc(100vh - 187px);
+    }
+
+    .table{
+        height: 100px;
     }
 
 `;
@@ -175,5 +185,13 @@ export const ContainerMenu  = styled.div`
     }
 
 
+`;
+
+export const TableProduto  = styled.div`
+    height: calc(100vh - 180px);
+
+    @media screen and (max-width: 40em) {
+
+    }
 `;
 

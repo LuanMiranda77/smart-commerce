@@ -6,7 +6,9 @@ export type ColumnsDataGridType = {
     dataType: string | 'string';
     format?: string | Object ;
     alignment?:string;
-    allowGrouping?: boolean ;
+    allowGrouping?: boolean;
+    allowSearch?:boolean;
     cssClass?:string;
     width?:number ;
+    visible?:boolean;
 }

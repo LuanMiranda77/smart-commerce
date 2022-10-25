@@ -1,4 +1,11 @@
+import { Header } from './../Aside/styles';
 import styled from "styled-components";
+
+export const HeaderModal  = styled.header`
+    background-color:${color=> color.theme.colors.primary};
+    border-radius: 2px 2px 0px 0px;
+    margin-top:0;
+`;
 
 export const Container  = styled.div`
 
