@@ -17,7 +17,7 @@ interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement>{
 export const InputNumber: React.FC<InputNumberProps> = (props) => {
   return <Container>
     <label className='input_line__label' htmlFor={props.label}>{props.label}</label>
-    <NumericFormat className='input_line__field'
+    <NumericFormat className={'input_line__field '+props.className}
       id={props.label}
       type={'text'}
       thousandSeparator={props.separadorMilhar}
@@ -27,6 +27,7 @@ export const InputNumber: React.FC<InputNumberProps> = (props) => {
       decimalScale={props.casaDecimal}
       allowLeadingZeros={props.permiteZeroInicio}
       onChange={props.onChange}
+      placeholder={props.placeholder}
     />
   </Container>;
 }

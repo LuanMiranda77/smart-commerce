@@ -1,20 +1,23 @@
-import React, {useState} from 'react';
-import {DataGridDefault, InputIcon, ModalDefault } from "../../../../components";
+import React, { useState, useContext } from 'react';
+import { DataGridDefault, InputIcon, InputSearch, ModalDefault } from "../../../../components";
 import { UsageState } from "webpack";
 import { FaSearch } from 'react-icons/fa';
 import { ColumnsDataGridType } from '../../../../components/types';
 import _ from 'lodash';
-import {TableProduto} from './styles';
+import { TableProduto } from './styles';
+import { ThemeContext } from 'styled-components';
 
 // import { Container } from './styles';
 interface ModalProps {
-    showModal:boolean;
-    closeModal: ()=>void;
+  showModal: boolean;
+  closeModal: () => void;
 }
 
 const ModalProduto: React.FC<ModalProps> = (props) => {
-  
-  const eventClose =()=>{
+
+  const theme = useContext(ThemeContext);
+
+  const eventClose = () => {
     props.closeModal();
   }
   const columns = new Array<ColumnsDataGridType>();
@@ -55,39 +58,43 @@ const ModalProduto: React.FC<ModalProps> = (props) => {
     { item: 1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
     { item: 1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
   ]
-  const [dataSource, setDataSource]  = useState(data);
-  const [dataSourceCopy, setDataSourceCopy]  = useState(dataSource);
+  const [dataSource, setDataSource] = useState(data);
+  const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
 
-  const search = (desc:string) =>{
-    if(desc!==''){
-        let produtos = dataSourceCopy.filter(produto => {return produto.descricao.includes(desc)});
-        setDataSource(produtos);
-    }else{
-        setDataSource(dataSourceCopy);
+  const search = (desc: string) => {
+    if (desc !== '') {
+      let produtos = dataSourceCopy.filter(produto => { return produto.descricao.includes(desc) });
+      setDataSource(produtos);
+    } else {
+      setDataSource(dataSourceCopy);
     }
   }
 
-  return  <ModalDefault key={"#modalproduto"} title="LISTA DOS PRODUTOS" isOpen={props.showModal} onRequestClose={eventClose}>
-    <div>
-        <div className='w-full p-2 card-local'>
-            <div className='w-3/6'>
+  const eventCaptureTecla = (event: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    event.key === "Escape" ? eventClose() : null;
+  }
 
-            <InputIcon label='Pesquise' icon={<FaSearch/>} onChange={(e) => search(e.currentTarget.value)}/>
-            </div>
+  return <ModalDefault key={"#modalproduto"} title="LISTA DOS PRODUTOS" isOpen={props.showModal} onRequestClose={eventClose}>
+    <div>
+      <div className='w-full p-2 card-local'>
+        <div className='w-3/6'>
+          <InputSearch onChange={(e) => search(e.currentTarget.value)} autoFocus onKeyDownCapture={eventCaptureTecla}/>
         </div>
-        <TableProduto>
-            <DataGridDefault 
-            columns={columns} 
-            dataSource={dataSource} 
-            allowSorting={false} 
-            paginar={false} 
-            showRowLines 
-            showBorders
-            showColumnLines
-            hoverStateEnabled
-            isSelectRow
-            />
-        </TableProduto>
+      </div>
+      <TableProduto>
+        <DataGridDefault
+          columns={columns}
+          dataSource={dataSource}
+          allowSorting={false}
+          paginar={false}
+          showRowLines
+          showBorders
+          showColumnLines
+          hoverStateEnabled
+          isSelectRow
+        />
+      </TableProduto>
     </div>
 
   </ModalDefault>;

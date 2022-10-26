@@ -8,6 +8,9 @@ interface ModalDefaultProps {
   title: string;
   isOpen: boolean;
   children?: React.ReactNode;
+  width?: '98%' | string;
+  left?: '0%' | string;
+  right?: '0%' | string;
   onRequestClose: () => void;
 }
 
@@ -26,11 +29,11 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
             backgroundColor: "rgba(78, 76, 76, 0.75)",
           },
           content: {
-            width: '98%',
-            left: 0,
+            width: props.width ? props.width: '98%',
+            left: props.left,
+            right: props.right,
             top: 0,
             bottom: 0,
-            right: 0,
             border: 0,
             padding: 0,
             margin: '1rem',

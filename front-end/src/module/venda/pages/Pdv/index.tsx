@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useMemo } from "react";
 import CountUp from 'react-countup';
-import { FaArchive, FaBarcode, FaBox, FaBoxOpen, FaFileInvoice, FaHandHoldingMedical, FaHandHoldingUsd, FaIdCard, FaIdCardAlt, FaLongArrowAltLeft, FaMinusCircle, FaMoneyBillAlt, FaMoneyCheck, FaSync, FaTeamspeak, FaUserTie } from "react-icons/fa";
+import { FaArchive, FaBarcode, FaBox, FaBoxOpen, FaCreditCard, FaFileInvoice, FaHandHoldingMedical, FaHandHoldingUsd, FaIdCard, FaIdCardAlt, FaLongArrowAltLeft, FaMinusCircle, FaMoneyBillAlt, FaMoneyCheck, FaSync, FaTeamspeak, FaUserTie } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from 'styled-components';
-import { ButtonPdv, DataGridDefault, DialogPoupConfirme, DialogPoupDefault, ModalDefault } from "../../../../components";
+import { ButtonPdv, DataGridDefault, DialogPoupConfirme, DialogPoupDefault, InputNumber, ModalDefault } from "../../../../components";
 import { UtilsConvert } from '../../../../utils/utils_convert';
 
 import { NumericFormat } from "react-number-format";
@@ -11,7 +11,7 @@ import { ColumnsDataGridType } from "../../../../components/types";
 import { Container, ContainerLeft, ContainerMenu, ContainerProduto, ContainerRight } from './styles';
 import { set } from "lodash";
 import ModalProduto from './modalProduto';
-
+import ModalCaixa from './modalCaixa';
 /**
 *@Author Luan Miranda
 *@Issue 15
@@ -23,6 +23,12 @@ function Pdv() {
   const navigate = useNavigate();
   const [showPoup, setShowPopup] = useState(false);
   const [showModalProd, setShowModalProd] = useState(false);
+  const [showModalCaixa, setShowModalCaixa] = useState(false);
+  const [showPoupFechamento, setShowPoupFechamento] = useState(false);
+  const [disablePagemento, setDisablePagemento] = useState(true);
+  const [totalVenda, setTotalVenda] = useState(0);
+  const [valorPago, setValorPago] = useState(0);
+  const [troco, setTroco] = useState(0);
   const columns = new Array<ColumnsDataGridType>();
   columns.push({ dataField: 'item', caption: 'ITEM', alignment: 'center', dataType: '', width: 70, cssClass: 'font-bold column-1' });
   columns.push({ dataField: 'codigo', caption: 'Código', alignment: '', dataType: '', width: 70, cssClass: 'font-bold', visible: false });
@@ -62,6 +68,18 @@ function Pdv() {
     { item: 1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
   ]
 
+  useMemo(()=>{
+    let soma = 0;
+    dataSource.forEach(produto => {
+      soma += produto.total;
+    });
+    setTotalVenda(soma);
+  }, [totalVenda]);
+
+  const calcvenda=()=>{
+
+  }
+
   const styleCell = (data: any) => {
     if (data.rowType === "data") {
       if (data.columnIndex === 5) {
@@ -92,23 +110,51 @@ function Pdv() {
   const eventCaptureTecla = (event: any) => {
     let key = event.key;
     switch (key) {
+      case 'Insert':
+        setShowModalProd(true);
+        break;
       case 'F2':
-        console.log('vc dogitou f2');
+        setShowModalCaixa(true);
+        break;
+      case 'F4':
+        setShowModalCaixa(true);
+        break;
+      case 'F8':
+        // setShowPoupFechamento(true);
+        document.getElementById("valor-pago")?.focus();
+        setDisablePagemento(false);
+        break;
+      case 'F9':
+        setShowPoupFechamento(true);
+        break;
+      case 'F10':
+        setShowPoupFechamento(true);
+        break;
+      case 'Home':
+        setShowModalCaixa(true);
+        break;
+      case 'End':
+        setShowModalCaixa(true);
+        break;
+      case 'PageUp':
+        setShowModalCaixa(true);
+        break;
+      case 'PageDown':
+        setShowModalCaixa(true);
+        break;
+      case 'Delete':
+        setShowPopup(true);
         break;
       case 'Escape':
         setShowPopup(true);
-        // navigate('/');
-        console.log('vc dogitou ESC');
-
         break;
-
-
     }
     console.log(key);
   }
 
-  const eventEsc = ()=>{
+  const eventEsc = () => {
     setShowPopup(false);
+    navigate('/');
     document.getElementById("#digite-produto")?.focus();
   }
 
@@ -150,7 +196,7 @@ function Pdv() {
             <label className="text-xs">DESCRIÇÃO DO ITEM  OU CÓDIGO</label>
             <div className="flex">
               <i className="mr-2"><FaBarcode style={{ height: '48px', width: '48px' }} /></i>
-              <input 
+              <input
                 id="#digite-produto"
                 className="w-full text-4xl focus:outline-none"
                 autoFocus
@@ -175,14 +221,14 @@ function Pdv() {
           </div>
         </div>
         <ContainerProduto>
-          <DataGridDefault 
-            columns={columns} 
-            dataSource={dataSource} 
-            allowSorting={false} 
+          <DataGridDefault
+            columns={columns}
+            dataSource={dataSource}
+            allowSorting={false}
             showColumnLines
             rowAlternationEnabled
-            paginar={false} 
-            />
+            paginar={false}
+          />
         </ContainerProduto>
         <footer className="flex h-22 p-2" style={{ backgroundColor: '#B4B8C5', borderTop: '1px solid black' }}>
           <div className="w-32 text-left mr-10">
@@ -191,7 +237,7 @@ function Pdv() {
           </div>
           <div className="w-full text-right">
             <p className="text-xs text-black">TOTAL A PAGAR</p>
-            <p className="text-6xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(58544878778.22)}</p>
+            <p className="text-6xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(totalVenda)}</p>
           </div>
         </footer>
       </ContainerLeft>
@@ -210,6 +256,7 @@ function Pdv() {
             <div className="text-center p-3">
               <label className="text-xs">INFORME O VALOR PAGO E  CLIQUE NA FORMA DE PAGAMENTO</label>
               <NumericFormat
+                id="valor-pago"
                 className="w-full h-10 focus:outline-none text-center text-3xl" style={{ background: 'transparent', border: 'none' }}
                 type={'text'}
                 thousandSeparator={'.'}
@@ -217,29 +264,31 @@ function Pdv() {
                 prefix={''}
                 fixedDecimalScale={true}
                 decimalScale={2}
+                placeholder='0,00'
+                disabled={disablePagemento}
+                onChange={(e)=> setTroco(Number(e.currentTarget.value)-totalVenda)}
               />
-              {/* <InputMask className="w-full h-10 text-black focus:outline-none text-center text-3xl" label='teste' mask='999,99' style={{ background: 'transparent', border: 'none' }}></InputMask> */}
             </div>
             <div className="flex items-center justify-between text-center p-1">
               <label className="text-xs mr-2" style={{ color: theme.colors.warning }}>TROCO</label>
-              <label className="w-full text-3xl" style={{ color: theme.colors.warning }}>R$ 130,00</label>
+              <label className="w-full text-3xl" style={{ color: theme.colors.warning }}>{UtilsConvert.formatCurrency(troco)}</label>
             </div>
           </div>
           <ContainerMenu className="">
             <div className="max-h-max lg:grid lg:grid-cols-4 lg:gap-3 font-bold mb-3">
-              <ButtonPdv labelSuperior="F1" icon={<FaArchive className="text-xl" />} labelInferior="CONSULTAR PRODUTOS" onClick={()=>setShowModalProd(true)}/>
-              <ButtonPdv labelSuperior="F2" icon={<FaBoxOpen className="text-2xl" />} labelInferior="ABRIR CAIXA" />
-              <ButtonPdv labelSuperior="F3" icon={<FaBox className="text-xl" />} labelInferior="FECHAR CAIXA" />
-              <ButtonPdv labelSuperior="F4" icon={<FaHandHoldingUsd className="text-2xl" />} labelInferior="DINHEIRO" />
-              <ButtonPdv labelSuperior="F5" icon={<FaIdCard className="text-xl" />} labelInferior="VALE" />
+              <ButtonPdv labelSuperior="INSERT" icon={<FaArchive className="text-xl" />} labelInferior="CONSULTAR PRODUTOS" onClick={() => setShowModalProd(true)} />
+              <ButtonPdv labelSuperior="F2" icon={<FaBoxOpen className="text-2xl" />} labelInferior="CAIXA" />
+              <ButtonPdv labelSuperior="F4" icon={<FaBox className="text-xl" />} labelInferior="FECHAR CAIXA" />
+              <ButtonPdv labelSuperior="F8" icon={<FaHandHoldingUsd className="text-2xl" />} labelInferior="DINHEIRO" />
+              <ButtonPdv labelSuperior="F9" icon={<FaIdCard className="text-xl" />} labelInferior="VALE" />
               {/* <ButtonPdv labelSuperior="F6" icon={<FaMoneyCheckAlt className="text-xl" />} labelInferior="CARTÃO DÉBITO" /> */}
-              <ButtonPdv labelSuperior="F7" icon={<FaMoneyCheck className="text-xl" />} labelInferior="CARTÃO" />
-              <ButtonPdv labelSuperior="F8" icon={<FaMoneyBillAlt className="text-xl" />} labelInferior="VENDA DIRETA" />
-              <ButtonPdv labelSuperior="F9" icon={<FaSync className="text-xl" />} labelInferior="ALTERAR PREÇO" />
-              <ButtonPdv labelSuperior="F10" icon={<FaFileInvoice className="text-xl" />} labelInferior="VENDAS" />
-              <ButtonPdv labelSuperior="F11" icon={<FaHandHoldingMedical className="text-xl" />} labelInferior="ADICIONAL" />
+              <ButtonPdv labelSuperior="F10" icon={<FaMoneyCheck className="text-xl" />} labelInferior="CARTÃO" />
+              <ButtonPdv labelSuperior="END" icon={<FaMoneyBillAlt className="text-xl" />} labelInferior="SANGRIA" />
+              <ButtonPdv labelSuperior="HOME" icon={<FaSync className="text-xl" />} labelInferior="ALTERAR PREÇO" />
+              <ButtonPdv labelSuperior="PG UP" icon={<FaFileInvoice className="text-xl" />} labelInferior="VENDAS" />
+              <ButtonPdv labelSuperior="PG DN" icon={<FaHandHoldingMedical className="text-xl" />} labelInferior="ADICIONAL" />
               <ButtonPdv labelSuperior="DEL" icon={<FaMinusCircle className="text-xl" />} labelInferior="CANCELAR PRODUTOS" />
-              <ButtonPdv labelSuperior="ESC" icon={<FaLongArrowAltLeft className="text-xl" />} labelInferior="SAIR" onClick={dataSource.length > 0 ? () => setShowPopup(true):() => navigate('/')}/>
+              <ButtonPdv labelSuperior="ESC" icon={<FaLongArrowAltLeft className="text-xl" />} labelInferior="SAIR" onClick={dataSource.length > 0 ? () => setShowPopup(true) : () => navigate('/')} />
               {/* <Link to={'/'} onClick={() => setShowPopup(true)}>
               </Link> */}
             </div>
@@ -260,11 +309,28 @@ function Pdv() {
 
     <DialogPoupConfirme title="Confirme" isOpen={showPoup} onRequestClose={() => setShowPopup(false)} onClickSim={eventEsc}>
       <p className="font-bold text-2xl">Tem certesa que deseja sair da venda? </p>
-      <p className="font-bold" style={{color:theme.colors.error}}>Esta venda ficará nas vendas pendentes ao sair da tela!</p>
+      <p className="font-bold" style={{ color: theme.colors.error }}>Esta venda ficará nas vendas pendentes ao sair da tela!</p>
     </DialogPoupConfirme>
 
-    <ModalProduto  key={"#modalproduto"}  showModal={showModalProd} closeModal={() => setShowModalProd(false)}/>
-      
+    <ModalProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} />
+    <ModalCaixa showModal={showModalCaixa} closeModal={() => setShowModalCaixa(false)} />
+    <DialogPoupDefault title="Confirmar pagamento" isOpen={showPoupFechamento} onRequestClose={() => setShowPoupFechamento(false)}>
+    <div>
+    <div className='mb-10'>
+        <InputNumber className='h-16 text-4xl text-center'
+          label='Valor pago'
+          prefixo='R$ '
+          fixedZeroFinal
+          separadorMilhar={'.'}
+          casaDecimal={2}
+          separadorDecimal={','}
+          placeholder='R$ 0,00'
+          // onChange={(e)=> setValorDigitado(Number(e.currentTarget.value))}
+        />
+      </div>
+    </div>
+  </DialogPoupDefault>
+
   </Container>;
 }
 export default Pdv;

@@ -54,6 +54,7 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
       onSelectionChanged={props.onSelectionChanged}
       onRowClick={props.onRowClick}
       onRowDblClick={props.onRowDblClick}
+      noDataText={''}
     >
       {props.isSelectRow ? <Selection mode={props.moduloSeletion}/> : null}
       <GroupPanel visible={props.columnGroup} />

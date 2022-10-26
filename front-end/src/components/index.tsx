@@ -1,4 +1,5 @@
 //export default
+export { InputSearch } from './Inputs/InputSearch';
 export { DataGridDefault } from './DataTable/DataGridDefault';
 export { InputNumber } from './Inputs/InputNumber';
 export { InputMask } from './Inputs/InputMask';
