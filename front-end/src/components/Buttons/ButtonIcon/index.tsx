@@ -6,19 +6,19 @@ interface ButtonIconProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   //adicionar os props
   label: string;
   icon: React.ReactNode;
-  size: "large" | "medium" | "small" | "mini";
+  color?: string;
+  width: string;
 }
 
 export const ButtonIcon: React.FC<ButtonIconProps> = (props) => {
 
-  return <Container className={props.className} id={props.label} onClick={props.onClick}  style={
-    (
-      props.size === 'large' ? { width: '100%' } :
-        props.size === 'medium' ? { width: '75%' } :
-          props.size === 'small' ? { width: '50%' } :
-            { width: '25%' }
-    )}>
+  return <Container id={props.label}
+    onClick={props.onClick}
+    color={props.color}
+    // width={props.width}
+    {...props}
+  >
     <i style={{ fontSize: '24px' }}>{props.icon}</i>
-    <label className='ml-2' htmlFor={props.label} style={{cursor:'pointer'}}>{props.label}</label>
+    <label className='ml-2' htmlFor={props.label} style={{ cursor: 'pointer' }}>{props.label}</label>
   </Container>;
 }

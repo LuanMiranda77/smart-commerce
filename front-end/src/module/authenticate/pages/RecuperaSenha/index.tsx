@@ -58,7 +58,7 @@ function RecuperaSenha() {
             size="small"
             onClick={open}
           />
-          <ButtonIcon size="large"  onClick={open} label="save" icon={<FaEnvelope/>}/>
+          <ButtonIcon width="100%"  onClick={open} label="save" icon={<FaEnvelope/>}/>
         </div>
         <div>
           <small className="p-4 font-bold text-sm">

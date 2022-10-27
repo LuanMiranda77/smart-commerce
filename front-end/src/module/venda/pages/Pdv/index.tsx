@@ -163,7 +163,7 @@ function Pdv() {
   const liberarPgamento = (tipo: number) => {
     setTipoPagamento(tipo);
     if (tipo === 0) {
-      document.getElementById("valor-pago")?.focus();
+      document.getElementById("valorPago")?.focus();
       setDisablePagemento(false);
     } else if (tipo === 1) {
       setShowPoupFechamento(true);
@@ -287,7 +287,7 @@ function Pdv() {
             <div className="text-center p-3">
               <label className="text-xs">INFORME O VALOR PAGO E  CLIQUE NA FORMA DE PAGAMENTO</label>
               <NumericFormat
-                id="valor-pago"
+                id="valorPago"
                 className="w-full h-10 focus:outline-none text-center text-3xl" style={{ background: 'transparent', border: 'none' }}
                 type={'text'}
                 thousandSeparator={'.'}

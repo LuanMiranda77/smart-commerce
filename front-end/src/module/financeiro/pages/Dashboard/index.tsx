@@ -157,7 +157,7 @@ function Dashboard() {
                         <InputDate className="mb-5 w-full lg:mr-5 lg:w-40" label="Data inicio" />
                         <InputDate className="w-full lg:mr-5 lg:w-40" label="Data final" />
                         <div className="w-32 mt-6">
-                              <ButtonIcon className="" icon={<FaFunnelDollar />} label="FILTRO" size="large" />
+                              <ButtonIcon className="" icon={<FaFunnelDollar />} label="FILTRO" width="100%" />
                         </div>
                   </div>
 

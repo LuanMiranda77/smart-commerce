@@ -11,4 +11,5 @@ export type ColumnsDataGridType = {
     cssClass?:string;
     width?:number ;
     visible?:boolean;
+    styleCell?:(e:any)=>React.ReactNode;
 }

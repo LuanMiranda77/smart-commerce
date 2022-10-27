@@ -34,6 +34,7 @@ interface DataGridDefaultProps {
   onSelectionChanged?:(element: any)=>void;
   onRowDblClick?:(element: any)=>void;
   styleCell?: (data: any)=> React.ReactNode;
+  // styleCellColumn?: (data: any)=> React.ReactNode;
 
 };
 
@@ -73,7 +74,7 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
           allowSorting={props.allowSorting}
           cssClass={column.cssClass}
           width={column.width}
-          cellRender={props.styleCell}
+          cellRender={column.styleCell}
           allowSearch={column.allowSearch}
           visible={column.visible}
         />
