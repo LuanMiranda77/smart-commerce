@@ -11,7 +11,7 @@ interface ButtonIconProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const ButtonIcon: React.FC<ButtonIconProps> = (props) => {
 
-  return <Container id={props.label} onClick={props.onClick} style={
+  return <Container className={props.className} id={props.label} onClick={props.onClick}  style={
     (
       props.size === 'large' ? { width: '100%' } :
         props.size === 'medium' ? { width: '75%' } :

@@ -1,17 +1,17 @@
-import { useContext, useState, useMemo } from "react";
-import CountUp from 'react-countup';
-import { FaArchive, FaBarcode, FaBox, FaBoxOpen, FaCreditCard, FaFileInvoice, FaHandHoldingMedical, FaHandHoldingUsd, FaIdCard, FaIdCardAlt, FaLongArrowAltLeft, FaMinusCircle, FaMoneyBillAlt, FaMoneyCheck, FaSync, FaTeamspeak, FaUserTie } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext, useMemo, useState } from "react";
+import { FaArchive, FaBarcode, FaBox, FaBoxOpen, FaFileInvoice, FaHandHoldingMedical, FaHandHoldingUsd, FaIdCard, FaIdCardAlt, FaLongArrowAltLeft, FaMinusCircle, FaMoneyBillAlt, FaMoneyCheck, FaSync, FaTeamspeak, FaUserTie } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { ThemeContext } from 'styled-components';
-import { ButtonPdv, DataGridDefault, DialogPoupConfirme, DialogPoupDefault, InputNumber, ModalDefault } from "../../../../components";
+import { ButtonBase, ButtonPdv, DataGridDefault, DialogPopupConfirme, InputDefault, InputNumber, InputSelectDefault, ModalDefault } from "../../../../components";
 import { UtilsConvert } from '../../../../utils/utils_convert';
 
 import { NumericFormat } from "react-number-format";
 import { ColumnsDataGridType } from "../../../../components/types";
-import { Container, ContainerLeft, ContainerMenu, ContainerProduto, ContainerRight } from './styles';
-import { set } from "lodash";
-import ModalProduto from './modalProduto';
 import ModalCaixa from './modalCaixa';
+import ModalProduto from './modalProduto';
+import ModalVenda from './modalVenda';
+import { Container, ContainerLeft, ContainerMenu, ContainerProduto, ContainerRight } from './styles';
+import cartoes from './mooks/tipoCartao.json';
 /**
 *@Author Luan Miranda
 *@Issue 15
@@ -24,11 +24,13 @@ function Pdv() {
   const [showPoup, setShowPopup] = useState(false);
   const [showModalProd, setShowModalProd] = useState(false);
   const [showModalCaixa, setShowModalCaixa] = useState(false);
+  const [showModalVenda, setShowModalVenda] = useState(false);
   const [showPoupFechamento, setShowPoupFechamento] = useState(false);
   const [disablePagemento, setDisablePagemento] = useState(true);
   const [totalVenda, setTotalVenda] = useState(0);
   const [valorPago, setValorPago] = useState(0);
   const [troco, setTroco] = useState(0);
+  const [tipoPagamento, setTipoPagamento] = useState(0);
   const columns = new Array<ColumnsDataGridType>();
   columns.push({ dataField: 'item', caption: 'ITEM', alignment: 'center', dataType: '', width: 70, cssClass: 'font-bold column-1' });
   columns.push({ dataField: 'codigo', caption: 'Código', alignment: '', dataType: '', width: 70, cssClass: 'font-bold', visible: false });
@@ -68,7 +70,7 @@ function Pdv() {
     { item: 1, descricao: 'produto', quantidade: 10, valor: 1502, desconto: 12, total: 32 },
   ]
 
-  useMemo(()=>{
+  useMemo(() => {
     let soma = 0;
     dataSource.forEach(produto => {
       soma += produto.total;
@@ -76,7 +78,7 @@ function Pdv() {
     setTotalVenda(soma);
   }, [totalVenda]);
 
-  const calcvenda=()=>{
+  const calcvenda = () => {
 
   }
 
@@ -120,24 +122,22 @@ function Pdv() {
         setShowModalCaixa(true);
         break;
       case 'F8':
-        // setShowPoupFechamento(true);
-        document.getElementById("valor-pago")?.focus();
-        setDisablePagemento(false);
+        liberarPgamento(0);
         break;
       case 'F9':
-        setShowPoupFechamento(true);
+        liberarPgamento(1);
         break;
       case 'F10':
-        setShowPoupFechamento(true);
+        liberarPgamento(2);
         break;
       case 'Home':
-        setShowModalCaixa(true);
+        liberarPgamento(3);
         break;
       case 'End':
-        setShowModalCaixa(true);
+        liberarPgamento(3);
         break;
       case 'PageUp':
-        setShowModalCaixa(true);
+        setShowModalVenda(true);
         break;
       case 'PageDown':
         setShowModalCaixa(true);
@@ -148,14 +148,45 @@ function Pdv() {
       case 'Escape':
         setShowPopup(true);
         break;
+      case 'Enter':
+        document.getElementById("Valor")?.focus();
+        break;
     }
-    console.log(key);
   }
 
   const eventEsc = () => {
     setShowPopup(false);
     navigate('/');
     document.getElementById("#digite-produto")?.focus();
+  }
+
+  const liberarPgamento = (tipo: number) => {
+    setTipoPagamento(tipo);
+    if (tipo === 0) {
+      document.getElementById("valor-pago")?.focus();
+      setDisablePagemento(false);
+    } else if (tipo === 1) {
+      setShowPoupFechamento(true);
+    } else if (tipo === 2) {
+      setShowPoupFechamento(true);
+    } else if (tipo === 3) {
+      setShowPoupFechamento(true);
+    }
+  }
+
+  const efetuarPagamento = (event: any) => {
+    if (event.key && event.key === 'Enter' && tipoPagamento === 0) {
+      console.log(tipoPagamento);
+    }
+    else if (event.key && event.key === 'Enter' && tipoPagamento === 1) {
+      console.log(tipoPagamento);
+    }
+    else if (event.key && event.key === 'Enter' && tipoPagamento === 2) {
+      console.log(tipoPagamento);
+    }
+    else if (event.key && event.key === 'Enter' && tipoPagamento === 3) {
+      console.log(tipoPagamento);
+    }
   }
 
   return <Container>
@@ -230,7 +261,7 @@ function Pdv() {
             paginar={false}
           />
         </ContainerProduto>
-        <footer className="flex h-22 p-2" style={{ backgroundColor: '#B4B8C5', borderTop: '1px solid black' }}>
+        <footer className="flex h-22 p-2" style={{ backgroundColor: '#B4B8C5', borderTop: '2px solid '+theme.colors.primary }}>
           <div className="w-32 text-left mr-10">
             <p className="text-xs text-black">ITEMS</p>
             <p className="text-3xl" style={{ color: theme.colors.info }}>{dataSource.length < 9 ? '0' + dataSource.length : dataSource.length}</p>
@@ -266,7 +297,7 @@ function Pdv() {
                 decimalScale={2}
                 placeholder='0,00'
                 disabled={disablePagemento}
-                onChange={(e)=> setTroco(Number(e.currentTarget.value)-totalVenda)}
+                onChange={(e) => setTroco(Number(e.currentTarget.value) - totalVenda)}
               />
             </div>
             <div className="flex items-center justify-between text-center p-1">
@@ -277,15 +308,15 @@ function Pdv() {
           <ContainerMenu className="">
             <div className="max-h-max lg:grid lg:grid-cols-4 lg:gap-3 font-bold mb-3">
               <ButtonPdv labelSuperior="INSERT" icon={<FaArchive className="text-xl" />} labelInferior="CONSULTAR PRODUTOS" onClick={() => setShowModalProd(true)} />
-              <ButtonPdv labelSuperior="F2" icon={<FaBoxOpen className="text-2xl" />} labelInferior="CAIXA" />
-              <ButtonPdv labelSuperior="F4" icon={<FaBox className="text-xl" />} labelInferior="FECHAR CAIXA" />
-              <ButtonPdv labelSuperior="F8" icon={<FaHandHoldingUsd className="text-2xl" />} labelInferior="DINHEIRO" />
-              <ButtonPdv labelSuperior="F9" icon={<FaIdCard className="text-xl" />} labelInferior="VALE" />
+              <ButtonPdv labelSuperior="F2" icon={<FaBoxOpen className="text-2xl" />} labelInferior="CAIXA" onClick={() => setShowModalCaixa(true)} />
+              <ButtonPdv labelSuperior="F4" icon={<FaBox className="text-xl" />} labelInferior="FECHAR CAIXA" onClick={() => setShowModalCaixa(true)} />
+              <ButtonPdv labelSuperior="F8" icon={<FaHandHoldingUsd className="text-2xl" />} labelInferior="DINHEIRO" onClick={() => liberarPgamento(0)} />
+              <ButtonPdv labelSuperior="F9" icon={<FaIdCard className="text-xl" />} labelInferior="VALE" onClick={() => liberarPgamento(1)} />
               {/* <ButtonPdv labelSuperior="F6" icon={<FaMoneyCheckAlt className="text-xl" />} labelInferior="CARTÃO DÉBITO" /> */}
-              <ButtonPdv labelSuperior="F10" icon={<FaMoneyCheck className="text-xl" />} labelInferior="CARTÃO" />
-              <ButtonPdv labelSuperior="END" icon={<FaMoneyBillAlt className="text-xl" />} labelInferior="SANGRIA" />
+              <ButtonPdv labelSuperior="F10" icon={<FaMoneyCheck className="text-xl" />} labelInferior="CARTÃO" onClick={() => liberarPgamento(2)} />
+              <ButtonPdv labelSuperior="END" icon={<FaMoneyBillAlt className="text-xl" />} labelInferior="SANGRIA" onClick={() => liberarPgamento(3)} />
               <ButtonPdv labelSuperior="HOME" icon={<FaSync className="text-xl" />} labelInferior="ALTERAR PREÇO" />
-              <ButtonPdv labelSuperior="PG UP" icon={<FaFileInvoice className="text-xl" />} labelInferior="VENDAS" />
+              <ButtonPdv labelSuperior="PG UP" icon={<FaFileInvoice className="text-xl" />} labelInferior="VENDAS" onClick={() => setShowModalVenda(true)}/>
               <ButtonPdv labelSuperior="PG DN" icon={<FaHandHoldingMedical className="text-xl" />} labelInferior="ADICIONAL" />
               <ButtonPdv labelSuperior="DEL" icon={<FaMinusCircle className="text-xl" />} labelInferior="CANCELAR PRODUTOS" />
               <ButtonPdv labelSuperior="ESC" icon={<FaLongArrowAltLeft className="text-xl" />} labelInferior="SAIR" onClick={dataSource.length > 0 ? () => setShowPopup(true) : () => navigate('/')} />
@@ -307,29 +338,99 @@ function Pdv() {
       </ContainerRight>
     </div>
 
-    <DialogPoupConfirme title="Confirme" isOpen={showPoup} onRequestClose={() => setShowPopup(false)} onClickSim={eventEsc}>
-      <p className="font-bold text-2xl">Tem certesa que deseja sair da venda? </p>
-      <p className="font-bold" style={{ color: theme.colors.error }}>Esta venda ficará nas vendas pendentes ao sair da tela!</p>
-    </DialogPoupConfirme>
+    <DialogPopupConfirme title="Confirme" isOpen={showPoup} onRequestClose={() => setShowPopup(false)} onClickSim={eventEsc}>
+      <p className="font-bold text-2xl">Tem certeza que deseja sair da venda? </p>
+      <p className="font-bold" style={{ color: theme.colors.error }}>Esta venda ficará pendente ao sair da tela!</p>
+    </DialogPopupConfirme>
 
     <ModalProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} />
     <ModalCaixa showModal={showModalCaixa} closeModal={() => setShowModalCaixa(false)} />
-    <DialogPoupDefault title="Confirmar pagamento" isOpen={showPoupFechamento} onRequestClose={() => setShowPoupFechamento(false)}>
-    <div>
-    <div className='mb-10'>
-        <InputNumber className='h-16 text-4xl text-center'
-          label='Valor pago'
-          prefixo='R$ '
-          fixedZeroFinal
-          separadorMilhar={'.'}
-          casaDecimal={2}
-          separadorDecimal={','}
-          placeholder='R$ 0,00'
-          // onChange={(e)=> setValorDigitado(Number(e.currentTarget.value))}
-        />
+    <ModalVenda showModal={showModalVenda} closeModal={() => setShowModalVenda(false)} />
+
+    {/* modal de pagamento */}
+    <ModalDefault title="Confirmar"
+      isOpen={showPoupFechamento}
+      onRequestClose={() => setShowPoupFechamento(false)} left='25%' width="50%">
+      <div className="text-center">
+        {tipoPagamento === 1 ?
+          <div className='mb-10 font-bold card-local p-5 m-10'>
+            <div className="mb-10">
+              <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>PAGAMENTO EM VALE</label>
+              <hr className="mt-5" />
+              <div className="text-right mt-2 mb-2">
+                <p className="text-3xl">VALOR DA COMPRA</p>
+                <label className="text-5xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(totalVenda)}</label>
+              </div>
+              <hr className="mb-5" />
+              <div className="p-5 w-9/12" style={{ marginLeft: '13%' }}>
+                <InputSelectDefault className="text-left"
+                  label="Consumidor"
+                  placeholder="Selecione o consumidor..."
+                  isClearable
+                  autoFocus
+                  options={[{ value: '1', label: 'JOÃO' }, { value: '1', label: 'MARIA' }]}
+                  onKeyDownCapture={efetuarPagamento}
+                />
+
+              </div>
+              <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-8" onClick={()=>efetuarPagamento({key:'Enter'})}/>
+            </div>
+          </div>
+          :
+          tipoPagamento === 2 ?
+            <div className='mb-10 font-bold card-local p-5 m-10'>
+              <div className="mb-10">
+                <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>PAGAMENTO EM CARTÃO</label>
+                <hr className="mt-5" />
+                <div className="text-right mt-2 mb-2">
+                  <p className="text-3xl">VALOR DA COMPRA</p>
+                  <label className="text-5xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(totalVenda)}</label>
+                </div>
+                <hr className="mb-5" />
+                <div className="p-5 w-9/12" style={{ marginLeft: '13%' }}>
+                  <InputSelectDefault className="text-left"
+                    label="Tipo do Cartão"
+                    isClearable
+                    autoFocus
+                    placeholder="Selecione o cartão..."
+                    options={cartoes.tipos}
+                    onKeyDownCapture={efetuarPagamento}
+                  />
+                </div>
+                <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-8" onClick={()=>efetuarPagamento({key:'Enter'})}/>
+              </div>
+            </div>
+            :
+            <div className='mb-10 font-bold card-local p-5 m-10'>
+              <div className="mb-10">
+                <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>SANGRIA</label>
+                <hr className="mb-5" />
+                <div className="p-5 w-9/12" style={{ marginLeft: '13%' }}>
+                  <InputDefault className="text-left mb-10 h-12"
+                    type="text"
+                    label="Motivo"
+                    placeholder="Digite o motivo da sangria"
+                    autoFocus
+                    onKeyDownCapture={eventCaptureTecla}
+                  />
+                  <InputNumber id='valor-3' className='h-16 text-4xl text-center'
+                    label='Valor'
+                    prefixo='R$ '
+                    fixedZeroFinal
+                    separadorMilhar={'.'}
+                    casaDecimal={2}
+                    separadorDecimal={','}
+                    placeholder='R$ 0,00'
+                    // onChange={(e)=> setValorDigitado(Number(e.currentTarget.value))}
+                    onKeyDownCapture={efetuarPagamento}
+                  />
+                </div>
+                <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-8" onClick={()=>efetuarPagamento({key:'Enter'})}/>
+              </div>
+            </div>
+        }
       </div>
-    </div>
-  </DialogPoupDefault>
+    </ModalDefault>
 
   </Container>;
 }

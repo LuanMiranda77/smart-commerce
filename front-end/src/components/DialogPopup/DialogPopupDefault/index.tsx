@@ -12,7 +12,7 @@ interface DialogPoupDefaultProps {
   onRequestClose: () => void;
 }
 
-export const DialogPoupDefault: React.FC<DialogPoupDefaultProps> = (props) => {
+export const DialogPopupDefault: React.FC<DialogPoupDefaultProps> = (props) => {
   const { colors } = useContext(ThemeContext);
   return (
     <Container>

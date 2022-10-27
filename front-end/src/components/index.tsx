@@ -1,4 +1,5 @@
 //export default
+export { InputSelectDefault } from './Inputs/InputSelectDefault';
 export { InputSearch } from './Inputs/InputSearch';
 export { DataGridDefault } from './DataTable/DataGridDefault';
 export { InputNumber } from './Inputs/InputNumber';
@@ -14,10 +15,10 @@ export { ButtonIcon } from './Buttons/ButtonIcon';
 export { InputIcon } from './Inputs/InputIcon';
 export { InputDefault } from './Inputs/InputDefault';
 export { SummaryCustom } from './Summary/SummaryCustom';
-export { DialogPoupInfo } from './DialogPoup/DialogPoupInfo';
-export { DialogPoupConfirme } from './DialogPoup/DialogPoupConfirme';
+export { DialogPoupInfo } from './DialogPopup/DialogPopupInfo';
+export { DialogPopupConfirme } from './DialogPopup/DialogPopupConfirme';
 export { ModalDefault } from './ModalDefault';
-export { DialogPoupDefault } from './DialogPoup/DialogPoupDefault';
+export { DialogPopupDefault } from './DialogPopup/DialogPopupDefault';
 export { ToastDefault } from './ToastDefault';
 export { Logo } from './Logo';
 export { ButtonBase } from './Buttons/ButtonBase';

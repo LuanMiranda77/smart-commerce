@@ -5,6 +5,8 @@ interface InputDefaultProps extends InputHTMLAttributes<HTMLInputElement> {
   //adicionar os props
   type: string;
   label: string;
+  autoFocus?: boolean;
+  onKeyDownCapture?:(e: any)=>void;
 }
 
 export const InputDefault: React.FC<InputDefaultProps> = (props) => {
@@ -18,6 +20,8 @@ export const InputDefault: React.FC<InputDefaultProps> = (props) => {
             name={props.label}
             id={props.label}
             onChange={props.onChange}
+            onKeyDownCapture={props.onKeyDownCapture}
+            autoFocus={props.autoFocus ? props.autoFocus:false}
           />
     </Container>
   );

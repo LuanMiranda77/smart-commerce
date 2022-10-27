@@ -10,7 +10,9 @@ interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement>{
   prefixo: string;
   fixedZeroFinal?:boolean;
   permiteZeroInicio?: boolean;
-  casaDecimal: number
+  casaDecimal: number;
+  autoFocus?: boolean;
+  onKeyDownCapture?:(e: any)=>void;
 
 }
 
@@ -28,6 +30,8 @@ export const InputNumber: React.FC<InputNumberProps> = (props) => {
       allowLeadingZeros={props.permiteZeroInicio}
       onChange={props.onChange}
       placeholder={props.placeholder}
+      autoFocus={props.autoFocus ? props.autoFocus:false}
+      onKeyDownCapture={props.onKeyDownCapture}
     />
   </Container>;
 }

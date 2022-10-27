@@ -29,6 +29,35 @@ export const Container  = styled.button`
         opacity : 0.8;
     }
 
+    .primary-color{
+      background-color: ${color => color.theme.colors.primary};
+      border: 2px solid ${color => color.theme.colors.primary};
+  }
+  .secondary-color{
+      background-color: ${color => color.theme.colors.secondary};
+      border: 2px solid ${color => color.theme.colors.secondary};
+  }
+  .tertiary-color{
+      background-color: ${color => color.theme.colors.tertiary};
+      border: 2px solid ${color => color.theme.colors.tertiary};
+  }
+  .green-color{
+      background-color: ${color => color.theme.colors.success};
+      border: 2px solid ${color => color.theme.colors.success};
+  }
+  .red-color{
+      background-color: ${color => color.theme.colors.error};;
+      border: 2px solid ${color => color.theme.colors.error};;
+  }
+  .blue-color{
+      background-color: ${color => color.theme.colors.info};
+      border: 2px solid ${color => color.theme.colors.info};
+  }
+  .black-color{
+      background-color: ${color => color.theme.colors.black};;
+      border: 2px solid ${color => color.theme.colors.black};;
+  }
+
     
 
 

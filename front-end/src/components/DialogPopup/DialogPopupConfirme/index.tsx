@@ -13,7 +13,7 @@ interface DialogPoupConfirmeProps {
   onClickSim: () => void;
 }
 
-export const DialogPoupConfirme: React.FC<DialogPoupConfirmeProps> = (props) => {
+export const DialogPopupConfirme: React.FC<DialogPoupConfirmeProps> = (props) => {
   const { colors } = useContext(ThemeContext);
   return (
     <Container>
@@ -59,7 +59,7 @@ export const DialogPoupConfirme: React.FC<DialogPoupConfirmeProps> = (props) => 
           /> 
         </div>
         <div className="w-full p-1">
-          <div className="w-full p-2 h-32 text-center">{props.children}</div>
+          <div className="w-full h-full mb-2 p-2 text-center">{props.children}</div>
           <Footer className="w-full p-2 grid grid-cols-2 gap-2 text-center">
             <ButtonBase
               label="Não"

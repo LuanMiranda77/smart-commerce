@@ -11,6 +11,7 @@ interface ModalDefaultProps {
   width?: '98%' | string;
   left?: '0%' | string;
   right?: '0%' | string;
+  height?: '98%' | string;
   onRequestClose: () => void;
 }
 
@@ -29,6 +30,7 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
             backgroundColor: "rgba(78, 76, 76, 0.75)",
           },
           content: {
+            height: props.height ? props.height: '95%',
             width: props.width ? props.width: '98%',
             left: props.left,
             right: props.right,

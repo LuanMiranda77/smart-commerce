@@ -26,6 +26,10 @@ export const Container  = styled.div`
       background-color: ${color => color.theme.colors.info};
       border: 2px solid ${color => color.theme.colors.info};
   }
+  .orange-color{
+      background-color: ${color => color.theme.colors.warning};
+      border: 2px solid ${color => color.theme.colors.warning};
+  }
   .black-color{
       background-color: ${color => color.theme.colors.black};;
       border: 2px solid ${color => color.theme.colors.black};;

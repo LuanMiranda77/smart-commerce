@@ -148,7 +148,7 @@ export const ContainerRight = styled.div`
 
 export const ContainerProduto  = styled.div`
     background-color: ${color => color.theme.colors.white};
-    height: calc(100vh - 241px);
+    height: calc(100vh - 242px);
 
     .column-1{
         color: ${color => color.theme.colors.error};
