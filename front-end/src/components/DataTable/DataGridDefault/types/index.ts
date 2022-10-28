@@ -12,4 +12,5 @@ export type ColumnsDataGridType = {
     width?:number ;
     visible?:boolean;
     styleCell?:(e:any)=>React.ReactNode;
+    defaultSortOrder?:'asc' | 'desc';
 }

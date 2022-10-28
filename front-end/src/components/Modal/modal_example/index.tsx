@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "./styles";
-import { IconButton } from "../Buttons/IconButton";
+import { IconButton } from "../../Buttons/IconButton";
 
 export function ModalExample() {
   return (

@@ -115,7 +115,7 @@ export const Table = styled.table`
 export const ContainerLeft = styled.div`
     background-color: ${color => color.theme.colors.gray};
     height: calc(100vh - 340px);
-    width: 70%;
+    width: 75%;
 
     @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
@@ -127,7 +127,7 @@ export const ContainerLeft = styled.div`
 export const ContainerRight = styled.div`
     background-color: ${color => color.theme.colors.gray};
     /* height: calc(100vh - 310px); */
-    width: 30%;
+    width: 25%;
 
     input[type=number]::-webkit-inner-spin-button { 
     -webkit-appearance: none;
@@ -173,7 +173,7 @@ export const ContainerProduto  = styled.div`
 export const ContainerMenu  = styled.div`
     padding: 1rem;
     background-color: ${color => color.theme.colors.tertiary};
-    height: calc(100vh - 300px);
+    height: calc(100vh - 172px);
     max-height: max-content;
     /* overflow-y: scroll; */
 

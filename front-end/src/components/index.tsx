@@ -1,4 +1,5 @@
 //export default
+export { ModalLoad } from './Modal/ModalLoad';
 export { InputSelectDefault } from './Inputs/InputSelectDefault';
 export { InputSearch } from './Inputs/InputSearch';
 export { DataGridDefault } from './DataTable/DataGridDefault';
@@ -17,7 +18,7 @@ export { InputDefault } from './Inputs/InputDefault';
 export { SummaryCustom } from './Summary/SummaryCustom';
 export { DialogPoupInfo } from './DialogPopup/DialogPopupInfo';
 export { DialogPopupConfirme } from './DialogPopup/DialogPopupConfirme';
-export { ModalDefault } from './ModalDefault';
+export { ModalDefault } from './Modal/ModalDefault';
 export { DialogPopupDefault } from './DialogPopup/DialogPopupDefault';
 export { ToastDefault } from './ToastDefault';
 export { Logo } from './Logo';

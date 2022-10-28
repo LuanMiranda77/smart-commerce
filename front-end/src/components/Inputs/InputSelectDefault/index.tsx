@@ -1,8 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, InputHTMLAttributes, SelectHTMLAttributes } from 'react';
 import { Container } from './styles';
 import Select from 'react-select';
 
-interface InputSelectDefaultProps {
+interface InputSelectDefaultProps{
   //adicionar os props
   options: Array<Object>;
   label:string;
@@ -13,6 +13,7 @@ interface InputSelectDefaultProps {
   className?: string;
   defaultValue?: Object;
   onKeyDownCapture?:(e: any)=>void;
+  onChange?:(e: any)=>void;
 }
 
 export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => (
@@ -28,6 +29,8 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       defaultValue={props.defaultValue}
       autoFocus={props.autoFocus}
       onKeyDown={props.onKeyDownCapture}
+      onChange={props.onChange}
+      
     />
   </Container>
 )

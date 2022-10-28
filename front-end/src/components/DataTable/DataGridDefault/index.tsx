@@ -34,6 +34,8 @@ interface DataGridDefaultProps {
   onSelectionChanged?:(element: any)=>void;
   onRowDblClick?:(element: any)=>void;
   styleCell?: (data: any)=> React.ReactNode;
+  onCellPrepared?:(element: any)=>void;
+
   // styleCellColumn?: (data: any)=> React.ReactNode;
 
 };
@@ -56,6 +58,7 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
       onRowClick={props.onRowClick}
       onRowDblClick={props.onRowDblClick}
       noDataText={''}
+      onCellPrepared={props.onCellPrepared}
     >
       {props.isSelectRow ? <Selection mode={props.moduloSeletion}/> : null}
       <GroupPanel visible={props.columnGroup} />
@@ -77,6 +80,7 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
           cellRender={column.styleCell}
           allowSearch={column.allowSearch}
           visible={column.visible}
+          sortOrder={column.defaultSortOrder}
         />
 
       })}

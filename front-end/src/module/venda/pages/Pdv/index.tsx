@@ -2,7 +2,7 @@ import { useContext, useMemo, useState } from "react";
 import { FaArchive, FaBarcode, FaBox, FaBoxOpen, FaFileInvoice, FaHandHoldingMedical, FaHandHoldingUsd, FaIdCard, FaIdCardAlt, FaLongArrowAltLeft, FaMinusCircle, FaMoneyBillAlt, FaMoneyCheck, FaSync, FaTeamspeak, FaUserTie } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from 'styled-components';
-import { ButtonBase, ButtonPdv, DataGridDefault, DialogPopupConfirme, InputDefault, InputNumber, InputSelectDefault, ModalDefault } from "../../../../components";
+import { ButtonBase, ButtonPdv, DataGridDefault, DialogPopupConfirme, InputDefault, InputNumber, InputSelectDefault, ModalDefault, ModalLoad } from "../../../../components";
 import { UtilsConvert } from '../../../../utils/utils_convert';
 
 import { NumericFormat } from "react-number-format";
@@ -26,11 +26,12 @@ function Pdv() {
   const [showModalCaixa, setShowModalCaixa] = useState(false);
   const [showModalVenda, setShowModalVenda] = useState(false);
   const [showPoupFechamento, setShowPoupFechamento] = useState(false);
-  const [disablePagemento, setDisablePagemento] = useState(true);
+  const [ultimoPagamento, setUltimoPagamento] = useState(0);
   const [totalVenda, setTotalVenda] = useState(0);
-  const [valorPago, setValorPago] = useState(0);
+  const [valorDigitado, setValorDigitado] = useState(0);
+  const [saldoPagar, setSaldoPagar] = useState(0);
   const [troco, setTroco] = useState(0);
-  const [tipoPagamento, setTipoPagamento] = useState(0);
+  const [tipoPagamento, setTipoPagamento] = useState(-1);
   const columns = new Array<ColumnsDataGridType>();
   columns.push({ dataField: 'item', caption: 'ITEM', alignment: 'center', dataType: '', width: 70, cssClass: 'font-bold column-1' });
   columns.push({ dataField: 'codigo', caption: 'Código', alignment: '', dataType: '', width: 70, cssClass: 'font-bold', visible: false });
@@ -76,6 +77,7 @@ function Pdv() {
       soma += produto.total;
     });
     setTotalVenda(soma);
+    setSaldoPagar(soma);
   }, [totalVenda]);
 
   const calcvenda = () => {
@@ -149,9 +151,14 @@ function Pdv() {
         setShowPopup(true);
         break;
       case 'Enter':
-        document.getElementById("Valor")?.focus();
+        tipoPagamento === 3 ? document.getElementById("Valor")?.focus()
+          : calculaTroco()
         break;
     }
+  }
+
+  const closeModal = () => {
+    setShowPoupFechamento(false);
   }
 
   const eventEsc = () => {
@@ -160,11 +167,19 @@ function Pdv() {
     document.getElementById("#digite-produto")?.focus();
   }
 
+  const calculaTroco = () => {
+    document.getElementById("Troco")?.focus()
+    if (valorDigitado > totalVenda) {
+      let troco = valorDigitado - totalVenda;
+      setTroco(troco);
+    }
+    console.log(valorDigitado, totalVenda);
+  }
+
   const liberarPgamento = (tipo: number) => {
     setTipoPagamento(tipo);
     if (tipo === 0) {
-      document.getElementById("valorPago")?.focus();
-      setDisablePagemento(false);
+      setShowPoupFechamento(true);
     } else if (tipo === 1) {
       setShowPoupFechamento(true);
     } else if (tipo === 2) {
@@ -177,6 +192,10 @@ function Pdv() {
   const efetuarPagamento = (event: any) => {
     if (event.key && event.key === 'Enter' && tipoPagamento === 0) {
       console.log(tipoPagamento);
+      let restante = totalVenda - valorDigitado;
+      setSaldoPagar(restante);
+      setUltimoPagamento(valorDigitado);
+      closeModal();
     }
     else if (event.key && event.key === 'Enter' && tipoPagamento === 1) {
       console.log(tipoPagamento);
@@ -261,7 +280,7 @@ function Pdv() {
             paginar={false}
           />
         </ContainerProduto>
-        <footer className="flex h-22 p-2" style={{ backgroundColor: '#B4B8C5', borderTop: '2px solid '+theme.colors.primary }}>
+        <footer className="flex h-22 p-2" style={{ backgroundColor: '#B4B8C5', borderTop: '2px solid ' + theme.colors.primary }}>
           <div className="w-32 text-left mr-10">
             <p className="text-xs text-black">ITEMS</p>
             <p className="text-3xl" style={{ color: theme.colors.info }}>{dataSource.length < 9 ? '0' + dataSource.length : dataSource.length}</p>
@@ -279,15 +298,15 @@ function Pdv() {
         <header className="h-12" style={{ backgroundColor: theme.colors.info }}>
           <div className="w-full flex items-center justify-between">
             <label htmlFor="">SALDO À PAGAR</label>
-            <label htmlFor="">{UtilsConvert.formatCurrency(585.22)}</label>
+            <label htmlFor="" className="text-3xl">{UtilsConvert.formatCurrency(saldoPagar)}</label>
           </div>
         </header>
         <div className="shadow-lg">
-          <div className="h-32 shadow-lg" style={{ backgroundColor: theme.colors.primary }}>
+          {/* <div className="h-32 shadow-lg" style={{ backgroundColor: theme.colors.primary }}>
             <div className="text-center p-3">
               <label className="text-xs">INFORME O VALOR PAGO E  CLIQUE NA FORMA DE PAGAMENTO</label>
               <NumericFormat
-                id="valorPago"
+                id="saldoPagar"
                 className="w-full h-10 focus:outline-none text-center text-3xl" style={{ background: 'transparent', border: 'none' }}
                 type={'text'}
                 thousandSeparator={'.'}
@@ -304,9 +323,12 @@ function Pdv() {
               <label className="text-xs mr-2" style={{ color: theme.colors.warning }}>TROCO</label>
               <label className="w-full text-3xl" style={{ color: theme.colors.warning }}>{UtilsConvert.formatCurrency(troco)}</label>
             </div>
-          </div>
+          </div> */}
           <ContainerMenu className="">
-            <div className="max-h-max lg:grid lg:grid-cols-4 lg:gap-3 font-bold mb-3">
+            <div className="w-full text-center mb-2">
+              <label className="text-xs">ESCOLHA A FORMA DE PAGAMENTO</label>
+            </div>
+            <div className="max-h-max lg:grid lg:grid-cols-3 lg:gap-3 font-bold mb-3">
               <ButtonPdv labelSuperior="INSERT" icon={<FaArchive className="text-xl" />} labelInferior="CONSULTAR PRODUTOS" onClick={() => setShowModalProd(true)} />
               <ButtonPdv labelSuperior="F2" icon={<FaBoxOpen className="text-2xl" />} labelInferior="CAIXA" onClick={() => setShowModalCaixa(true)} />
               <ButtonPdv labelSuperior="F4" icon={<FaBox className="text-xl" />} labelInferior="FECHAR CAIXA" onClick={() => setShowModalCaixa(true)} />
@@ -316,7 +338,7 @@ function Pdv() {
               <ButtonPdv labelSuperior="F10" icon={<FaMoneyCheck className="text-xl" />} labelInferior="CARTÃO" onClick={() => liberarPgamento(2)} />
               <ButtonPdv labelSuperior="END" icon={<FaMoneyBillAlt className="text-xl" />} labelInferior="SANGRIA" onClick={() => liberarPgamento(3)} />
               <ButtonPdv labelSuperior="HOME" icon={<FaSync className="text-xl" />} labelInferior="ALTERAR PREÇO" />
-              <ButtonPdv labelSuperior="PG UP" icon={<FaFileInvoice className="text-xl" />} labelInferior="VENDAS" onClick={() => setShowModalVenda(true)}/>
+              <ButtonPdv labelSuperior="PG UP" icon={<FaFileInvoice className="text-xl" />} labelInferior="VENDAS" onClick={() => setShowModalVenda(true)} />
               <ButtonPdv labelSuperior="PG DN" icon={<FaHandHoldingMedical className="text-xl" />} labelInferior="ADICIONAL" />
               <ButtonPdv labelSuperior="DEL" icon={<FaMinusCircle className="text-xl" />} labelInferior="CANCELAR PRODUTOS" />
               <ButtonPdv labelSuperior="ESC" icon={<FaLongArrowAltLeft className="text-xl" />} labelInferior="SAIR" onClick={dataSource.length > 0 ? () => setShowPopup(true) : () => navigate('/')} />
@@ -327,8 +349,14 @@ function Pdv() {
         </div>
         <footer className="flex h-16">
           <div className="w-3/5 p-2" style={{ backgroundColor: theme.colors.info }}>
-            <p className="text-xs lg:text-lg">DINHEIRO</p>
-            <p className="text-xs lg:text-2xl" style={{ marginTop: '-.5rem' }}>R$ 989,50</p>
+            {tipoPagamento !== -1 && tipoPagamento !== 3 ?
+              <>
+                {/* <a href="javascript:window.print();"> este</a> */}
+                <p className="text-xs lg:text-lg">{tipoPagamento === 0 ? 'DINHEIRO' : tipoPagamento === 2 ? 'VALE' : 'CARTÃO'}</p>
+                <p className="text-xs lg:text-2xl" style={{ marginTop: '-.5rem' }}>{UtilsConvert.formatCurrency(ultimoPagamento)}</p>
+              </>
+              : <></>
+            }
           </div>
           <button className="w-2/5 font-bold button-pagamento" style={{ backgroundColor: theme.colors.success }}>
             <p className="text-xs lg:text-lg">CONFIRMAR</p>
@@ -342,7 +370,7 @@ function Pdv() {
       <p className="font-bold text-2xl">Tem certeza que deseja sair da venda? </p>
       <p className="font-bold" style={{ color: theme.colors.error }}>Esta venda ficará pendente ao sair da tela!</p>
     </DialogPopupConfirme>
-
+    {/* <ModalLoad mensage="carregar notas..." isOpen={showPoup} onRequestClose={() => setShowPopup(false)}/> */}
     <ModalProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} />
     <ModalCaixa showModal={showModalCaixa} closeModal={() => setShowModalCaixa(false)} />
     <ModalVenda showModal={showModalVenda} closeModal={() => setShowModalVenda(false)} />
@@ -350,84 +378,146 @@ function Pdv() {
     {/* modal de pagamento */}
     <ModalDefault title="Confirmar"
       isOpen={showPoupFechamento}
-      onRequestClose={() => setShowPoupFechamento(false)} left='25%' width="50%">
+      onRequestClose={closeModal}
+      left='25%' width="50%">
       <div className="text-center">
-        {tipoPagamento === 1 ?
-          <div className='mb-10 font-bold card-local p-5 m-10'>
-            <div className="mb-10">
-              <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>PAGAMENTO EM VALE</label>
+        {tipoPagamento === 0 ?
+          <div className='mb-1 font-bold card-local p-5 m-2'>
+            <div className="">
+              <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>PAGAMENTO EM DINHEIRO</label>
               <hr className="mt-5" />
               <div className="text-right mt-2 mb-2">
-                <p className="text-3xl">VALOR DA COMPRA</p>
-                <label className="text-5xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(totalVenda)}</label>
+                <p className="text-3xl">VALOR À PAGAR</p>
+                <label className="text-5xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(saldoPagar)}</label>
               </div>
               <hr className="mb-5" />
               <div className="p-5 w-9/12" style={{ marginLeft: '13%' }}>
-                <InputSelectDefault className="text-left"
-                  label="Consumidor"
-                  placeholder="Selecione o consumidor..."
-                  isClearable
+                <InputNumber id='saldoPagar' className='h-16 text-4xl text-center mb-5'
+                  label='Valor pago'
+                  prefixo=''
+                  fixedZeroFinal
+                  separadorMilhar={'.'}
+                  casaDecimal={2}
+                  separadorDecimal={','}
+                  placeholder='R$ 0,00'
+                  onChange={(e) => setValorDigitado(Number(e.currentTarget.value.replaceAll(',', '.')))}
                   autoFocus
-                  options={[{ value: '1', label: 'JOÃO' }, { value: '1', label: 'MARIA' }]}
+                  onKeyDownCapture={eventCaptureTecla}
+                />
+                <InputNumber id='troco' className='h-16 text-4xl text-center'
+                  label='Troco'
+                  prefixo=''
+                  fixedZeroFinal
+                  separadorMilhar={'.'}
+                  casaDecimal={2}
+                  separadorDecimal={','}
+                  placeholder='R$ 0,00'
+                  readOnly={true}
+                  value={troco}
                   onKeyDownCapture={efetuarPagamento}
                 />
-
               </div>
-              <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-8" onClick={()=>efetuarPagamento({key:'Enter'})}/>
+              <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-3" onClick={() => efetuarPagamento({ key: 'Enter' })} />
             </div>
           </div>
           :
-          tipoPagamento === 2 ?
+          tipoPagamento === 1 ?
             <div className='mb-10 font-bold card-local p-5 m-10'>
               <div className="mb-10">
-                <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>PAGAMENTO EM CARTÃO</label>
+                <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>PAGAMENTO EM VALE</label>
                 <hr className="mt-5" />
                 <div className="text-right mt-2 mb-2">
-                  <p className="text-3xl">VALOR DA COMPRA</p>
-                  <label className="text-5xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(totalVenda)}</label>
+                  <p className="text-3xl">VALOR À PAGAR</p>
+                  <label className="text-5xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(saldoPagar)}</label>
                 </div>
                 <hr className="mb-5" />
                 <div className="p-5 w-9/12" style={{ marginLeft: '13%' }}>
                   <InputSelectDefault className="text-left"
-                    label="Tipo do Cartão"
+                    label="Consumidor"
+                    placeholder="Selecione o consumidor..."
                     isClearable
                     autoFocus
-                    placeholder="Selecione o cartão..."
-                    options={cartoes.tipos}
+                    options={[{ value: '1', label: 'JOÃO' }, { value: '1', label: 'MARIA' }]}
                     onKeyDownCapture={efetuarPagamento}
                   />
+                  <InputNumber id='saldoPagar' className='h-16 text-4xl text-center mb-5'
+                      label='Valor pago'
+                      prefixo=''
+                      fixedZeroFinal
+                      separadorMilhar={'.'}
+                      casaDecimal={2}
+                      separadorDecimal={','}
+                      placeholder='R$ 0,00'
+                      onChange={(e) => setValorDigitado(Number(e.currentTarget.value.replaceAll(',', '.')))}
+                      onKeyDownCapture={efetuarPagamento}
+                    />
                 </div>
-                <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-8" onClick={()=>efetuarPagamento({key:'Enter'})}/>
+                <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-8" onClick={() => efetuarPagamento({ key: 'Enter' })} />
               </div>
             </div>
             :
-            <div className='mb-10 font-bold card-local p-5 m-10'>
-              <div className="mb-10">
-                <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>SANGRIA</label>
-                <hr className="mb-5" />
-                <div className="p-5 w-9/12" style={{ marginLeft: '13%' }}>
-                  <InputDefault className="text-left mb-10 h-12"
-                    type="text"
-                    label="Motivo"
-                    placeholder="Digite o motivo da sangria"
-                    autoFocus
-                    onKeyDownCapture={eventCaptureTecla}
-                  />
-                  <InputNumber id='valor-3' className='h-16 text-4xl text-center'
-                    label='Valor'
-                    prefixo='R$ '
-                    fixedZeroFinal
-                    separadorMilhar={'.'}
-                    casaDecimal={2}
-                    separadorDecimal={','}
-                    placeholder='R$ 0,00'
-                    // onChange={(e)=> setValorDigitado(Number(e.currentTarget.value))}
-                    onKeyDownCapture={efetuarPagamento}
-                  />
+            tipoPagamento === 2 ?
+              <div className='mb-10 font-bold card-local p-5 m-10'>
+                <div className="mb-10">
+                  <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>PAGAMENTO EM CARTÃO</label>
+                  <hr className="mt-5" />
+                  <div className="text-right mt-2 mb-2">
+                    <p className="text-3xl">VALOR À PAGAR</p>
+                    <label className="text-5xl" style={{ color: theme.colors.error }}>{UtilsConvert.formatCurrency(saldoPagar)}</label>
+                  </div>
+                  <hr className="mb-5" />
+                  <div className="p-5 w-9/12" style={{ marginLeft: '13%' }}>
+                    <InputSelectDefault className="text-left"
+                      label="Tipo do Cartão"
+                      isClearable
+                      autoFocus
+                      placeholder="Selecione o cartão..."
+                      options={cartoes.tipos}
+                      // onKeyDownCapture={efetuarPagamento}
+                    />
+                    <InputNumber id='saldoPagar' className='h-16 text-4xl text-center mb-5'
+                      label='Valor pago'
+                      prefixo=''
+                      fixedZeroFinal
+                      separadorMilhar={'.'}
+                      casaDecimal={2}
+                      separadorDecimal={','}
+                      placeholder='R$ 0,00'
+                      onChange={(e) => setValorDigitado(Number(e.currentTarget.value.replaceAll(',', '.')))}
+                      onKeyDownCapture={efetuarPagamento}
+                    />
+                  </div>
+                  <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-8" onClick={() => efetuarPagamento({ key: 'Enter' })} />
                 </div>
-                <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-8" onClick={()=>efetuarPagamento({key:'Enter'})}/>
               </div>
-            </div>
+              :
+              <div className='mb-10 font-bold card-local p-5 m-10'>
+                <div className="mb-10">
+                  <label className="text-4xl font-bold " htmlFor="" style={{ color: theme.colors.primary }}>SANGRIA</label>
+                  <hr className="mb-5" />
+                  <div className="p-5 w-9/12" style={{ marginLeft: '13%' }}>
+                    <InputDefault className="text-left mb-10 h-12"
+                      type="text"
+                      label="Motivo"
+                      placeholder="Digite o motivo da sangria"
+                      autoFocus
+                      onKeyDownCapture={eventCaptureTecla}
+                    />
+                    <InputNumber id='valor-3' className='h-16 text-4xl text-center'
+                      label='Valor'
+                      prefixo='R$ '
+                      fixedZeroFinal
+                      separadorMilhar={'.'}
+                      casaDecimal={2}
+                      separadorDecimal={','}
+                      placeholder='R$ 0,00'
+                      // onChange={(e)=> setValorDigitado(Number(e.currentTarget.value))}
+                      onKeyDownCapture={efetuarPagamento}
+                    />
+                  </div>
+                  <ButtonBase label="PAGAR" model="btn_base" className="primary-color mt-8" onClick={() => efetuarPagamento({ key: 'Enter' })} />
+                </div>
+              </div>
         }
       </div>
     </ModalDefault>

@@ -12,7 +12,7 @@ export const Container  = styled.button<ButtonIconProps>`
     display: flex;
     padding-top: 0.1rem;
     padding-left: 9px;
-    padding-right: 45%;
+    padding-right: 9px;
     width: ${props => props.width};
     text-align: center;
     align-items: center ;

@@ -16,7 +16,7 @@ export function Aside(){
                   <label className='text-white font-bold' style={{fontSize:'11px'}}>VENDA</label>
                 </div>
               </Link>
-              <Link to={'/estoque'}>
+              <Link to={'/produto'}>
                 <div className='w-100 text-center mb-2'>
                   <FaShopify className='btn-menu'/>
                   <label className='text-white font-bold' style={{fontSize:'11px'}}>ESTOQUE</label>
