@@ -1,0 +1,22 @@
+{
+ "token_livre":{
+    "client_id": "", 
+    "client_secret":"", 
+    "access_token": "",
+    "token_type": "bearer",
+    "expires_in": 0,
+    "scope": "offline_access payments read write",
+    "user_id": 669091157,
+    "refresh_token": "",
+    "status": ""
+
+},
+ "token_pago":{
+    "id":null,
+	"public_key":"",
+	"client_id":"",
+	"client_secret":"",
+	"access_token":"",
+	"status":""
+ }
+}
