@@ -8,9 +8,9 @@ import DataGrid, {
   Paging,
   SearchPanel,
 } from 'devextreme-react/data-grid';
-import config from 'devextreme/core/config';
 import { ColumnsDataGridType } from './types';
 import { Selection } from 'devextreme-react/tree-list';
+
 
 interface DataGridDefaultProps {
   //adicionar os props
@@ -42,7 +42,6 @@ interface DataGridDefaultProps {
 
 export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
   // Specifying a currency globally
-  config({ defaultCurrency: 'BRL' });
 
   return <Container>
     <DataGrid id="gridContainer"

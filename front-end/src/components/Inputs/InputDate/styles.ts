@@ -17,7 +17,7 @@ export const Container  = styled.div`
   border-bottom: 2px solid ${color => color.theme.colors.primary};
   border-radius: 0px 5px 5px 5px;
   outline: 0;
-  height: 35px;
+  height: 32px;
   /* font-size: 1.3rem; */
   color: ${color => color.theme.colors.black};;
   padding: 7px 9px;
@@ -35,6 +35,7 @@ export const Container  = styled.div`
 .input-label {
   color: ${color => (color.title ==='dark'? color.theme.colors.white : color.theme.colors.primary)};
   font-weight:bold;
+  font-size: 14px;
 }
 
 .input-field:focus {

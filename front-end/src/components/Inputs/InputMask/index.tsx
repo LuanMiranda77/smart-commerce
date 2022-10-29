@@ -10,12 +10,12 @@ interface InputMaskProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const InputMask: React.FC<InputMaskProps> = (props) => (
-  <Container>
+  <Container className={props.className}>
     <label className={"input_line__label"}>{props.label}</label>
     <InputMaskDefault
-      className='input_line__field'
+      className={'input_line__field'}
       mask={props.mask}
-      maskPlaceholder={' '}
+      // maskPlaceholder={' '}
       value={props.value}
       onChange={props.onChange}
       placeholder={props.placeholder}

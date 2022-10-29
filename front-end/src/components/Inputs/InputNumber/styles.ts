@@ -35,7 +35,7 @@ export const Container  = styled.div`
   top: -7px;
   display: block;
   transition: 0.2s;
-  font-size: 1rem;
+  font-size: 14px;
   color: ${color => color.theme.colors.primary};
   font-weight:bold;
 }

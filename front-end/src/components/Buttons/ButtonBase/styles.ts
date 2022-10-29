@@ -1,3 +1,4 @@
+import { colors } from "react-select/dist/declarations/src/theme";
 import styled from "styled-components";
 
 export const Container  = styled.div`
@@ -61,22 +62,26 @@ export const Container  = styled.div`
 
   border-radius: 8px;
   box-shadow: 0 6px 30px -10px rgba(#CCCCCC, 1);
+  box-shadow: 0 2px 3px 0 rgba(0,0,0,0.5);
   
   &:hover {
     transform: translateX(5px) translateY(-7px);
     opacity : 0.8;
+    box-shadow: 0px 8px 16px 0 rgba(0,0,0,0.5);
   }
 }
 
 .btn_line{
   background-color: transparent;
-  color: var(--text-label);
-  /* border: 2px solid #4CAF50; */
-  border-radius: 2px; 
+  color: ${color => color.theme.title==='drak' ? color.theme.colors.textLabel : color.theme.colors.primary};
+  font-weight: bold;
+  border-radius: 8px; 
   height: var(--max-height-button);
-  box-shadow: 0 8px 10px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 2px 3px 0 rgba(0,0,0,0.5);
+  transition: all 0.3s;
   &:hover {
-    transform: translateX(2px) translateY(-3px);
+    transform: translateX(5px) translateY(-7px);
+    opacity : 0.8;
     box-shadow: 0px 8px 16px 0 rgba(0,0,0,0.5);
   }
 }

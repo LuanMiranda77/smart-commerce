@@ -11,11 +11,11 @@ interface InputDefaultProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const InputDefault: React.FC<InputDefaultProps> = (props) => {
   return (
-    <Container className="input_line_group">
+    <Container className={"input_line_group " + props.className}>
           <label className="input_line__label">{props.label}</label>
           <input
             type={props.type}
-            className={"input_line__field " + props.className}
+            className={"input_line__field"}
             placeholder={props.placeholder}
             name={props.label}
             id={props.label}

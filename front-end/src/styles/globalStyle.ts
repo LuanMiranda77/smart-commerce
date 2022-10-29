@@ -8,7 +8,7 @@ export const GlobalStyle = createGlobalStyle`
   --text-label: #fff;
  
   //variaveis de tamanho
-  --max-height-button:35px;
+  --max-height-button:32px;
 }
 
 *{
@@ -58,6 +58,7 @@ button {
   border-bottom: 2px solid ${color => color.theme.colors.primary};
   border-radius: 0px 5px 5px 5px;
   outline: 0;
+  height: var(--max-height-button);
   /* font-size: 1.3rem; */
   color: ${color => color.theme.colors.black};;
   padding: 7px 9px;
@@ -77,7 +78,7 @@ button {
   top: -7px;
   display: block;
   transition: 0.2s;
-  font-size: 1rem;
+  font-size: 14px;
   color: ${color => color.theme.colors.primary};
   font-weight:bold;
 }
@@ -119,6 +120,10 @@ button {
   align-items: center;
   justify-content: center;
 
+}
+
+.linha-vertical {
+        border-left: 2px solid;/* Adiciona borda esquerda na div como ser fosse uma linha.*/
 }
 
 .card-local{

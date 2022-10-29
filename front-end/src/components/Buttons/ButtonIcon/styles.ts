@@ -28,11 +28,12 @@ export const Container  = styled.button<ButtonIconProps>`
     overflow: hidden;
 
     border-radius: 8px;
-    box-shadow: 0 6px 30px -10px rgba(#CCCCCC, 1);
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.5);
     
     &:hover {
         transform: translateX(5px) translateY(-7px);
         opacity : 0.8;
+        box-shadow: 0px 8px 16px 0 rgba(0,0,0,0.5);
     }
 @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo

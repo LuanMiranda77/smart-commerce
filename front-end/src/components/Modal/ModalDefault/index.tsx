@@ -30,7 +30,7 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
             backgroundColor: "rgba(78, 76, 76, 0.75)",
           },
           content: {
-            height: props.height ? props.height: '95%',
+            height: props.height ? props.height: '98%',
             width: props.width ? props.width: '98%',
             left: props.left,
             right: props.right,
@@ -38,7 +38,7 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
             bottom: 0,
             border: 0,
             padding: 0,
-            margin: '1rem',
+            // margin: '0.4rem',
             backgroundColor: colors.background,
           },
         }}

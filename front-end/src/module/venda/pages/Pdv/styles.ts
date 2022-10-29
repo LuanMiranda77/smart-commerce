@@ -24,10 +24,6 @@ export const Container  = styled.div`
         /* box-shadow: 2px 2px 2px gray; */
     }
 
-    .linha-vertical {
-        border-left: 2px solid;/* Adiciona borda esquerda na div como ser fosse uma linha.*/
-    }
-
     .button-pagamento{
         box-shadow: 0px 2px 5px  black;
         padding: 0.3rem;
