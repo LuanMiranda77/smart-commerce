@@ -126,9 +126,9 @@ function Mde() {
     }
   }
 
-  const onTesteCnpjCpf=(e:string)=>{
+  const onTesteCnpjCpf = (e: string) => {
     console.log(e);
-    if(e !== undefined ){
+    if (e !== undefined) {
       setTamanhoIpuntCnpjCpf(e.length);
     }
   };
@@ -185,10 +185,12 @@ function Mde() {
           columns={columns}
           dataSource={dataSource}
           paginar={false}
-          showBorders={true}
-          showColumnLines={true}
-          hoverStateEnabled={true}
-          rowAlternationEnabled={true}
+          showBorders
+          showColumnLines
+          hoverStateEnabled
+          rowAlternationEnabled
+          isSelectRow
+          moduloSeletion='single'
         />
       </ContainerTable>
     </Body>
@@ -199,7 +201,7 @@ function Mde() {
           <hr className="mb-2" style={{ border: '1px solid' + theme.colors.gray }} />
           <div className="flex items-center mt-3">
             <div className="w-full mr-5">
-              <InputSelectDefault label="Tipo" options={tiposFiltroData}  defaultValue={tiposFiltroData[0]}/>
+              <InputSelectDefault label="Tipo" options={tiposFiltroData} defaultValue={tiposFiltroData[0]} />
             </div>
             <InputDate className="text-ms w-40 mr-5" label="Data inicial" />
             <InputDate className="text-ms w-40" label="Data final" />
@@ -212,18 +214,18 @@ function Mde() {
           <div className="w-full">
             <InputDefault className="w-3/12 mr-5 mb-5" label="Número da nota" type="number" />
             <div className="flex w-full">
-              {tamanhoIpuntCnpjCpf < 11 ? 
-              <InputMask className="w-6/12 mr-5 " label="CNPJ" type="number" mask={'99.999.999/9999-99'} beforeMaskValue={onTesteCnpjCpf}/>
-              :
-              <InputMask className="w-6/12 mr-5 " label="CPF" type="number" mask={'999.999.999-99'} />
+              {tamanhoIpuntCnpjCpf < 11 ?
+                <InputMask className="w-6/12 mr-5 " label="CNPJ" type="number" mask={'99.999.999/9999-99'} beforeMaskValue={onTesteCnpjCpf} />
+                :
+                <InputMask className="w-6/12 mr-5 " label="CPF" type="number" mask={'999.999.999-99'} />
               }
               <InputDefault className="w-full" label="Fornnecedor" type="text" />
             </div>
           </div>
         </div>
-        <div className="flex justify-end w-full" style={{bottom: 25, right:15, position:'absolute'}}>
-            <ButtonBase  label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={() => setShowModalEntrada(false)}/>
-            <ButtonBase label="FILTAR" model="btn_base" className="primary-color w-32" size="large"/>
+        <div className="flex justify-end w-full" style={{ bottom: 25, right: 15, position: 'absolute' }}>
+          <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={() => setShowModalEntrada(false)} />
+          <ButtonBase label="FILTAR" model="btn_base" className="primary-color w-32" size="large" />
         </div>
       </ContainerFiltro>
     </ModalDefault>

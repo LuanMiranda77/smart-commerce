@@ -80,8 +80,26 @@ export const ContainerEntradaNota  = styled.div`
     .card-local{
             background-color: ${color => color.theme.colors.gray}!important;
     }
+
     
 }
+
+`;
+
+export const ContainerProdutoSync  = styled.div`
+    height: calc(100vh - 230px);
+
+    .image{
+        position: absolute;
+        top:30%auto;
+        left:calc(100vh - 120px);
+    }
+`;
+
+export const ContainerFoto  = styled.div`
+        position: absolute;
+        top:9%;
+        left:calc(200vh - 60px);
 `;
 
 

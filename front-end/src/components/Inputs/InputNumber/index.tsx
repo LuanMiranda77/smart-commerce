@@ -16,11 +16,12 @@ interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement>{
   readOnly?: boolean;
   value?:any;
   onKeyDownCapture?:(e: any)=>void;
+  color?:string;
 
 }
 
 export const InputNumber: React.FC<InputNumberProps> = (props) => {
-  return <Container>
+  return <Container color={props.color}>
     <label className='input_line__label' htmlFor={props.label}>{props.label}</label>
     <NumericFormat className={'input_line__field '+props.className}
       id={props.label}

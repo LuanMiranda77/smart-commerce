@@ -1,7 +1,11 @@
 //export default
+export { InputCheck } from './InputCheck';
+export { InputRadio } from './Inputs/InputRadio';
+export { InputFileProduto } from './Inputs/InputFileProduto';
 export { ModalLoad } from './Modal/ModalLoad';
 export { InputSelectDefault } from './Inputs/InputSelectDefault';
 export { InputSearch } from './Inputs/InputSearch';
+export { InputMook } from './Inputs/InputMook';
 export { DataGridDefault } from './DataTable/DataGridDefault';
 export { InputNumber } from './Inputs/InputNumber';
 export { InputMask } from './Inputs/InputMask';

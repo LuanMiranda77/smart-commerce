@@ -1,25 +1,22 @@
 import styled from "styled-components";
 
-interface InputPorps{
-  color?: string;
-}
+export const Container  = styled.div`
 
-export const Container  = styled.div<InputPorps>`
-
-    //adicionar stylos
-
+//style dos inputs do projeto
+.input_line_group {
   position: relative;
   padding: 15px 0 0;
   margin-top: 10px;
-
+}
 
 .input_line__field {
   font-family: inherit;
   width: 100%;
   border: 0;
-  border-bottom: 2px solid ${color => (color.color ? color.color : color.theme.colors.primary)};
+  border-top: 2px solid ${color => color.theme.colors.primary};
   border-radius: 0px 5px 5px 5px;
   outline: 0;
+  height: var(--max-height-button);
   /* font-size: 1.3rem; */
   color: ${color => color.theme.colors.black};;
   padding: 7px 9px;
@@ -40,7 +37,7 @@ export const Container  = styled.div<InputPorps>`
   display: block;
   transition: 0.2s;
   font-size: 14px;
-  color: ${color => (color.color ? color.color : color.theme.colors.primary)};
+  color: ${color => color.theme.colors.primary};
   font-weight:bold;
 }
 
@@ -51,13 +48,13 @@ export const Container  = styled.div<InputPorps>`
     display: block;
     transition: 0.2s;
     font-size: 1rem;
-    color: ${color => (color.color ? color.color : color.theme.colors.primary)};
+    color: ${color => color.theme.colors.primary};;
     font-weight:700;    
   }
   padding-bottom: 6px;  
   font-weight: 700;
   border-width: 3px;
-  border-image: linear-gradient(to right, ${color => (color.color ? color.color : color.theme.colors.primary)}, ${color => color.theme.colors.secondary});
+  border-image: linear-gradient(to right, ${color => color.theme.colors.primary},${color => color.theme.colors.secondary});
   border-image-slice: 1;
 }
 /* reset input */

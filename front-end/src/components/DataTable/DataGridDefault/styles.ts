@@ -21,6 +21,33 @@ export const Container  = styled.div`
         /* cursor: pointer;   */
     } 
 
+        .dx-rtl .dx-datagrid-rowsview .dx-selection.dx-row > td:not(.dx-focused).dx-datagrid-group-space,  
+    .dx-rtl .dx-datagrid-rowsview .dx-selection.dx-row:hover > td:not(.dx-focused).dx-datagrid-group-space {  
+        border-left-color: ${color => color.theme.colors.dns_info} !important;  
+    }  
+
+    .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-lines) > td,  
+    .dx-datagrid-rowsview .dx-selection.dx-row:hover:not(.dx-row-lines) > td {  
+        border-bottom: 1px solid ${color => color.theme.colors.dns_info} !important;  
+        border-top: 1px solid ${color => color.theme.colors.dns_info} !important;  
+    }  
+
+    .dx-datagrid-rowsview .dx-selection.dx-row > td.dx-datagrid-group-space,  
+    .dx-datagrid-rowsview .dx-selection.dx-row:hover > td.dx-datagrid-group-space {  
+        border-right-color: ${color => color.theme.colors.dns_info} !important;  
+    }  
+
+    .dx-datagrid-rowsview .dx-selection.dx-row > td,  
+    .dx-datagrid-rowsview .dx-selection.dx-row:hover > td {  
+        background-color: ${color => color.theme.colors.dns_info} !important;  
+        color: #232323;  
+    }  
+
+    .dx-datagrid-table .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(.dx-row-removed):not(.dx-edit-row) > td:not(.dx-focused) {  
+    background-color: ${color => color.theme.colors.dns_info} !important;  
+    color: #333;  
+    }  
+
 @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
 }

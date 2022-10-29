@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FaCreditCard, FaDollarSign, FaFileUpload, FaIdCard, FaKickstarter, FaMoneyCheckAlt, FaPlus, FaSave, FaSink, FaSync, FaUserPlus } from 'react-icons/fa';
 import { ThemeContext } from 'styled-components';
-import { ButtonBase, ButtonIcon, DataGridDefault, InputDate, InputDefault, InputIcon, InputMask, InputNumber, InputSearch, ModalDefault, SummaryCustom, SummaryDefault, ToastDefault } from "../../../../components";
+import { ButtonBase, ButtonIcon, DataGridDefault, InputCheck, InputDate, InputDefault, InputIcon, InputMask, InputNumber, InputRadio, InputSearch, ModalDefault, SummaryCustom, SummaryDefault, ToastDefault } from "../../../../components";
 import CountUp from 'react-countup';
 import { toast } from "react-toastify";
 import { ModalSincronizarProduto } from './modalSincronizarProduto';
-import { ContainerEntradaNota, ContainerTable } from './styles';
+import { ContainerEntradaNota, ContainerProdutoSync, ContainerTable } from './styles';
 import { ColumnsDataGridType } from '../../../../components/types';
 
 // import { Container } from './styles';
@@ -24,48 +24,47 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
   }
 
   const columns = new Array<ColumnsDataGridType>();
-  columns.push({ dataField: 'numero', caption: 'NÚMERO', alignment: 'left', dataType: 'string', width: 100, cssClass: 'font-bold column-1' });
-  columns.push({ dataField: 'emissao', caption: 'EMISSÃO', alignment: 'center', dataType: 'date', width: 95, cssClass: 'font-bold' });
-  columns.push({ dataField: 'cnpj', caption: 'CNPJ/CPF', alignment: '', dataType: 'string', width: 150 });
-  columns.push({ dataField: 'fornecedor', caption: 'FORNECEDOR', alignment: 'left', dataType: 'number', });
-  columns.push({ dataField: 'vlrbruto', caption: 'VLR.BRUTO', alignment: 'center', dataType: 'number', format: { type: 'fixedPoint', precision: 2 }, width: 110 });
-  // columns.push({ dataField: 'vlricms', caption: 'VLR.ICMS', alignment: 'center', dataType: 'number', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 110 });
-  // columns.push({ dataField: 'vlrdesconto', caption: 'VLR.DESCONTO', alignment: 'right', dataType: 'number', cssClass: 'font-bold', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 150 });
-  // columns.push({ dataField: 'vlrliquido', caption: 'VLR.LÍQUIDO', alignment: 'right', dataType: 'number', cssClass: 'font-bold', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 150 });
-  columns.push({ dataField: 'status', caption: 'STATUS', alignment: 'center', dataType: 'number', cssClass: 'font-bold text-sx', allowSearch: false, width: 120 });
-  columns.push({ dataField: 'manifesto', caption: 'MANIFESTO', alignment: 'center', dataType: 'date', allowSearch: false, width: 100 });
-  columns.push({ dataField: 'entrada', caption: 'ENTRADA', alignment: 'center', dataType: 'date', cssClass: 'font-bold', allowSearch: false, width: 95 });
-  columns.push({ dataField: 'incluida', caption: 'INCLUIDA', alignment: 'center', dataType: 'number', cssClass: 'font-bold', allowSearch: false, width: 90 });
-  columns.push({ dataField: '', caption: '', alignment: 'center', dataType: '', cssClass: '', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 50 });
+  columns.push({ dataField: 'codigo', caption: 'Código', alignment: 'left', dataType: 'string', width: 80, cssClass: 'font-bold text-blue-800' });
+  columns.push({ dataField: 'codbarras', caption: 'Cod. Barras', alignment: 'center', dataType: 'string', width: 90, });
+  columns.push({ dataField: 'descricao', caption: 'Descrição', alignment: '', dataType: 'string' });
+  columns.push({ dataField: 'un', caption: 'UN', alignment: 'center', dataType: 'string', format: { type: 'fixedPoint', precision: 2 }, width: 40 });
+  columns.push({ dataField: 'quant', caption: 'Qtde', alignment: 'center', dataType: 'number', format: { type: 'fixedPoint', precision: 3 }, width: 60 });
+  columns.push({ dataField: 'unNota', caption: 'UN NF', alignment: 'center', dataType: 'string', cssClass: 'font-bold', width: 50 });
+  columns.push({ dataField: 'quantNota', caption: 'Qtde NF', alignment: 'center', dataType: 'number', cssClass: 'font-bold', format: { type: 'fixedPoint', precision: 3 }, width: 60 });
+  columns.push({ dataField: 'vlrcusto', caption: 'Vlr. Custo', alignment: 'center', dataType: 'number', cssClass: 'font-bold', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 75 });
+  columns.push({ dataField: 'vlrvenda', caption: 'Vlr. Venda', alignment: 'right', dataType: 'number', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 75 });
+  columns.push({ dataField: 'vlrtotal', caption: 'Vlr. Total', alignment: 'right', dataType: 'number', cssClass: 'font-bold', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 80 });
+  columns.push({ dataField: 'cstNota', caption: 'CST NF', alignment: 'center', dataType: 'number', cssClass: 'font-bold text-sx', allowSearch: false, width: 52 });
+  columns.push({ dataField: 'cst', caption: 'CST', alignment: 'center', dataType: 'number', allowSearch: false, width: 50 });
 
   const data = [
-    { numero: '12368498', emissao: '11/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'CADA', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
-    { numero: '98984225', emissao: '31/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'KAKA D', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
-    { numero: '1154889', emissao: '21/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
-    { numero: '1245', emissao: '10/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '45687', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '697', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '1125', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
+    { codigo: '12368498', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'KG', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 99999, cstNota: '', incluida: 'N' },
+    { codigo: '98984225', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UN', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: '', incluida: 'N' },
+    { codigo: '1154889', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: '', incluida: 'N' },
+    { codigo: '1245', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'CTD', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '45687', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'CT', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '697', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'CT', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '1125', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
+    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
   ];
 
   const [dataSource, setDataSource] = useState(data);
@@ -75,9 +74,9 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
     if (desc !== '') {
       let notas = dataSourceCopy;
       if (!isNaN(parseFloat(desc)) && isFinite(desc)) {
-        notas = dataSourceCopy.filter(produto => { return produto.numero.includes(desc) });
+        notas = dataSourceCopy.filter(produto => { return produto.codigo.includes(desc) });
       } else {
-        notas = dataSourceCopy.filter(produto => { return produto.fornecedor.includes(desc.toUpperCase()) });
+        notas = dataSourceCopy.filter(produto => { return produto.descricao.includes(desc.toUpperCase()) });
       }
       setDataSource(notas);
     } else {
@@ -91,17 +90,24 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
       <div className='left' style={{ width: '30%' }}>
         <p className="text-left text-xs font-bold ">Dados fornecedor</p>
         <hr className="mb-2" style={{ border: '1px solid' + theme.colors.gray }} />
-        <InputDefault className="w-6/12 mr-5 mb-3" label="Número da nota" type="number" />
-        <InputDefault className="mr-5 mb-5" label="Chave acesso" type="number" />
+        <div className='flex'>
+          <InputDefault className="w-6/12 mr-5 mb-3" label="Número da nota" type="number" />
+          <div className='text-left font-bold mt-1 text-xs'>
+            <p className='text-xs mb-1' style={{color:theme.title==='drak'? theme.colors.textLabel: theme.colors.primary}}>Tipo da entrada</p>
+            <InputRadio label='Nota Eletronica' />
+            <InputRadio label='Nota Avulsa' checked={true} />
+          </div>
+        </div>
+        <InputDefault className="mr-5 mb-5 text-xs" label="Chave acesso" type="number" />
         <div className='flex' style={{ marginTop: '-10px' }}>
           <InputDate className="text-ms w-40 mr-5 text-left" label="Data emissão" />
           <InputDate className="text-ms w-40 text-left" label="Data entrada" />
         </div>
-        <div className='flex items-center mt-3 mb-2' style={{ marginTop: '0px' }}>
+        <div className='flex items-center mt-3 mb-1' style={{ marginTop: '0px' }}>
           <InputMask className="w-6/12 mr-5 " label="CNPJ" type="number" mask={'99.999.999/9999-99'} />
           <i><FaUserPlus style={{ fontSize: '40px', marginTop: '25px', color: theme.colors.primary }} /></i>
         </div>
-        <InputDefault className=" mr-5 mb-4" label="Fornecedor" type="number" />
+        <InputDefault className=" mr-5 mb-2" label="Fornecedor" type="text" />
         <p className="text-left text-xs font-bold ">Cálculo do imposto</p>
         <hr className="" style={{ border: '1px solid' + theme.colors.gray }} />
         <div className='grid grid-cols-3 gap-2 p-2'>
@@ -112,6 +118,7 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
           <InputNumber label='Valor IPI' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
           <InputNumber label='Valor COFINS' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
           <InputNumber label='Frete' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
+          <InputNumber label='Desconto' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
         </div>
 
       </div>
@@ -123,30 +130,53 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
           <div className="w-8/12">
             <InputSearch onChange={(e) => search(e.currentTarget.value)} />
           </div>
-          <ButtonIcon className="mr-3" label="NOVO" icon={<FaPlus />} width={'12%'} style={{ marginTop: '-3px' }} />
-          <ButtonIcon className="" label="SINCRONIZAR" icon={<FaSync />} width={'20%'} style={{ marginTop: '-3px' }} />
+          <ButtonIcon className="mr-3" label="NOVO" icon={<FaPlus />} width={'12%'} style={{ marginTop: '-3px' }} onClick={() => setShowModalProd(true)} />
+          <ButtonIcon className="" label="SINCRONIZAR" icon={<FaSync />} width={'20%'} style={{ marginTop: '-3px' }} onClick={() => setShowModalProd(true)} />
         </div>
         <hr className="mb-3" style={{ marginTop: '-5px' }} />
-        <ContainerTable>
+        <ContainerProdutoSync>
           <DataGridDefault
             columns={columns}
             dataSource={dataSource}
             paginar={false}
-            showBorders={true}
-            showColumnLines={true}
-            hoverStateEnabled={true}
-            rowAlternationEnabled={true}
+            showBorders
+            // showRowLines
+            showColumnLines
+            hoverStateEnabled
+            rowAlternationEnabled
+            isSelectRow
+            moduloSeletion='single'
           />
-        </ContainerTable>
-        <footer className=''>
-        <div className="flex justify-end w-full" style={{bottom: 25, right:15, position:'absolute'}}>
-            <ButtonBase  label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={props.closeModal}/>
-            <ButtonIcon className="mr-3" label="SALVAR" icon={<FaSave />} width={'10%'} />
+        </ContainerProdutoSync>
+        <div className='text-left grid grid-cols-6 gap-2 mt-2'>
+          <div className='w-24 text-xs font-bold '>
+            <p>Quantidade</p>
+            <CountUp end={dataSourceCopy.length} prefix='' separator="" decimal="" decimals={0} />
+          </div>
+          <div className='w-24 text-xs font-bold'>
+            <p>Total produtos</p>
+            <CountUp end={150000} prefix='R$ ' separator="." decimal=',' decimals={2} />
+          </div>
+          <div className='w-24 text-xs font-bold '>
+            <p>Total Nota fiscal</p>
+            <CountUp end={150000} prefix='R$ ' separator="." decimal=',' decimals={2} />
+          </div>
+          <div className='col-span-3 text-xs font-bold bg-gray-400 text-center rounded'>
+            <p className='text-red-700'>ATENÇÃO</p>
+            <p className='flex items-center justify-center'><div className='bg-red-700 h-2 w-2 mr-2'></div>Items em vermelho não estão cadastrados ou sincronizados</p>
+          </div>
         </div>
+        <hr className="mb-3" style={{ marginTop: '1px' }} />
+        <footer className=''>
+          <ButtonBase label="ESTORNAR NOTA" model="btn_base" className="red-color mr-5  w-40 mt-3" size="large" onClick={props.closeModal} />
+          <div className="flex justify-end" style={{ bottom: 25, right: 15, position: 'absolute' }}>
+            <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={props.closeModal} />
+            <ButtonIcon className="mr-3" label="SALVAR" icon={<FaSave />} width={'50%'} />
+          </div>
         </footer>
       </div>
     </ContainerEntradaNota>
     <ToastDefault />
-    <ModalSincronizarProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} />
+    <ModalSincronizarProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} tipo={1} />
   </ModalDefault>;
 }

@@ -44,6 +44,13 @@ button {
   cursor: pointer;
 }
 
+/* remover o incrementador de input do type number */
+input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 //style dos inputs do projeto
 .input_line_group {
   position: relative;
@@ -52,7 +59,6 @@ button {
 }
 
 .input_line__field {
-  font-family: inherit;
   width: 100%;
   border: 0;
   border-bottom: 2px solid ${color => color.theme.colors.primary};

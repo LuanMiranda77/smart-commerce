@@ -12,6 +12,7 @@ interface ModalDefaultProps {
   left?: '0%' | string;
   right?: '0%' | string;
   height?: '98%' | string;
+  margin?: string;
   onRequestClose: () => void;
 }
 
@@ -38,7 +39,7 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
             bottom: 0,
             border: 0,
             padding: 0,
-            // margin: '0.4rem',
+            margin: props.margin ? props.margin: '0',
             backgroundColor: colors.background,
           },
         }}

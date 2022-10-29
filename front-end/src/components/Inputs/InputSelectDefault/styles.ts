@@ -5,10 +5,17 @@ export const Container  = styled.div`
     //adicionar stylos
     .input{
         width: 100%;
+        .css-1s2u09g-control{
+            height: var(--max-height-button);
+
+        }
         .css-tlfecz-indicatorContainer{
             color: ${color => color.theme.colors.primary};
             font-weight: bold;
+            width: 100%;
         }
+        /* border-bottom: 2px solid  ${color => color.theme.colors.primary}; */
+        
     }
 
     .label{

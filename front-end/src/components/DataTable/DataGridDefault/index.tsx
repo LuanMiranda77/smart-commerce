@@ -7,6 +7,8 @@ import DataGrid, {
   Pager,
   Paging,
   SearchPanel,
+  Summary,
+  TotalItem,
 } from 'devextreme-react/data-grid';
 import { ColumnsDataGridType } from './types';
 import { Selection } from 'devextreme-react/tree-list';
@@ -52,6 +54,7 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
       showRowLines={props.showRowLines}
       showColumnLines={props.showColumnLines}
       hoverStateEnabled={props.hoverStateEnabled}
+      
       height={'100%'}
       onSelectionChanged={props.onSelectionChanged}
       onRowClick={props.onRowClick}
@@ -87,6 +90,5 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
       <Paging defaultPageSize={props.defaultPageSize}  enabled={props.paginar}/>
       <Pager allowedPageSizes={props.pageSizes} showPageSizeSelector={true} />
     </DataGrid>
-
   </Container>;
 }
