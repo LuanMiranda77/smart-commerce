@@ -14,14 +14,15 @@ export const InputMook: React.FC<InputDefaultProps> = (props) => {
     <Container className={"input_line_group " + props.className}>
           <label className="input_line__label">{props.label}</label>
           <input
-            className={"input_line__field"}
+            className={"input_line__field text-center font-bold"}
             placeholder={props.placeholder}
             name={props.label}
             id={props.label}
             onChange={props.onChange}
             onKeyDownCapture={props.onKeyDownCapture}
             autoFocus={props.autoFocus ? props.autoFocus:false}
-            {...props}
+            value={props.value}
+            readOnly
           />
     </Container>
   );

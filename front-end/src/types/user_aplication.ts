@@ -1,11 +1,13 @@
-export interface IUserAplication{
+export type UserAplicationType = {
   id: number;
   nome: string;
   email: string;
   dataCriacao: null | Date;
   dataAtualizacao: null | Date;
-  status: String;
+  acesso: null | Date;
+  status: 'S' | 'N';
   password: string;
-  typeRole: string;
-  // roles: number[];
+  telefone: string;
+  cargo: string;
+  roles: Array<number>;
 }

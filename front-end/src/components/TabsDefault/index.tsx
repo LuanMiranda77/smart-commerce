@@ -12,23 +12,23 @@ interface TabDefaultProps {
 
 export const TabsDefault: React.FC<TabDefaultProps> = (props) => {
   const [activeTab, setActiveTab] = useState(props.tabs[0].value);
-  return <Container className={props.className}>
-    <div className="Tabs">
-      <ul className="nav">
-        {
-          props.tabs.map((tab, key) => {
-            return <li key={key}
-              className={activeTab === tab.value ? "active" : ""}
-              onClick={() => setActiveTab(tab.value)}
-            >
-              {tab.label}
-            </li>
-          })
-        }
-      </ul>
-      {/* <div className=""> */}
-        {props.onSelectTab(activeTab)}
-      {/* </div> */}
-    </div>
-  </Container>;
+  return <>
+    <Container className={props.className}>
+      <div className="Tabs">
+        <ul className="nav">
+          {
+            props.tabs.map((tab, key) => {
+              return <li key={key}
+                className={activeTab === tab.value ? "active" : ""}
+                onClick={() => setActiveTab(tab.value)}
+              >
+                {tab.label}
+              </li>
+            })
+          }
+        </ul>
+      </div>
+    </Container>
+    {props.onSelectTab(activeTab)}
+  </>;
 }
