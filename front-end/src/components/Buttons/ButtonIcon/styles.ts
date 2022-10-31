@@ -26,6 +26,7 @@ export const Container  = styled.button<ButtonIconProps>`
     /* position: relative; */
     font-weight: bold;
     overflow: hidden;
+    border: 1px solid ${color=>(color.theme.title === 'dark' ? color.theme.colors.textLabel : 'transparent')};
 
     border-radius: 8px;
     box-shadow: 0 2px 3px 0 rgba(0,0,0,0.5);

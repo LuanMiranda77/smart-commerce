@@ -45,6 +45,7 @@ export class UtilsValid {
         resto = (soma * 10) % 11
         if ((resto == 10) || (resto == 11)) resto = 0
         if (resto != parseInt(cpf.substring(10, 11))) return false
+        
         return true
     }
     /**

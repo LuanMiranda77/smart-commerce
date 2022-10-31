@@ -18,12 +18,12 @@ interface ModalDefaultProps {
 
 export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
 
-  const { colors } = useContext(ThemeContext);
+  const { colors, title } = useContext(ThemeContext);
 
   return (
     <Container>
       <Modal
-        id={"@"+props.title}
+        id={props.title}
         isOpen={props.isOpen}
         ariaHideApp={true}
         style={{
@@ -31,8 +31,8 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
             backgroundColor: "rgba(78, 76, 76, 0.75)",
           },
           content: {
-            height: props.height ? props.height: '98%',
-            width: props.width ? props.width: '98%',
+            height: props.height ? props.height: '100%',
+            width: props.width ? props.width: '100%',
             left: props.left,
             right: props.right,
             top: 0,
@@ -40,7 +40,7 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
             border: 0,
             padding: 0,
             margin: props.margin ? props.margin: '0',
-            backgroundColor: colors.background,
+            backgroundColor: (title === 'dark'? colors.secondary : colors.white),
           },
         }}
         // closeTimeoutMS={800}

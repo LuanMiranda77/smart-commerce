@@ -39,7 +39,7 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
     }),
   }
   return <Container className='font-bold text-left input_line_group'>
-    <label className='label input_line__label' htmlFor="">{props.label}</label>
+    <label className='input_line__label' htmlFor="">{props.label}</label>
     <Select
       id={'input-select'+props.label}
       className={'input ' + props.className}

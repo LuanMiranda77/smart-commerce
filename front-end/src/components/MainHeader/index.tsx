@@ -11,16 +11,17 @@ interface Props {
   //adicionar os props
   alterTheme(): void;
   onClickMenu(): void;
+  onClose(): void;
 }
 
-export const MainHeader: React.FC<Props> = ({ alterTheme, onClickMenu }) => {
+export const MainHeader: React.FC<Props> = ({ alterTheme, onClickMenu, onClose }) => {
   const theme = useContext(ThemeContext);
   const options = [
     'one', 'two', 'three'
   ];
   
   return (
-    <Container className="" style={{ boxShadow: '0px 15px 10px gray' }}>
+    <Container className="" style={{ boxShadow: '0px 15px 10px gray' }}  onClick={onClose}>
       <div className="flex text-left" style={{width: '60%'}}>
         <button
           style={{

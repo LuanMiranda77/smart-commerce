@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FaCreditCard, FaDollarSign, FaFileUpload, FaIdCard, FaKickstarter, FaMoneyCheckAlt, FaPlus, FaSave, FaSink, FaSync, FaUserPlus } from 'react-icons/fa';
+import {GiStarProminences} from 'react-icons/gi';
 import { ThemeContext } from 'styled-components';
 import { ButtonBase, ButtonIcon, DataGridDefault, InputCheck, InputDate, InputDefault, InputIcon, InputMask, InputNumber, InputRadio, InputSearch, ModalDefault, SummaryCustom, SummaryDefault, ToastDefault } from "../../../../components";
 import CountUp from 'react-countup';
@@ -12,11 +13,15 @@ import { ColumnsDataGridType } from '../../../../components/types';
 interface ModalProps {
   showModal: boolean;
   closeModal: () => void;
+  tipo: number;
 }
 
 export const ModalEntrada: React.FC<ModalProps> = (props) => {
   const theme = useContext(ThemeContext);
   const [showModalProd, setShowModalProd] = useState(false);
+  const [showModalPromocao, setShowModalPromocao] = useState(false);
+  const [tipoCadastro, setTipoCadastro] = useState(0);
+  const [produtoselect, setProdutoSelect] = useState<any>();
 
 
   const eventClose = () => {
@@ -38,8 +43,8 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
   columns.push({ dataField: 'cst', caption: 'CST', alignment: 'center', dataType: 'number', allowSearch: false, width: 50 });
 
   const data = [
-    { codigo: '12368498', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'KG', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 99999, cstNota: '', incluida: 'N' },
-    { codigo: '98984225', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UN', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: '', incluida: 'N' },
+    { codigo: '', codbarras: '123456789125', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'KG', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 99999, cstNota: '', incluida: 'N' },
+    { codigo: '', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UN', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: '', incluida: 'N' },
     { codigo: '1154889', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: '', incluida: 'N' },
     { codigo: '1245', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'CTD', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
     { codigo: '45687', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'CT', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
@@ -74,7 +79,11 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
     if (desc !== '') {
       let notas = dataSourceCopy;
       if (!isNaN(parseFloat(desc)) && isFinite(desc)) {
-        notas = dataSourceCopy.filter(produto => { return produto.codigo.includes(desc) });
+        if(desc.length < 12){
+          notas = dataSourceCopy.filter(produto => { return produto.codigo.includes(desc) });
+        }else{
+          notas = dataSourceCopy.filter(produto => { return produto.codbarras.includes(desc) });
+        }
       } else {
         notas = dataSourceCopy.filter(produto => { return produto.descricao.includes(desc.toUpperCase()) });
       }
@@ -84,18 +93,49 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
     }
   }
 
+  const onCadastroNovo = () =>{
+    if(!produtoselect){
+      toast.error("Selecione um produto para o cadastro.");
+      return;
+    }
+    setShowModalProd(true); 
+    setTipoCadastro(0);
+  }
+
+  const onCadastroSincronizar = () =>{
+    if(!produtoselect){
+      toast.error("Selecione um produto para sincronizar.");
+      return
+    }
+    setShowModalProd(true); 
+    setTipoCadastro(1);
+  }
+
+  const onCreatePromocao = () =>{
+    console.log(produtoselect);
+    if(!produtoselect){
+      toast.error("Selecione um produto para criar a promoção.");
+      return
+    }
+    else if(produtoselect.codigo === ""){
+      toast.error("O produto ainda não foi cadastrado, realize o cadastro.");
+      return
+    }
+    setShowModalPromocao(true); 
+  }
+
 
   return <ModalDefault key={"#modalcaixa"} title={'ENTRADA DE NOTA'} isOpen={props.showModal} onRequestClose={eventClose} width='100%' height='100%'>
     <ContainerEntradaNota className='p-2 flex'>
       <div className='left' style={{ width: '30%' }}>
-        <p className="text-left text-xs font-bold ">Dados fornecedor</p>
-        <hr className="mb-2" style={{ border: '1px solid' + theme.colors.gray }} />
+        {/* <p className="text-left text-xs font-bold ">Dados fornecedor</p>
+        <hr className="mb-2" style={{ border: '1px solid' + theme.colors.gray }} /> */}
         <div className='flex'>
           <InputDefault className="w-6/12 mr-5 mb-3" label="Número da nota" type="number" />
           <div className='text-left font-bold mt-1 text-xs'>
             <p className='text-xs mb-1' style={{color:theme.title==='drak'? theme.colors.textLabel: theme.colors.primary}}>Tipo da entrada</p>
-            <InputRadio label='Nota Eletronica' />
-            <InputRadio label='Nota Avulsa' checked={true} />
+            <InputRadio label='Nota Eletronica' checked={props.tipo===1?true:false} disabled={props.tipo===1?false:true} />
+            <InputRadio label='Nota Avulsa' checked={props.tipo===1?false:true} disabled={props.tipo===1?true:false}/>
           </div>
         </div>
         <InputDefault className="mr-5 mb-5 text-xs" label="Chave acesso" type="number" />
@@ -127,11 +167,12 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
 
       <div className='right' style={{ width: '70%' }}>
         <div className="h-10 flex ">
-          <div className="w-8/12">
+          <div className="w-6/12">
             <InputSearch onChange={(e) => search(e.currentTarget.value)} />
           </div>
-          <ButtonIcon className="mr-3" label="NOVO" icon={<FaPlus />} width={'12%'} style={{ marginTop: '-3px' }} onClick={() => setShowModalProd(true)} />
-          <ButtonIcon className="" label="SINCRONIZAR" icon={<FaSync />} width={'20%'} style={{ marginTop: '-3px' }} onClick={() => setShowModalProd(true)} />
+          <ButtonIcon className="green-color mr-5  w-40" label="Criar Promoção"  icon={<GiStarProminences />} width={'20%'} style={{ marginTop: '-3px' }}  color={theme.colors.success} onClick={onCreatePromocao} />
+          <ButtonIcon className="mr-5" label="Novo" icon={<FaPlus />} width={'12%'} style={{ marginTop: '-3px' }} onClick={onCadastroNovo} />
+          <ButtonIcon className="" label="Sincronizar item" icon={<FaSync />} width={'20%'} style={{ marginTop: '-3px' }} onClick={onCadastroSincronizar} />
         </div>
         <hr className="mb-3" style={{ marginTop: '-5px' }} />
         <ContainerProdutoSync>
@@ -146,6 +187,7 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
             rowAlternationEnabled
             isSelectRow
             moduloSeletion='single'
+            onSelectionChanged={(e) => setProdutoSelect(e.selectedRowsData[0])}
           />
         </ContainerProdutoSync>
         <div className='text-left grid grid-cols-6 gap-2 mt-2'>
@@ -176,7 +218,27 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
         </footer>
       </div>
     </ContainerEntradaNota>
+
+
+    <ModalDefault title='PROMOÇÃO' isOpen={showModalPromocao} onRequestClose={() => setShowModalPromocao(false)} width='40%' left='24%' margin='9%' height='45%'>
+      <div className='card-local p-3'style={{marginTop:'-10px'}}>
+        <div className='mr-4  w-32 mb-5'>
+          <InputNumber placeholder='00,00' label='Desconto %' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
+        </div>
+        <div className='flex mb-16'>
+          <InputDate className="text-ms w-40 mr-5 text-left" label="Data ininical" />
+          <InputDate className="text-ms w-40 text-left" label="Data final" />
+        </div>
+        <div className="flex justify-end" style={{ bottom: 22, right: 15, position: 'absolute' }}>
+          <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={props.closeModal} />
+          <ButtonIcon className="mr-3" label="SALVAR" icon={<FaSave />} width={'50%'} />
+        </div>
+      </div>
+    </ModalDefault>
+
+    <ModalSincronizarProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} tipo={tipoCadastro} />
+
     <ToastDefault />
-    <ModalSincronizarProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} tipo={1} />
+
   </ModalDefault>;
 }

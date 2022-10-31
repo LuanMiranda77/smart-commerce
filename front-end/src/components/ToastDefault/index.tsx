@@ -15,7 +15,7 @@ export const ToastDefault: React.FC<ToastDefaultProps> = () => {
         hideProgressBar={true}
         newestOnTop={true}
         closeOnClick
-        rtl={false}
+        // rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover

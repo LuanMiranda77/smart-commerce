@@ -35,7 +35,7 @@ export const Container  = styled.div`
   display: block;
   transition: 0.2s;
   font-size: 14px;
-  color: ${color => color.theme.colors.primary};
+  color: ${color=>(color.theme.title === 'dark' ? color.theme.colors.textLabel : color.theme.colors.primary)};
   font-weight:bold;
 }
 

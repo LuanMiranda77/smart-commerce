@@ -18,7 +18,7 @@ export const ButtonIcon: React.FC<ButtonIconProps> = (props) => {
     // width={props.width}
     {...props}
   >
-    <i style={{ fontSize: '20px' }}>{props.icon}</i>
-    <label className='ml-2' htmlFor={props.label} style={{ cursor: 'pointer', width:'100%' }}>{props.label}</label>
+    <i style={{ fontSize: '15px' }}>{props.icon}</i>
+    <label className='ml-1' htmlFor={props.label} style={{ cursor: 'pointer', width:'100%' }}>{props.label}</label>
   </Container>;
 }

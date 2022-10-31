@@ -13,7 +13,7 @@ export const Container  = styled.div`
   font-family: inherit;
   width: 100%;
   border: 0;
-  border-top: 2px solid ${color => color.theme.colors.primary};
+  border-top: 2px solid ${color => (color.theme.title === 'dark' ? color.theme.colors.error : color.theme.colors.primary)};
   border-radius: 0px 5px 5px 5px;
   outline: 0;
   height: var(--max-height-button);
@@ -37,7 +37,7 @@ export const Container  = styled.div`
   display: block;
   transition: 0.2s;
   font-size: 14px;
-  color: ${color => color.theme.colors.primary};
+  color: ${color => (color.theme.title === 'dark' ? color.theme.colors.textLabel : color.theme.colors.primary)};
   font-weight:bold;
 }
 

@@ -9,11 +9,15 @@ interface InputMaskProps extends InputHTMLAttributes<HTMLInputElement> {
   beforeMaskValue?: Function;
 }
 
-export const InputMask: React.FC<InputMaskProps> = (props) => (
-  <Container className={props.className}>
+export const InputMask: React.FC<InputMaskProps> = (props) => {
+  const replace = (value:any)  => {
+    return value.replaceAll('.','');
+  }
+  return <Container className={props.className}>
     <label className={"input_line__label"}>{props.label}</label>
     <InputMaskDefault
       className={'input_line__field'}
+      type='text'
       mask={props.mask}
       // maskPlaceholder={' '}
       value={props.value}
@@ -21,5 +25,6 @@ export const InputMask: React.FC<InputMaskProps> = (props) => (
       placeholder={props.placeholder}
       beforeMaskedStateChange={props.beforeMaskValue ? props.beforeMaskValue() : ''}	
     />
+    {/* {props.beforeMaskValue ? replace(props.value) : ''} */}
   </Container>
-)
+}
