@@ -152,8 +152,8 @@ function Usuario() {
           </div>
           <div className='flex items-center justify-between'>
             <InputMask className='w-2/12' label='CPF' mask={'999.999.999-99'} />
-            <div className='rounded-full w-28 h-10 text-center p-2 font-bold text-white' style={{ backgroundColor: user.status === 'S' ? colors.success : colors.error }} >
-              <p>{user.status === 'S' ? 'ATIVO' : 'INATIVO'}</p>
+            <div className='rounded-full w-28 h-10 text-center p-2 font-bold text-white' style={{ backgroundColor: user !== undefined && user.status === 'S' ? colors.success : colors.error }} >
+              <p>{user !== undefined && user.status === 'S' ? 'ATIVO' : 'INATIVO'}</p>
             </div>
           </div>
           <div className='flex mt-3'>

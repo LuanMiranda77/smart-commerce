@@ -18,7 +18,7 @@ export const TabsDefault: React.FC<TabDefaultProps> = (props) => {
         <ul className="nav">
           {
             props.tabs.map((tab, key) => {
-              return <li key={key}
+              return <li key={key} id={tab.value}
                 className={activeTab === tab.value ? "active" : ""}
                 onClick={() => setActiveTab(tab.value)}
               >

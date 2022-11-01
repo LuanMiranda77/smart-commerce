@@ -1,7 +1,7 @@
 
 import { api } from "../api";
 import { login } from "../auth";
-import { IUserAplication } from "../../types/user_aplication";
+import { UserAplicationType } from "../../types/user_aplication";
 
 export class LoginService {
 
@@ -9,7 +9,7 @@ export class LoginService {
     auth='/tokken';
     erro='';
 
-    public async login(pEntity : IUserAplication) {
+    public async login(pEntity : UserAplicationType) {
         
         const token = await api.post(this.auth, {email:'admin',password:'Ads%$#@!Ads'}).then(response =>{
             login(response.data);
@@ -30,7 +30,7 @@ export class LoginService {
         }
     }
 
-    public async recuperarSenha(user: IUserAplication){
+    public async recuperarSenha(user: UserAplicationType){
         const response = await api.post(this.url+'/recuperasenha', user)
         .then( resp =>{
             return resp.data;
@@ -41,7 +41,7 @@ export class LoginService {
         return response;
     }
 
-    public async trocarSenha(user: IUserAplication){
+    public async trocarSenha(user: UserAplicationType){
         const response = await api.put(this.url+`/${user.id}`, user)
         .then( resp =>{
             return resp.data;

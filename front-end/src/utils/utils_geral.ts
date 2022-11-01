@@ -1,25 +1,15 @@
-import { IUserAplication } from '../types/user_aplication';
+import { UserAplicationType } from './../types/user_aplication';
 import { logout } from "../service/auth";
 import userPersistState from './userPersistState';
 
 export class UtilsGeral {
 
-    /**
-     * @params de type = 'success', 'error', 'info','warn'
-    */
-    // static messagemShow = (toast: RefObject<Toast>, type: string, title: string, body: string, time: number) => {
-    //     if (toast.current != null) {
-    //         toast.current.show({ severity: type, summary: title, detail: body, life: time });
-    //     }
-
-    // }
-
     public static getEmogi() {
         return ['🤑', '😀', '😱', '😰', '😥'];
     }
 
-    public static setTokenLogin(user: IUserAplication){
-        let key = this.encrypt(this.geraStringAleatoria(10)+'&'+user.nome+'&'+this.geraStringAleatoria(20)+'&'+user.typeRole+'&'+this.geraStringAleatoria(15)+'&'+user.id+"&"+this.geraStringAleatoria(5)+'&'+user.status+"&"+this.geraStringAleatoria(8));
+    public static setTokenLogin(user: UserAplicationType){
+        let key = this.encrypt(this.geraStringAleatoria(10)+'&'+user.nome+'&'+this.geraStringAleatoria(20)+'&'+user.roles+'&'+this.geraStringAleatoria(15)+'&'+user.id+"&"+this.geraStringAleatoria(5)+'&'+user.status+"&"+this.geraStringAleatoria(8));
         localStorage.setItem("@TOKEN_KEY", key);
     }
 
@@ -27,15 +17,18 @@ export class UtilsGeral {
         let key = localStorage.getItem("@TOKEN_KEY");
         if(key != null){
             const array = this.decrypt(key).split('&');
-            const userLogado: IUserAplication={
+            const userLogado: UserAplicationType={
                 id: Number(array[5]),
                 nome: array[1], 
                 email:'', 
                 dataCriacao: null, 
                 dataAtualizacao: null, 
-                status: 'ATIVO', 
+                acesso: null,
+                status: 'S', 
                 password: '', 
-                typeRole:array[4],
+                telefone:'',
+                cargo:'',
+                roles:[1,2,3],
                 // role: Number(array[3])
             } 
             return userLogado;

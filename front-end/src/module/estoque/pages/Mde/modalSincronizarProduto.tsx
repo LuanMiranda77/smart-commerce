@@ -46,7 +46,7 @@ export const ModalSincronizarProduto: React.FC<ModalProps> = (props) => {
       </header>
 
       <ContainerFoto >
-        <InputFileProduto />
+        <InputFileProduto lado='right' />
       </ContainerFoto>
 
       <div className='flex mt-5'>
