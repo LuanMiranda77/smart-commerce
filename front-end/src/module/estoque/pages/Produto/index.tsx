@@ -391,8 +391,8 @@ function Produto() {
         // showRowLines
         rowAlternationEnabled
         showBorders
-        showColumnLines
-        hoverStateEnabled
+        // showColumnLines
+        // hoverStateEnabled
         isSelectRow
         moduloSeletion='single'
       />

@@ -24,7 +24,7 @@ export const Header = styled.header`
 export const MenuContainer = styled.nav`
     /* margin-top:1px; */
     padding: 0.5rem;
-    height: 80%;
+    height: 100%;
     cursor: pointer;
 
     .btn-menu{
@@ -33,6 +33,6 @@ export const MenuContainer = styled.nav`
         };
         font-size: 45px;
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-
+        margin-left:3px ;
     }
 `;

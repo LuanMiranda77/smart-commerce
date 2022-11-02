@@ -1,6 +1,7 @@
 import { UserAplicationType } from './../types/user_aplication';
 import { logout } from "../service/auth";
 import userPersistState from './userPersistState';
+import _ from 'lodash';
 
 export class UtilsGeral {
 
@@ -84,6 +85,14 @@ export class UtilsGeral {
         }
         return stringAleatoria;
     }
+
+    static removeMask(value: any):string {
+        let v = value.replaceAll(/\D/g, '');
+        // v = v.replaceAll('-', '');
+        // v = v.replaceAll('/', '');
+        return v;
+    }
+
 
 
 
