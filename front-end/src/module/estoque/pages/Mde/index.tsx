@@ -237,7 +237,7 @@ function Mde() {
             <InputDefault className="w-3/12 mr-5 mb-5" label="Número da nota" type="number" />
             <div className="flex w-full">
               {tamanhoIpuntCnpjCpf < 11 ?
-                <InputMask className="w-6/12 mr-5 " label="CNPJ" type="number" mask={'99.999.999/9999-99'} beforeMaskValue={onTesteCnpjCpf} />
+                <InputMask className="w-6/12 mr-5 " label="CNPJ" type="number" mask={'99.999.999/9999-99'} />
                 :
                 <InputMask className="w-6/12 mr-5 " label="CPF" type="number" mask={'999.999.999-99'} />
               }

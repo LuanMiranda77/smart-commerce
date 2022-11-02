@@ -20,7 +20,9 @@ export class UtilsGeral {
             const array = this.decrypt(key).split('&');
             const userLogado: UserAplicationType={
                 id: Number(array[5]),
+                cpf:'',
                 nome: array[1], 
+                codigo:0,
                 email:'', 
                 dataCriacao: null, 
                 dataAtualizacao: null, 

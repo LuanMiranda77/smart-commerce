@@ -53,7 +53,7 @@ function Estabelecimento() {
 
     <div id='informacoes' className="mb-5">
       <div className="flex mb-5">
-        <InputMask className="w-2/12 mr-5" label="CNPJ/CPF" mask="999.999.999/9999-99"  value={cpfSemMask} onChange={(e)=> setCpfSemMask(e.target.value)} beforeMaskValue={beforeMaskedValueChange}/>
+        <InputMask className="w-2/12 mr-5" label="CNPJ/CPF" mask="999.999.999/9999-99"  value={cpfSemMask} onChange={(e)=> setCpfSemMask(e.target.value)} />
         <div className="w-2/12" >
           <InputSelectDefault label="Regime da empresa" options={regimes} defaultValue={regimes[0]} />
         </div>

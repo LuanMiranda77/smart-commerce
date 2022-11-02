@@ -1,5 +1,7 @@
 export type UserAplicationType = {
   id: number;
+  codigo: number;
+  cpf: string;
   nome: string;
   email: string;
   dataCriacao: null | Date;

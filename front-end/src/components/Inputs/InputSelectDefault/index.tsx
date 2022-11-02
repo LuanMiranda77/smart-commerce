@@ -13,6 +13,7 @@ interface InputSelectDefaultProps{
   autoFocus?: boolean;
   className?: string;
   defaultValue?: Object;
+  value?:any;
   onKeyDownCapture?:(e: any)=>void;
   onChange?:(e: any)=>void;
 }
@@ -53,8 +54,7 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       onChange={props.onChange}
       noOptionsMessage={(obj:{inputValue: string})=><p>Não existe items</p>}
       styles={customStyles}
-      
-      
+      value={props.value}
     />
   </Container>
 }

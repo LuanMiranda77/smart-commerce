@@ -19,6 +19,10 @@ import {
 import { ColumnsDataGridType } from '../../../../components/types';
 import { Container, TableContainer } from './styles';
 import { cargos } from './__mocks__';
+import { useDispatch, useSelector } from 'react-redux';
+import {selectStateList, usuarioSlice } from '../../../../store/slices/usuario.slice';
+import { UserAplicationType } from '../../../../types/user_aplication';
+import { RootState } from '../../../../store/index.store';
 
 /**
 *@Author
@@ -26,27 +30,33 @@ import { cargos } from './__mocks__';
 */
 
 function Usuario() {
+  const dispatch = useDispatch();
+  const {userAplication, usuarios} = useSelector((state:RootState)=> state.user);
+  // const {nome} = useSelector(selectState);
+  // const userRed = useSelector();
 
   const { colors, title } = useContext(ThemeContext);
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState<any>();
   const [showPoupAtivo, setShowPopupAtivo] = useState(false);
   const [showPoupInativo, setShowPopupInativo] = useState(false);
+  const [dataSource, setDataSource] = useState<Array<UserAplicationType>>(useSelector(selectStateList));
+  const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
 
 
   const renderCell = (element: any) => {
     if (element.value === "S") {
-      return <div className='rounded-full h-6 text-center p-1'style={{ backgroundColor: colors.success }}><span className='font-bold text-white'>ATIVO</span></div>
+      return <div className='rounded-full h-6 text-center p-1' style={{ backgroundColor: colors.success }}><span className='font-bold text-white'>ATIVO</span></div>
     }
     else if (element.value === "N") {
-      return <div className='rounded-full  h-6 text-center p-1'style={{ backgroundColor: colors.error }}><span className='font-bold text-white'>INATIVO</span></div>
+      return <div className='rounded-full  h-6 text-center p-1' style={{ backgroundColor: colors.error }}><span className='font-bold text-white'>INATIVO</span></div>
     }
     else {
       return <div className='flex items-center justify-center'>
         {element.data.status === 'N' ?
-          <i className='text-2xl cursor-pointer mr-6' style={{ color: colors.success }}><FaPlayCircle id='buttonAtive' className='' title='Ativar usuário' onClick={() => showPopupConfirmeAction(element.data,1)} /></i>
+          <i className='text-2xl cursor-pointer mr-6' style={{ color: colors.success }}><FaPlayCircle id='buttonAtive' className='' title='Ativar usuário' onClick={() => showPopupConfirmeAction(element.data, 1)} /></i>
           :
-          <i className='text-2xl cursor-pointer mr-6' style={{ color: colors.error }}><FaPauseCircle id='buttonInative' className='' title='Desativar usuário' onClick={() => showPopupConfirmeAction(element.data,2)} /></i>
+          <i className='text-2xl cursor-pointer mr-6' style={{ color: colors.error }}><FaPauseCircle id='buttonInative' className='' title='Desativar usuário' onClick={() => showPopupConfirmeAction(element.data, 2)} /></i>
         }
         <i className='text-2xl cursor-pointer' style={{ color: colors.primary }}><FaPenSquare id='buttonAction' className='' title='Editar usuário' onClick={() => onEdit(element.data)} /></i>
       </div>
@@ -64,37 +74,10 @@ function Usuario() {
   columns.push({ dataField: 'status', caption: 'STATUS', alignment: 'center', dataType: 'number', width: 100, styleCell: renderCell });
   columns.push({ dataField: '', caption: '', alignment: 'center', dataType: '', width: 100, styleCell: renderCell });
 
-  const data = [
-    { codigo: 1, nome: 'produto1', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'N', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 2, nome: 'tudo', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'N', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 3, nome: 'tudynho', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'N', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 4, nome: 'luto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'N', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 5, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'N', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 6, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'N', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 7, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 8, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 9, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 10, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 11, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 12, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 13, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 14, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 15, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 16, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 17, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 18, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 19, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 20, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 21, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 22, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 23, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 24, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 25, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 26, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-    { codigo: 27, nome: 'produto', cargo: 'CAIXA', email: 'luanmirqanda@gmail.com', status: 'S', dataCriacao: '12/12/2022', acesso: '12/01/2022', telefone: '(83) 9. 99638-6694' },
-  ]
-  const [dataSource, setDataSource] = useState(data);
-  const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
+  const closeModal = () =>{
+    usuarioSlice.actions.reset();
+    setShowModal(false);
+  }
 
   const search = (nome: string) => {
     if (nome !== '') {
@@ -106,15 +89,14 @@ function Usuario() {
   }
 
   const onEdit = (user: any) => {
-    console.log(user);
-    setUser(user);
+    
     setShowModal(true);
 
   }
 
   const showPopupConfirmeAction = (user: any, tipo: number) => {
     setUser(user);
-    (tipo === 1 ? setShowPopupAtivo(true):setShowPopupInativo(true));
+    (tipo === 1 ? setShowPopupAtivo(true) : setShowPopupInativo(true));
 
   }
 
@@ -151,15 +133,17 @@ function Usuario() {
             <Divider tipo='horizontal' />
           </div>
           <div className='flex items-center justify-between'>
-            <InputMask className='w-2/12' label='CPF' mask={'999.999.999-99'} />
-            <div className='rounded-full w-28 h-10 text-center p-2 font-bold text-white' style={{ backgroundColor: user !== undefined && user.status === 'S' ? colors.success : colors.error }} >
-              <p>{user !== undefined && user.status === 'S' ? 'ATIVO' : 'INATIVO'}</p>
+            <InputMask className='w-2/12' label='CPF' mask={'999.999.999-99'} value={userAplication.cpf} onChange={(e)=> dispatch(usuarioSlice.actions.cpf(e.target.value))}/>
+            <div className='rounded-full w-28 h-10 text-center p-2 font-bold text-white'
+              style={{ backgroundColor: userAplication.status === 'S' ? colors.success : colors.error }}
+            >
+              <p>{userAplication.status === 'S' ? 'ATIVO' : 'INATIVO'}</p>
             </div>
           </div>
           <div className='flex mt-3'>
-            <InputDefault className='w-4/12 mr-6' label='Nome' type='text' />
+            <InputDefault className='w-4/12 mr-6' label='Nome' type='text' value={userAplication.nome} onChange={(e)=> dispatch(usuarioSlice.actions.nome(e.target.value))}/>
             <div className='w-3/12'>
-              <InputSelectDefault label='Cargo' options={cargos} defaultValue={cargos[2]} />
+              <InputSelectDefault label='Cargo' options={cargos} defaultValue={cargos[2]}  value={userAplication.cargo} onChange={(e)=> dispatch(usuarioSlice.actions.cargo(e.target.value))}/>
             </div>
           </div>
         </div>
@@ -167,16 +151,16 @@ function Usuario() {
         <div className='mb-7 text-left'>
           <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Contato</p>
           <Divider tipo='horizontal' />
-          <InputMask className='w-2/12' label='Telefone' mask={'(99) 9.9999-9999'} />
+          <InputMask className='w-2/12' label='Telefone' mask={'(99) 9.9999-9999'} value={userAplication.telefone} onChange={(e)=> dispatch(usuarioSlice.actions.telefone(e.target.value))}/>
         </div>
 
         <div className='text-left'>
           <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Acesso</p>
           <Divider tipo='horizontal' />
-          <InputDefault className='w-5/12 mr-6' label='Email' type='email' />
+          <InputDefault className='w-5/12 mr-6' label='Email' type='email' value={userAplication.email} onChange={(e)=> dispatch(usuarioSlice.actions.email(e.target.value))}/>
           <div className='flex mt-3'>
-            <InputDefault className='w-2/12 mr-6' label='Email' type='password' />
-            <InputDefault className='w-2/12 mr-6' label='Email' type='password' />
+            <InputDefault className='w-2/12 mr-6' label='Senha' type='password' value={userAplication.password} onChange={(e)=> dispatch(usuarioSlice.actions.password(e.target.value))}/>
+            <InputDefault className='w-2/12 mr-6' label='Confirme senha' type='password' />
           </div>
         </div>
 
@@ -188,10 +172,10 @@ function Usuario() {
           <Divider tipo='horizontal' />
         </div>
         <div className='p-5'>
-          <InputCheck label='Estoque' classN='mb-3' />
-          <InputCheck label='Financeiro' classN='mb-3' />
-          <InputCheck label='Venda' classN='mb-3' />
-          <InputCheck label='Configurações' classN='mb-3' />
+          <InputCheck label='Estoque' css='mb-3' />
+          <InputCheck label='Financeiro' css='mb-3' />
+          <InputCheck label='Venda' css='mb-3' />
+          <InputCheck label='Configurações' css='mb-3' />
           <InputCheck label='Usuários' />
         </div>
       </div>
@@ -210,7 +194,7 @@ function Usuario() {
     <TableContainer>
       <DataGridDefault
         columns={columns}
-        dataSource={dataSource}
+        dataSource={useSelector(selectStateList)}
         allowSorting={false}
         paginar={false}
         // showRowLines
@@ -224,7 +208,7 @@ function Usuario() {
     <ModalDefault
       isOpen={showModal}
       title='Cadastro de usuario'
-      onRequestClose={() => setShowModal(false)}
+      onRequestClose={closeModal}
       width='75%'
       margin='1%'
       height='95%'
@@ -244,12 +228,12 @@ function Usuario() {
 
     </ModalDefault>
 
-    <DialogPopupConfirme title="Confirme" isOpen={showPoupInativo} onRequestClose={() => setShowPopupInativo(false)} onClickSim={()=>onInative(user)}>
+    <DialogPopupConfirme title="Confirme" isOpen={showPoupInativo} onRequestClose={() => setShowPopupInativo(false)} onClickSim={() => onInative(user)}>
       <p className="font-bold text-2xl">Tem certeza que deseja bloquear o usuário? </p>
       <p className="font-bold" style={{ color: colors.error }}>O mesmo não poderá acessar o sistema até ser liberado !</p>
     </DialogPopupConfirme>
 
-    <DialogPopupConfirme title="Confirme" isOpen={showPoupAtivo} onRequestClose={() => setShowPopupAtivo(false)} onClickSim={()=>onAtive(user)}>
+    <DialogPopupConfirme title="Confirme" isOpen={showPoupAtivo} onRequestClose={() => setShowPopupAtivo(false)} onClickSim={() => onAtive(user)}>
       <p className="font-bold text-2xl">Tem certeza que deseja liberar o usuário? </p>
       <p className="font-bold" style={{ color: colors.error }}>O mesmo poderá acessar o sistema normalmente!</p>
     </DialogPopupConfirme>

@@ -44,6 +44,16 @@ button {
   cursor: pointer;
 }
 
+.column{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.row{
+  display: flex ;
+}
+
 /* remover o incrementador de input do type number */
 input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {

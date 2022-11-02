@@ -233,7 +233,7 @@ export const ModalSincronizarProduto: React.FC<ModalProps> = (props) => {
 
           <footer className=''>
             <div className='flex items-center'>
-              <InputCheck label='Preço atacado' classN='mt-5 ml-2 mr-2' checked={isAtacado} onChange={(e) => setIsAtacado(e.target.checked)} />
+              <InputCheck label='Preço atacado' css='mt-5 ml-2 mr-2' checked={isAtacado} onChange={(e) => setIsAtacado(e.target.checked)} />
             </div>
             <div className="flex justify-end" style={{ bottom: 25, right: 15, position: 'absolute' }}>
               <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={props.closeModal} />
