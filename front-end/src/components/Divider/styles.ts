@@ -1,4 +1,4 @@
-import { SizeLogo } from './../../types/enums/size-logo';
+import { SizeLogo } from '../../domain/enums';
 import styled from "styled-components";
 
 interface PropsColor{

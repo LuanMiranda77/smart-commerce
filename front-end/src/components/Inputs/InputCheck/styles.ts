@@ -8,12 +8,13 @@ export const Container  = styled.div`
     label{
         color: ${color=>(color.theme.title === 'dark' ? color.theme.colors.textLabel : color.theme.colors.primary)};
         font-weight:bold;
-        font-size: 20px;
     }
+
     input{
         transform : scale(1.6);
         background-color: red;
     }
+    
     input:checked{
         accent-color: ${color=>(color.theme.title === 'dark' ? color.theme.colors.textLabel : color.theme.colors.primary)};
     }

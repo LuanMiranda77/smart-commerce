@@ -16,6 +16,8 @@ interface InputSelectDefaultProps{
   value?:any;
   onKeyDownCapture?:(e: any)=>void;
   onChange?:(e: any)=>void;
+  required?: boolean;
+  error?:boolean;
 }
 
 export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => {
@@ -40,7 +42,7 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
     }),
   }
   return <Container className='font-bold text-left input_line_group'>
-    <label className='input_line__label' htmlFor="">{props.label}</label>
+    <label className='input_line__label' htmlFor="">{props.label}<span className='text-red-500 font-bold'>{props.required ? " *" : ''}</span></label>
     <Select
       id={'input-select'+props.label}
       className={'input ' + props.className}
@@ -56,5 +58,6 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       styles={customStyles}
       value={props.value}
     />
+    {props.error && props.required ?<small className='text-red-500 absolute left-1 top-12'>O campo é obrigatório</small>:''}
   </Container>
 }

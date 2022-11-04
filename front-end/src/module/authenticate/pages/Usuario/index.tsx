@@ -21,7 +21,7 @@ import { Container, TableContainer } from './styles';
 import { cargos } from './__mocks__';
 import { useDispatch, useSelector } from 'react-redux';
 import {selectStateList, usuarioSlice } from '../../../../store/slices/usuario.slice';
-import { UserAplicationType } from '../../../../types/user_aplication';
+import { UserAplicationType } from '../../../../domain/types/user_aplication';
 import { RootState } from '../../../../store/index.store';
 
 /**

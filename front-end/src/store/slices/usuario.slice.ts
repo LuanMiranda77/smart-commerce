@@ -1,4 +1,4 @@
-import { UserAplicationType } from './../../types/user_aplication';
+import { UserAplicationType } from '../../domain/types/user_aplication';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export const usuarioSlice = createSlice({

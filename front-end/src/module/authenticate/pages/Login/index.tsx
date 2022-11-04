@@ -7,7 +7,7 @@ import bannerSuperior from '../../../../assets/banner_superior.svg';
 import icon from '../../../../assets/Logo/icon.svg';
 import { ButtonBase } from "../../../../components/Buttons/ButtonBase";
 import { Logo } from '../../../../components/Logo';
-import { SizeLogo } from '../../../../types/enums/size-logo';
+import { SizeLogo } from '../../../../domain/enums';
 import { Container } from "./styles";
 
 function Login() {

@@ -1,4 +1,4 @@
-import { UserAplicationType } from './../types/user_aplication';
+import { UserAplicationType } from '../domain/types/user_aplication';
 import { logout } from "../service/auth";
 import userPersistState from './userPersistState';
 import _ from 'lodash';

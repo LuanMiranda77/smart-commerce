@@ -6,11 +6,12 @@ interface InputCheckProps extends InputHTMLAttributes<HTMLInputElement>{
   label: string;
   color?: string;
   css?:string;
+  checked?: boolean;
 }
 
 export const InputCheck: React.FC<InputCheckProps> = (props) => {
   return <Container className={props.css}>
-    <input type="checkbox" className='cursor-pointer'  {...props} name={props.label} />
-    <label className='ml-2 ' htmlFor={props.label}>{props.label}</label>
+    <input id={props.label} type="checkbox" className='cursor-pointer' checked={props.checked} name={props.label} {...props}/>
+    <label className='ml-2' htmlFor={props.label}>{props.label}</label>
   </Container>;
 }

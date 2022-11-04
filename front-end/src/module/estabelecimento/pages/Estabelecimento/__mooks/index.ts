@@ -1,5 +1,6 @@
 export const regimes=[
-    {value:'S',label:'Simples'},
-    {value:'N',label:'Nomal'},
-    {value:'L',label:'Lucro real'},
+    {value:'ME',label:'Micro Empreendedor'},
+    {value:'SN',label:'Simples Nacional'},
+    {value:'LP',label:'Lucro Presumido'},
+    {value:'LR',label:'Lucro real'},
 ];
