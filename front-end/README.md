@@ -24,7 +24,7 @@ Um projeto com forte atuação em frente de atendimento para empresas de meio e 
 
 ## ✨ Features
 
-- 🌈 Ferramenta proderosa no controle de estoque.
+- 🛠 Ferramenta proderosa no controle de estoque e do financeiro da empresa.
 - 📦 Um conjunto de componentes React de alta qualidade prontos para uso.
 - 🛡 Escrito em TypeScript com tipos estáticos previsíveis.
 - 🎨 Personalização de tema para o modo __dark__.
@@ -34,13 +34,14 @@ Um projeto com forte atuação em frente de atendimento para empresas de meio e 
 | --- | --- | --- | --- | 
 | IE11, Edge | last 2 versions | last 2 versions | last 2 versions | 
 
-### ⌚ Status do Projeto
+### ⏳ Status do Projeto
 ---
-<h4 align="center" size='26px'> 
+<h3 align="center"> 
 	🚧  Portal React 🚀 Em construção...  🚧
-</h4>
+</h3>
+<hr/>
 
-## 📦 Install
+## 📀 Como rodar
 
 Acesse a pasta do projeto no terminal/cmd.
 ```bash
@@ -57,23 +58,12 @@ yarn dev
 ```
 O servidor inciará na porta:3000 - acesse <http://localhost:3000>
 
-## Pré-requisitos de uso
-<!--ts-->
-   * [Sobre](#Install)
-   * [Tabela de Conteudo](#tabela-de-conteudo)
-   * [Instalação](#instalacao)
-   * [Como usar](#como-usar)
-      * [Pre Requisitos](#pre-requisitos)
-      * [Local files](#local-files)
-      * [Remote files](#remote-files)
-      * [Multiple files](#multiple-files)
-      * [Combo](#combo)
-   * [Tests](#testes)
-   * [Tecnologias](#tecnologias)
-<!--te-->
+## ✋ Pré-requisitos de uso
+Node versão ^16
+disponivel em : https://nodejs.org/en/download/
 
 
-## 🚀 Features em desenvolvimento
+## 🚀 Features desenvolvida
 
 - [ ] Cadastro de usuário
 - [ ] Cadastro de cliente
@@ -81,23 +71,49 @@ O servidor inciará na porta:3000 - acesse <http://localhost:3000>
 - [x] Cadastro de estabelecimento
 - [ ] Cadastro de MDE
 - [x] Cadastro de Dashboard
+- [ ] Configuração base do sistema
+- [ ] Relatório de movimentação entrada
+- [ ] Relatório de movimentação saída
 
-### 🤖 Tecnologias utilizada
----
-
-## Demonstração da aplicação
-<h1 align="center">
-<div style="position: relative; width: 100%; height: 0; padding-top: 25.0000%;
- padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
- border-radius: 8px; will-change: transform;">
-  <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
-    src="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAE8q4NCYyo&#x2F;view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
-  </iframe>
+## 🧬 Demonstração da aplicação
+<div align="center">
+    <img width="100%" src="https://user-images.githubusercontent.com/60722028/200129343-c4e17de3-6b02-494e-bb98-728758346895.png">
 </div>
-</h1>
+
+### View inicial e carinha do sistema
+---
+ <img width="100%" src="https://user-images.githubusercontent.com/60722028/200131486-db6d3628-6d6d-4127-887c-dafb960ee303.gif">
+ 
+### View de produto e estoque
+---
+ <img width="100%" src="https://user-images.githubusercontent.com/60722028/200131732-64cd9953-77b8-43dd-84e2-d255f7860d19.gif">
+
+### View do MDE (Entrada de notas fiscais)
+---
+ <img width="100%" src="https://user-images.githubusercontent.com/60722028/200132023-94c37e46-0bb1-45e8-b813-1efd3cb0a254.gif">
+ 
+ ## 📢 Prototipagem do projeto
+ Disponivel em : https://www.figma.com/file/8NQ2VryZdHRAKBa7rxm2BJ/Web?node-id=0%3A1
+
+ 
+
+## 🛠 Tecnologias
+As seguintes ferramentas foram usadas na construção do projeto:
+
+- [Node.js](https://nodejs.org/en/)
+- [React](https://pt-br.reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [DevExtreme](https://js.devexpress.com/Overview/)
+- [Lodash](https://lodash.com)
+- [Moment](https://momentjs.com/docs/)
+- [Plop](https://www.npmjs.com/package/plop)
+- [React-icons](https://react-icons.github.io/react-icons/)
+- [Tailwindcss](https://tailwindcss.com/docs/installation)
+- [React-Toastify](https://www.npmjs.com/package/react-toastify)
 
 
-### ✅ Autor
+
+### 👨‍💻 Autor
 ---
 
 <a href="https://blog.rocketseat.com.br/author/thiago/">
