@@ -10,6 +10,8 @@
 <div align="center">
 
 Um projeto com forte atuação em frente de atendimento para empresas de meio e pequeno porte, realizado um suporte no controle de entradas de 	notas ficais com um jeito smart de inovação, tudo a uma palma de distância.
+	
+[![My Skills](https://skillicons.dev/icons?i=js,ts,java,spring,react,postgres,nodejs&theme=dark)](https://skillicons.dev)
 
 <!-- <img src="https://img.shields.io/static/v1?label=Blog&message=Rocketseat&color=7159c1&style=for-the-badge&logo=ghost"/> -->
  <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/LuanMiranda77/smart-commerce?color=blue&filename=front-end%2Fpackage.json">
