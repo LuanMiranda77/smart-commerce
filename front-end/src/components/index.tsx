@@ -1,5 +1,8 @@
 //export default
-export { InputCheck } from './InputCheck';
+export { TabsDefault } from './TabsDefault';
+export { MenuAside } from './MenuAside';
+export { Divider } from './Divider';
+export { InputCheck } from './Inputs/InputCheck';
 export { InputRadio } from './Inputs/InputRadio';
 export { InputFileProduto } from './Inputs/InputFileProduto';
 export { ModalLoad } from './Modal/ModalLoad';

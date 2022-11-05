@@ -3,12 +3,13 @@ import { FaArchive, FaDollarSign, FaFileDownload, FaFileImport, FaFileSignature,
 
 import { Body, Container, ContainerFiltro, ContainerTable } from './styles';
 import { ThemeContext } from 'styled-components';
-import { ButtonBase, ButtonIcon, DataGridDefault, InputDate, InputDefault, InputMask, InputSearch, InputSelectDefault, ModalDefault, SummaryDefault } from "../../../../components";
+import { ButtonBase, ButtonIcon, DataGridDefault, InputDate, InputDefault, InputMask, InputSearch, InputSelectDefault, ModalDefault, SummaryDefault, ToastDefault } from "../../../../components";
 import { status, tiposFiltroData } from './__mooks';
 import { ColumnsDataGridType } from "../../../../components/types";
 import { ModalEntrada } from "./modalEntrada";
 import CountUp from 'react-countup';
 import _ from 'lodash';
+import { toast } from "react-toastify";
 
 /**
 *@Author
@@ -20,6 +21,8 @@ function Mde() {
   const [showModalEntrada, setShowModalEntrada] = useState(false);
   const [showModalFiltro, setShowModalFiltro] = useState(false);
   const [tamanhoIpuntCnpjCpf, setTamanhoIpuntCnpjCpf] = useState(0);
+  const [tipoNota, setTipoNota] = useState(0);
+  const [notaSelect, setNotaSelect] = useState<any>();
 
   const actionNota = (nota: any) => {
     let compra = nota.data
@@ -38,6 +41,8 @@ function Mde() {
       return <span className='font-bold text-white' style={{ color: theme.colors.success }}>MANIFESTA</span>
     } else if (element.value === "A") {
       return <span className='font-bold text-white' style={{ color: theme.colors.error, fontSize: '12px' }}>A MANIFESTAR</span>
+    } else if (element.value === "E") {
+      return <span className='font-bold text-white' style={{ color: theme.colors.warning, fontSize: '12px' }}>AVULSA</span>
     } else if (element.value === "S") {
       return <i className='text-lg cursor-pointer' style={{ color: theme.colors.primary }}><FaRegCheckCircle className='ml-5' title='Nota incluida no sistema' /></i>
     } else if (element.value === "N") {
@@ -89,7 +94,7 @@ function Mde() {
     { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
     { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
     { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
+    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'E', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
   ];
 
   const [dataSource, setDataSource] = useState(data);
@@ -111,7 +116,7 @@ function Mde() {
   const filterStatus = (status: string) => {
     if (status !== '') {
       let notas = dataSourceCopy;
-      if (status === 'E') {
+      if (status === 'NE') {
         notas = dataSourceCopy.filter((e) => {
           if (e.entrada !== '') {
             return e;
@@ -132,6 +137,22 @@ function Mde() {
       setTamanhoIpuntCnpjCpf(e.length);
     }
   };
+
+  const onManifestar = () =>{
+    if(!notaSelect){
+      toast.error("Selecione uma nota para realizar o manifesto.");
+      return
+    }
+    else if(notaSelect.status === "E"){
+      toast.error("Nota de entrada avulsa não pode ser manifestada.");
+      return
+    }
+    else if(notaSelect.status === "M"){
+      toast.error("Nota já foi incluida não é possivel o manifesto.");
+      return
+    }
+
+  }
 
   return <Container className="card-local w-full h-full p-3 font-bold" style={{ backgroundColor: (theme.title === 'dark' ? theme.colors.tertiary : theme.colors.white) }}>
     <header className="flex text-xl font-bold items-center justify-between mb-1 h-6" style={{ color: theme.colors.primary }}>
@@ -165,9 +186,9 @@ function Mde() {
         <div className="w-8/12">
           <InputSearch onChange={(e) => search(e.currentTarget.value)} />
         </div>
-        <ButtonIcon className="mr-3" label="Novo" icon={<FaPlus />} width={'12%'} style={{ marginTop: '-3px' }} />
+        <ButtonIcon className="mr-3" label="Novo" icon={<FaPlus />} width={'12%'} style={{ marginTop: '-3px' }} onClick={()=>setTipoNota(0)}/>
         <ButtonIcon className="mr-3" label="Importar XML" icon={<FaFileUpload />} width={'18%'} style={{ marginTop: '-3px', border: '2px solid ' + theme.colors.primary, background: 'white', color: theme.colors.primary }} />
-        <ButtonIcon className="mr-3" label="Manifestar nota" icon={<FaFileSignature />} width={'19%'} style={{ marginTop: '-3px' }} color={theme.colors.warning} />
+        <ButtonIcon className="mr-3" label="Manifestar nota" icon={<FaFileSignature />} width={'19%'} style={{ marginTop: '-3px' }} color={theme.colors.warning} onClick={onManifestar} />
         <div className="linha-vertical h-8 m-2" style={{ marginTop: '-1px' }}></div>
         <div className="w-20 text-xs font-bold text-center">
           <p>Quantidade</p>
@@ -191,10 +212,11 @@ function Mde() {
           rowAlternationEnabled
           isSelectRow
           moduloSeletion='single'
+          onSelectionChanged={(e) => setNotaSelect(e.selectedRowsData[0])}
         />
       </ContainerTable>
     </Body>
-    <ModalDefault isOpen={showModalFiltro} title='FILTRAR NOTAS' onRequestClose={() => setShowModalFiltro(false)} width='50%' left="25%">
+    <ModalDefault isOpen={showModalFiltro} title='FILTRAR NOTAS' onRequestClose={() => setShowModalFiltro(false)} width='50%' left="22%" height="75%" margin="5%">
       <ContainerFiltro className="bg-white w-full p-3">
         <div className="text-left font-bold mb-5">
           <p className="text-xs">Filtro por data</p>
@@ -215,7 +237,7 @@ function Mde() {
             <InputDefault className="w-3/12 mr-5 mb-5" label="Número da nota" type="number" />
             <div className="flex w-full">
               {tamanhoIpuntCnpjCpf < 11 ?
-                <InputMask className="w-6/12 mr-5 " label="CNPJ" type="number" mask={'99.999.999/9999-99'} beforeMaskValue={onTesteCnpjCpf} />
+                <InputMask className="w-6/12 mr-5 " label="CNPJ" type="number" mask={'99.999.999/9999-99'} />
                 :
                 <InputMask className="w-6/12 mr-5 " label="CPF" type="number" mask={'999.999.999-99'} />
               }
@@ -224,12 +246,13 @@ function Mde() {
           </div>
         </div>
         <div className="flex justify-end w-full" style={{ bottom: 25, right: 15, position: 'absolute' }}>
-          <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={() => setShowModalEntrada(false)} />
+          <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={() => setShowModalFiltro(false)} />
           <ButtonBase label="FILTAR" model="btn_base" className="primary-color w-32" size="large" />
         </div>
       </ContainerFiltro>
     </ModalDefault>
-    <ModalEntrada showModal={showModalEntrada} closeModal={() => setShowModalEntrada(false)} />
+    <ModalEntrada showModal={showModalEntrada} closeModal={() => setShowModalEntrada(false)} tipo={tipoNota}/>
+    <ToastDefault />
   </Container>;
 }
 export default Mde;

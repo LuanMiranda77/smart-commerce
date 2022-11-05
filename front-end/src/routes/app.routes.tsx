@@ -12,6 +12,7 @@ import Pdv from '../module/venda/pages/Pdv';
 import { Layout } from "../components/Layout";
 import Dashboard from "../module/financeiro/pages/Dashboard";
 import { Notfound } from "../module/Notfound";
+import { EmConstrucao } from "../module/telaConstrucao";
 
 interface Props {
   setDefaultTheme(): void;
@@ -26,7 +27,7 @@ const AppRoutes: React.FC<Props> = ({ setDefaultTheme }) => {
         >
           <Routes>
 
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" />
             {/* nossas rotas */}
             <Route path="/produto" element={<Produto />} />
             <Route path="/configurar" element={<Configuracao />} />
@@ -36,6 +37,12 @@ const AppRoutes: React.FC<Props> = ({ setDefaultTheme }) => {
             <Route path="/venda" element={<Pdv />} />
             <Route path="/financeiro" element={<Dashboard />} />
             <Route path="*" element={<Notfound />} />
+            <Route path="/contas" element={<EmConstrucao />} />
+            <Route path="/plano-contas" element={<EmConstrucao />} />
+            <Route path="/dre" element={<EmConstrucao />} />
+            <Route path="/curva-abc" element={<EmConstrucao />} />
+            <Route path="/estoque-critico" element={<EmConstrucao />} />
+            <Route path="/sped" element={<EmConstrucao />} />
           </Routes>
         </Suspense>
       </Layout>

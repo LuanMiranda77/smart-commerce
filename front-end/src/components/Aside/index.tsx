@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FaCartArrowDown, FaFileInvoiceDollar, FaRegSun, FaShopify, FaSpeakap, FaStoreAlt, FaUserFriends } from 'react-icons/fa';
 import { Link } from "react-router-dom";
@@ -5,10 +6,8 @@ import { Logo } from '../Logo';
 import { Container, Header, MenuContainer } from './styles';
 
 export function Aside(){
+
   return <Container >
-            {/* <Header style={{justifyContent:"center", alignItems:'center'}}>
-              <Logo size='LARGE'/>
-            </Header> */}
             <MenuContainer>
               <Link to={'/venda'}>
                 <div className='w-100 text-center mb-2'>

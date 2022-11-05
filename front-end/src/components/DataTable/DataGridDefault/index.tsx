@@ -32,11 +32,14 @@ interface DataGridDefaultProps {
   rowAlternationEnabled?:boolean;
   showColumnLines?:boolean;
   moduloSeletion?: 'single'| 'multiple';
+  // styleCell?: (data: any)=> React.ReactNode;
   onRowClick?:(element: any)=>void;
   onSelectionChanged?:(element: any)=>void;
   onRowDblClick?:(element: any)=>void;
-  styleCell?: (data: any)=> React.ReactNode;
   onCellPrepared?:(element: any)=>void;
+  onInitialized?:(element: any)=>void;
+  onInitNewRow?:(element: any)=>void;
+  onEditorPrepared?:(element: any)=>void;
 
   // styleCellColumn?: (data: any)=> React.ReactNode;
 
@@ -57,10 +60,14 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
       
       height={'100%'}
       onSelectionChanged={props.onSelectionChanged}
+      onInitialized={props.onInitialized}
+      onInitNewRow={props.onInitNewRow}
+      onEditorPrepared={props.onEditorPrepared}
       onRowClick={props.onRowClick}
       onRowDblClick={props.onRowDblClick}
-      noDataText={''}
       onCellPrepared={props.onCellPrepared}
+      noDataText={''}
+
     >
       {props.isSelectRow ? <Selection mode={props.moduloSeletion}/> : null}
       <GroupPanel visible={props.columnGroup} />

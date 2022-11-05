@@ -13,8 +13,12 @@ interface InputSelectDefaultProps{
   autoFocus?: boolean;
   className?: string;
   defaultValue?: Object;
+  value?:any;
   onKeyDownCapture?:(e: any)=>void;
   onChange?:(e: any)=>void;
+  required?: boolean;
+  valid?:any
+  errorMessage?:any;
 }
 
 export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => {
@@ -39,7 +43,7 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
     }),
   }
   return <Container className='font-bold text-left input_line_group'>
-    <label className='label input_line__label' htmlFor="">{props.label}</label>
+    <label className='input_line__label' htmlFor="">{props.label}<span className='text-red-500 font-bold'>{props.required ? " *" : ''}</span></label>
     <Select
       id={'input-select'+props.label}
       className={'input ' + props.className}
@@ -53,8 +57,9 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       onChange={props.onChange}
       noOptionsMessage={(obj:{inputValue: string})=><p>Não existe items</p>}
       styles={customStyles}
-      
-      
+      value={props.value}
+      {...props.valid}
     />
+    <small className="text-red-500 absolute top-12 text-xs left-1 font-bold">{props.errorMessage}</small>
   </Container>
 }

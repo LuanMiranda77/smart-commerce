@@ -43,7 +43,7 @@ export const ContainerTable  = styled.div`
 `;
 
 export const ContainerFiltro  = styled.div`
-    height: calc(100vh - 90px) !important;
+    height: calc(100vh - 220px) !important;
     margin-top: -0.5rem;
     border-radius: 5px;
     input::-webkit-outer-spin-button,

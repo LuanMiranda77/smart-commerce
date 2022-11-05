@@ -5,7 +5,7 @@ export const Container  = styled.div`
  //adicionar stylos
   .primary-color{
       background-color: ${color => color.theme.colors.primary};
-      border: 2px solid ${color => color.theme.colors.primary};
+      border: 2px solid ${color=>(color.theme.title === 'dark' ? color.theme.colors.textLabel : color.theme.colors.primary)};
   }
   .secondary-color{
       background-color: ${color => color.theme.colors.secondary};
@@ -73,7 +73,7 @@ export const Container  = styled.div`
 
 .btn_line{
   background-color: transparent;
-  color: ${color => color.theme.title==='drak' ? color.theme.colors.textLabel : color.theme.colors.primary};
+  color: ${color => color.theme.title==='dark' ? color.theme.colors.textLabel : color.theme.colors.primary};
   font-weight: bold;
   border-radius: 8px; 
   height: var(--max-height-button);
