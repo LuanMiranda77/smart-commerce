@@ -12,7 +12,7 @@ export const usuarioSlice = createSlice({
             email: '',
             dataCriacao: null ,
             dataAtualizacao: null ,
-            acesso: new Date(),
+            acesso: null,
             status: 'S',
             password:'',
             telefone: '',

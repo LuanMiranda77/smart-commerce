@@ -17,7 +17,8 @@ interface InputSelectDefaultProps{
   onKeyDownCapture?:(e: any)=>void;
   onChange?:(e: any)=>void;
   required?: boolean;
-  error?:boolean;
+  valid?:any
+  errorMessage?:any;
 }
 
 export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => {
@@ -57,7 +58,8 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       noOptionsMessage={(obj:{inputValue: string})=><p>Não existe items</p>}
       styles={customStyles}
       value={props.value}
+      {...props.valid}
     />
-    {props.error && props.required ?<small className='text-red-500 absolute left-1 top-12'>O campo é obrigatório</small>:''}
+    <small className="text-red-500 absolute top-12 text-xs left-1 font-bold">{props.errorMessage}</small>
   </Container>
 }

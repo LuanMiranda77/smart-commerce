@@ -1,12 +1,17 @@
 // import {createStore , combineReducers} from 'redux';
 import { configureStore } from '@reduxjs/toolkit'
-import {usuarioSlice} from './slices';
+import {usuarioSlice, estabelecimentoSlice} from './slices';
+
+
 
 const storeConfig = configureStore({
     reducer:{
-        user: usuarioSlice.reducer
-        
-    }
+        user: usuarioSlice.reducer,
+        estabelecimento: estabelecimentoSlice.reducer,
+       
+    },
+    // middleware: (getDefaultMiddleware) =>
+    // getDefaultMiddleware().concat(pokemonApi.middleware),
 
 });
 

@@ -1,3 +1,4 @@
+import { EstabelecimentoType } from './../../../../domain/types/estabelecimento';
 import { api } from "../../../../config/api";
 
 /**
@@ -10,7 +11,7 @@ export class EstabelecimentoService {
     url='api/Estabelecimento';
 
     //modelo de request post
-    async post(pEntity: String){
+    async post(pEntity: EstabelecimentoType){
       const response = await api.post(this.url, pEntity).then( resp =>{
             return resp.data;
         })
@@ -29,7 +30,7 @@ export class EstabelecimentoService {
         .catch(error => {
             console.log(error.response.data);
             return Promise.reject(error.response.data[0]);
-        });;
+        });
       return response;
     }
     

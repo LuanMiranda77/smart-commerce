@@ -12,13 +12,15 @@ interface ButtonIconProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const ButtonIcon: React.FC<ButtonIconProps> = (props) => {
 
-  return <Container id={props.label}
+  return <Container 
+    id={props.label}
     onClick={props.onClick}
     color={props.color}
     // width={props.width}
+    type={props.type}
     {...props}
   >
-    <i style={{ fontSize: '15px' }}>{props.icon}</i>
-    <label className='ml-1' htmlFor={props.label} style={{ cursor: 'pointer', width:'100%' }}>{props.label}</label>
+    <i className='mr-1' style={{ fontSize: '15px' }}>{props.icon}</i>
+    {props.label}
   </Container>;
 }

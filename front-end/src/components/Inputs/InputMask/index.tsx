@@ -6,12 +6,12 @@ interface InputMaskProps extends InputHTMLAttributes<HTMLInputElement> {
   //adicionar os props
   label: string;
   mask: string | (string)[];
-  error?:boolean;
+  register?: any
+  errorMessage?: any;
 }
 
-export const InputMask: React.FC<InputMaskProps> = (props) => {
-
-  return <Container className={props.className}>
+export const InputMask: React.FC<InputMaskProps> = (props) => (
+  <Container className={props.className}>
     <label className={"input_line__label"}>{props.label}<span className='text-red-500 font-bold'>{props.required ? " *" : ''}</span></label>
     <InputMaskDefault
       className={'input_line__field'}
@@ -21,7 +21,8 @@ export const InputMask: React.FC<InputMaskProps> = (props) => {
       onChange={props.onChange}
       placeholder={props.placeholder}
       required={props.required}
+      {...props.register}
     />
-    {props.error && props.required ?<small className='text-red-500 absolute left-1 top-12'>O campo é obrigatório</small>:''}
+    <small className="text-red-500 absolute top-12 text-xs left-1 font-bold">{props.errorMessage}</small>
   </Container>
-}
+);

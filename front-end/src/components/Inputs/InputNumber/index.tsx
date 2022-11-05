@@ -17,6 +17,8 @@ interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement>{
   value?:any;
   onKeyDownCapture?:(e: any)=>void;
   color?:string;
+  valid?: any;
+  errorMessage?: any;
 
 }
 
@@ -39,6 +41,8 @@ export const InputNumber: React.FC<InputNumberProps> = (props) => {
       disabled={props.disabled ? props.disabled:false}
       readOnly={props.readOnly ? props.readOnly:false}
       value={props.value}
+      {...props.valid}
     />
+    <small className="text-red-500 absolute top-12 text-xs left-1 font-bold">{props.errorMessage}</small>
   </Container>;
 }
