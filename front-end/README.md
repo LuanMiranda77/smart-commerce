@@ -11,12 +11,21 @@
 
 Um projeto com forte atuação em frente de atendimento para empresas de meio e pequeno porte, realizado um suporte no controle de entradas de 	notas ficais com um jeito smart de inovação, tudo a uma palma de distância.
 
-<img src="https://img.shields.io/static/v1?label=Blog&message=Rocketseat&color=7159c1&style=for-the-badge&logo=ghost"/>
-![Badge](https://img.shields.io/badge/Blog-Rocketseat-%237159c1?style=for-the-badge&logo=ghost)
-[![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](http://shields.io/)
-[download-url]: https://npmjs.org/package/antd
+<!-- <img src="https://img.shields.io/static/v1?label=Blog&message=Rocketseat&color=7159c1&style=for-the-badge&logo=ghost"/> -->
+<img alt="GitHub" src="https://img.shields.io/github/license/LuanMiranda77/smart-commerce">
+<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/LuanMiranda77/smart-commerce/total">
+
+<img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/LuanMiranda77/smart-commerce">
+<img alt="GitHub issues" src="https://img.shields.io/github/issues/LuanMiranda77/smart-commerce">
+<img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/LuanMiranda77/smart-commerce?color=red">
+<img alt="GitHub forks" src="https://img.shields.io/github/forks/LuanMiranda77/smart-commerce?style=social">
+<img alt="GitHub followers" src="https://img.shields.io/github/followers/LuanMiranda77?style=social">
+
+
+
 
 </div>
+
 
 ## ✨ Features
 
