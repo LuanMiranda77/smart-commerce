@@ -1,7 +1,8 @@
 import { UserAplicationType } from '../domain/types/user_aplication';
 import { logout } from "../service/auth";
-import userPersistState from './userPersistState';
+import usePersistState from '../hooks/usePersistState';
 import _ from 'lodash';
+import { persistLocalStorage } from './persistLocalStorage';
 
 export class UtilsGeral {
 
@@ -10,8 +11,9 @@ export class UtilsGeral {
     }
 
     public static setTokenLogin(user: UserAplicationType){
-        let key = this.encrypt(this.geraStringAleatoria(10)+'&'+user.nome+'&'+this.geraStringAleatoria(20)+'&'+user.roles+'&'+this.geraStringAleatoria(15)+'&'+user.id+"&"+this.geraStringAleatoria(5)+'&'+user.status+"&"+this.geraStringAleatoria(8));
-        localStorage.setItem("@TOKEN_KEY", key);
+        let data = this.encrypt(this.geraStringAleatoria(10)+'&'+user.nome+'&'+this.geraStringAleatoria(20)+'&'+user.roles+'&'+this.geraStringAleatoria(15)+'&'+user.id+"&"+this.geraStringAleatoria(5)+'&'+user.status+"&"+this.geraStringAleatoria(8));
+        // localStorage.setItem("@TOKEN_KEY", data);
+        persistLocalStorage("@TOKEN_KEY", data);
     }
 
     public static getTokenLogin(){
@@ -29,9 +31,9 @@ export class UtilsGeral {
                 acesso: null,
                 status: 'S', 
                 password: '', 
-                telefone:'',
+                celular:'',
                 cargo:'',
-                roles:[1,2,3],
+                roles:'',
                 // role: Number(array[3])
             } 
             return userLogado;

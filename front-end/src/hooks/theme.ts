@@ -2,14 +2,14 @@ import { DefaultTheme } from 'styled-components';
 import dark from '../styles/themes/dark';
 import light from '../styles/themes/light';
 import roxo from '../styles/themes/roxo';
-import userPersistState from '../utils/userPersistState';
+import usePersistState from './usePersistState';
 
 
 export class ThemeContext {
 
     static ThemeProvider = () => {
 
-        const [theme, setTheme] = userPersistState<DefaultTheme>("@theme-local", light);
+        const [theme, setTheme] = usePersistState<DefaultTheme>("@theme-local", light);
 
         const setDefaultTheme =() => {
             setTheme(

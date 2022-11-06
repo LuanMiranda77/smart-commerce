@@ -151,7 +151,7 @@ function Usuario() {
         <div className='mb-7 text-left'>
           <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Contato</p>
           <Divider tipo='horizontal' />
-          <InputMask className='w-2/12' label='Telefone' mask={'(99) 9.9999-9999'} value={userAplication.telefone} onChange={(e)=> dispatch(usuarioSlice.actions.telefone(e.target.value))}/>
+          <InputMask className='w-2/12' label='Celular' mask={'(99) 9.9999-9999'} value={userAplication.celular} onChange={(e)=> dispatch(usuarioSlice.actions.telefone(e.target.value))}/>
         </div>
 
         <div className='text-left'>

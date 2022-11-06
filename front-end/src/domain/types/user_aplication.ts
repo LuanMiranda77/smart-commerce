@@ -9,7 +9,7 @@ export type UserAplicationType = {
   acesso: null | Date;
   status: 'S' | 'N';
   password: string;
-  telefone: string;
+  celular: string;
   cargo: string;
-  roles: Array<number>;
+  roles: string;
 }

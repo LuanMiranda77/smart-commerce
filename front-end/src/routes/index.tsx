@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import AppRoutes from './app.routes';
 import AuthRoutes from './auth.routes';
-import { isAuthenticated } from '../service/auth';
+import { isAuthenticated } from '../config/auth';
 
 // import { Container } from './styles';
 
@@ -10,9 +10,14 @@ interface Props{
 }
 
 const Routes: React.FC<Props> = ({setDefaultTheme}) => {
-    const logado = isAuthenticated();
+    let logado = isAuthenticated();
+    console.log(logado);
+    useEffect(()=>{
+      logado = isAuthenticated();
+    },[logado])
+
   return <>
-        {logado ? <AppRoutes setDefaultTheme={setDefaultTheme}/>: <AuthRoutes/>}
+        {logado ? <AppRoutes setDefaultTheme={setDefaultTheme}/> : <AuthRoutes/>}
   </>;
 }
 

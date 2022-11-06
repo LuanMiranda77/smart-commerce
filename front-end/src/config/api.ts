@@ -3,7 +3,7 @@ import { getToken } from "./auth";
 
 
 const api = axios.create({
-    baseURL: process.env.API_URL,
+    baseURL: 'http://localhost:8080/',
     headers:{
         
     }
@@ -11,9 +11,9 @@ const api = axios.create({
 
 api.interceptors.request.use(async config => {
     const token = getToken();
-    // if (token && config !== null) {
-    //   config.headers.Authorization = `${token}`;
-    // }
+    if (token && config !== null) {
+      config.headers.Authorization = `${token}`;
+    }
     return config;
 });
 

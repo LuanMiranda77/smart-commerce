@@ -35,6 +35,22 @@ export const Container  = styled.div`
         }
     }
 
+    .div-menu{
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem;
+        text-align: center;
+        position: absolute;
+        left: 89vw;
+        top:3rem;
+    }
+    .div-item{
+        &:hover{
+            color: ${props =>props.theme.colors.black};
+            border-color: ${props =>props.theme.colors.info};
+        }
+    }
+
 @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
 }

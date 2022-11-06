@@ -26,7 +26,6 @@ const AppRoutes: React.FC<Props> = ({ setDefaultTheme }) => {
           fallback={<div className="">Carregando....</div>}
         >
           <Routes>
-
             <Route path="/" />
             {/* nossas rotas */}
             <Route path="/produto" element={<Produto />} />

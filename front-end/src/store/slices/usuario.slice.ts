@@ -15,9 +15,9 @@ export const usuarioSlice = createSlice({
             acesso: null,
             status: 'S',
             password:'',
-            telefone: '',
+            celular: '',
             cargo: '',
-            roles: new Array<number>()
+            roles: '',
         } as UserAplicationType,
 
         usuarios:new Array<UserAplicationType>()
@@ -36,12 +36,12 @@ export const usuarioSlice = createSlice({
             state.userAplication.password = action.payload
         },
         telefone(state, action: PayloadAction<string>){
-            state.userAplication.telefone = action.payload
+            state.userAplication.celular = action.payload
         },
         cargo(state, action: PayloadAction<string>){
             state.userAplication.cargo = action.payload
         },
-        roles(state, action: PayloadAction<Array<number>>){
+        roles(state, action: PayloadAction<string>){
             state.userAplication.roles = action.payload;
         },
 
