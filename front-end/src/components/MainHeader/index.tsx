@@ -70,7 +70,7 @@ export const MainHeader: React.FC<Props> = ({ alterTheme, onClickMenu, onClose }
           <b>{userAplication.nome}</b>
           <small style={{ marginTop: '-6px' }}>{userAplication.cargo}</small>
         </div>
-        <FaEllipsisV onClick={onShowMenu} className="text-2xl mt-1" style={{ cursor: 'pointer', color: theme.colors.textLabel }} />
+        <FaEllipsisV onClick={()=>onShowMenu(0)} className="text-2xl mt-1" style={{ cursor: 'pointer', color: theme.colors.textLabel }} />
         {/* <FaTheaterMasks onClick={alterTheme} className="text-4xl" style={{ cursor: 'pointer', color: theme.colors.textLabel }} /> */}
       </div>
       <div className="div-menu card-local" style={{ display: show }}>

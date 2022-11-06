@@ -17,6 +17,7 @@ import { RootState } from '../../../../store/index.store';
 import { toast } from "react-toastify";
 import { ToastDefault } from "../../../../components";
 import {useNavigate} from 'react-router-dom';
+import { persistLocalStorage } from "../../../../utils/persistLocalStorage";
 
 
 function Login() {
@@ -33,7 +34,8 @@ function Login() {
       if (response.status !== "S") {
         toast.error("Seu usuario foi desativado! fale com administrador do sistema");
       }
-      dispatch(load(response));
+      persistLocalStorage<UserAplicationType>("@user-data", response);
+      // dispatch(load(response));
       // navegate('/');
       // window.r;
       window.location.reload();
