@@ -1,24 +1,24 @@
-import React, {useEffect} from 'react';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { isAuthenticated } from '../config/auth';
 import AppRoutes from './app.routes';
 import AuthRoutes from './auth.routes';
-import { isAuthenticated } from '../config/auth';
 
 // import { Container } from './styles';
 
-interface Props{
-    setDefaultTheme(): void;
+interface Props {
+  setDefaultTheme(): void;
 }
 
-const Routes: React.FC<Props> = ({setDefaultTheme}) => {
-    let logado = isAuthenticated();
-    console.log(logado);
-    useEffect(()=>{
-      logado = isAuthenticated();
-    },[logado])
-
-  return <>
-        {logado ? <AppRoutes setDefaultTheme={setDefaultTheme}/> : <AuthRoutes/>}
-  </>;
+const Routes: React.FC<Props> = ({ setDefaultTheme }) => {
+  let logado = isAuthenticated();
+  return <BrowserRouter>
+    {logado ?
+      <AppRoutes setDefaultTheme={setDefaultTheme} />
+      :
+      <AuthRoutes />
+    }
+  </BrowserRouter>;
 }
 
 export default Routes;

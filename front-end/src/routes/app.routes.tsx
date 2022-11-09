@@ -20,7 +20,6 @@ interface Props {
 
 const AppRoutes: React.FC<Props> = ({ setDefaultTheme }) => {
   return (
-    <BrowserRouter>
       <Layout alterTheme={setDefaultTheme}>
         <Suspense
           fallback={<div className="">Carregando....</div>}
@@ -45,7 +44,6 @@ const AppRoutes: React.FC<Props> = ({ setDefaultTheme }) => {
           </Routes>
         </Suspense>
       </Layout>
-    </BrowserRouter>
   );
 };
 export default AppRoutes;

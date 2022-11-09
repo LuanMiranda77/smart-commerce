@@ -1,70 +1,66 @@
+import { Cargo } from './../../domain/enums/index';
 import { UserAplicationType } from '../../domain/types/user_aplication';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+const initialState = {
+    id: 0,
+    codigo:0,
+    nome: '',
+    cpf:'',
+    email: '',
+    dataCriacao: null ,
+    dataAtualizacao: null ,
+    acesso: null,
+    status: 'S',
+    password:'',
+    celular: '',
+    cargo: null,
+    roles: '',
+}as UserAplicationType
+
 export const usuarioSlice = createSlice({
     name:'user-aplication',
-    initialState:{
-        userAplication: {
-            id: 0,
-            codigo:0,
-            nome: '',
-            cpf:'',
-            email: '',
-            dataCriacao: null ,
-            dataAtualizacao: null ,
-            acesso: null,
-            status: 'S',
-            password:'',
-            celular: '',
-            cargo: '',
-            roles: '',
-        } as UserAplicationType,
-
-        usuarios:new Array<UserAplicationType>()
-    },
+    initialState: initialState, 
     reducers:{
         cpf(state, action: PayloadAction<string>){
-            state.userAplication.cpf = action.payload
+            state.cpf = action.payload
         },
         nome(state, action: PayloadAction<string>){
-            state.userAplication.nome = action.payload
+            state.nome = action.payload
         },
         email(state, action: PayloadAction<string>){
-            state.userAplication.email = action.payload
+            state.email = action.payload
         },
         password(state, action: PayloadAction<string>){
-            state.userAplication.password = action.payload
+            state.password = action.payload
         },
         telefone(state, action: PayloadAction<string>){
-            state.userAplication.celular = action.payload
+            state.celular = action.payload
         },
-        cargo(state, action: PayloadAction<string>){
-            state.userAplication.cargo = action.payload
+        cargo(state, action: PayloadAction<Cargo>){
+            state.cargo = action.payload
         },
         roles(state, action: PayloadAction<string>){
-            state.userAplication.roles = action.payload;
+            state.roles = action.payload;
         },
-
+        setToken(state, action: PayloadAction<any>){
+            state.token = action.payload;
+        },
         load(state, action: PayloadAction<UserAplicationType>){
-            state.userAplication = {...action.payload}
+            return state = {...action.payload}
         },
 
         save(state, action: PayloadAction<UserAplicationType>){
-            state.userAplication = {...action.payload}
+            state = {...action.payload}
         },
 
         reset(state){
-            state.userAplication = {...usuarioSlice.getInitialState().userAplication};
+            state = {...initialState};
         },
 
-        addUser(state, action: PayloadAction<UserAplicationType>){
-            state.usuarios.push(action.payload);
-        }
-
- 
     }
 });
-export const {nome, save, addUser, cargo, cpf, email, load, password, roles, telefone } = usuarioSlice.actions;
-export const selectState = (state: { userAplication: UserAplicationType}) => state.userAplication;
+export const {nome, save, cargo, cpf, email, load, password, roles, telefone, setToken, reset } = usuarioSlice.actions;
+export const selectState = (state: UserAplicationType) => state;
 export const selectStateList = (state: { usuarios: Array<UserAplicationType>}) => state.usuarios;
 export default usuarioSlice.reducer;

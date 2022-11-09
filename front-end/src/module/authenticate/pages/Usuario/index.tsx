@@ -31,7 +31,7 @@ import { RootState } from '../../../../store/index.store';
 
 function Usuario() {
   const dispatch = useDispatch();
-  const {userAplication} = useSelector((state:RootState)=> state.user);
+  const userAplication = useSelector((state:RootState)=> state.userAplication);
   // const {nome} = useSelector(selectState);
   // const userRed = useSelector();
 

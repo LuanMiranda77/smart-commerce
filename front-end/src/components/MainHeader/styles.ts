@@ -43,12 +43,20 @@ export const Container  = styled.div`
         position: absolute;
         left: 89vw;
         top:3rem;
+        z-index: 999999999;
+        &:focus-within{
+            display: none;
+        }
+        &:hover ::before{
+            display: none;
+        }
     }
     .div-item{
-        &:hover{
+        &:hover {
             color: ${props =>props.theme.colors.black};
             border-color: ${props =>props.theme.colors.info};
         }
+        
     }
 
 @media screen and (max-width: 40em) {

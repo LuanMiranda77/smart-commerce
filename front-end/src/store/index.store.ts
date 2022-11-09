@@ -1,13 +1,15 @@
 // import {createStore , combineReducers} from 'redux';
 import { configureStore } from '@reduxjs/toolkit'
-import {usuarioSlice, estabelecimentoSlice} from './slices';
+import {usuarioSlice, estabelecimentoSlice, menuUserSlice } from './slices';
 
 
 
 const storeConfig = configureStore({
     reducer:{
-        user: usuarioSlice.reducer,
+        userAplication: usuarioSlice.reducer,
         estabelecimento: estabelecimentoSlice.reducer,
+        menuUser: menuUserSlice.reducer,
+
        
     },
     // middleware: (getDefaultMiddleware) =>

@@ -1,6 +1,8 @@
 import { api } from "../../../../config/api";
-import { login} from "../../../../config/auth";
+import { login, logout} from "../../../../config/auth";
 import { UserAplicationType } from "../../../../domain";
+import { persistLocalStorage } from "../../../../utils/persistLocalStorage";
+import { UtilsUserLocal } from "../../../../utils/utils_userLocal";
 
 
 /**
@@ -10,19 +12,27 @@ import { UserAplicationType } from "../../../../domain";
 export class AuthenticateService {
 
   url='api/usuario';
-  auth='/tokken';
+  auth='/token';
   erro='';
 
   public async login(pEntity : any) {
-      
-      const token = await api.post(this.auth, {email:'admin',password:'Ads%$#@!Ads'}).then(response =>{
+      const token = await api.post(this.auth, {email:process.env.REACT_APP_API_USER, password:process.env.REACT_APP_API_PASSWORD}).then(response =>{
           login(response.data);
           return response.data;
 
       });
       if(token){
-          const response = await api.post(this.url+'/login', pEntity)
+          const response = await api.post(this.url+'/login', pEntity,{
+            headers:{
+                'Authorization': token
+            }
+          })
           .then( resp =>{
+              let userLogado = resp.data;
+              userLogado.token = token;
+            //   persistLocalStorage<UserAplicationType>("@user-data", userLogado, 'set');
+              UtilsUserLocal.setTokenLogin(userLogado);
+              logout();
               return resp.data;
           })
           .catch(error => {

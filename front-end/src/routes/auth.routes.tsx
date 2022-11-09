@@ -9,7 +9,6 @@ import { Notfound } from "../module/Notfound";
 
 const AuthRoutes: React.FC = () => {
   return (
-    <BrowserRouter>
       <Suspense fallback={<div className="">Carregando....</div>}>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -18,7 +17,6 @@ const AuthRoutes: React.FC = () => {
           <Route path="*" element={<Notfound />} />
         </Routes>
       </Suspense>
-    </BrowserRouter>
   );
 };
 export default AuthRoutes;

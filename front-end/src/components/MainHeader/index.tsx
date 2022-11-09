@@ -1,16 +1,20 @@
-import React, { useContext, useState } from "react";
-import { AiOutlineMenu } from "react-icons/ai";
-import { Container } from "./styles";
-import { ThemeContext } from "styled-components";
-import { FaBars, FaClosedCaptioning, FaEllipsisV, FaTheaterMasks, FaUser } from "react-icons/fa";
-import Select from 'react-select';
-import Dropdown from 'react-dropdown';
-import { useDispatch, useSelector } from 'react-redux';
-import { InputSelectEstabelecimento } from "../Inputs/InputSelectEstabelecimento";
+import React, { useContext, useEffect } from "react";
 import 'react-dropdown/style.css';
-import { RootState } from "../../store/index.store";
-import { Divider } from "../Divider";
 import { BsDoorClosedFill } from "react-icons/bs";
+import { FaBars, FaEllipsisV, FaTheaterMasks, FaUser } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import { ThemeContext } from "styled-components";
+import { Cargo } from "../../domain/enums";
+import { RootState } from "../../store/index.store";
+import { reset, save } from '../../store/slices/menuUser.slice';
+import { load } from "../../store/slices/usuario.slice";
+import { persistLocalStorage } from "../../utils/persistLocalStorage";
+import { UtilsGeral } from "../../utils/utils_geral";
+import { UtilsUserLocal } from "../../utils/utils_userLocal";
+import { Divider } from "../Divider";
+import { InputSelectEstabelecimento } from "../Inputs/InputSelectEstabelecimento";
+import { Container } from "./styles";
 interface Props {
   //adicionar os props
   alterTheme(): void;
@@ -19,41 +23,55 @@ interface Props {
 }
 
 export const MainHeader: React.FC<Props> = ({ alterTheme, onClickMenu, onClose }) => {
-  const theme = useContext(ThemeContext);
-  const { userAplication } = useSelector((state: RootState) => state.user);
-  const [show, setShow] = useState('none');
-  const options = [
-    'Meus dados', 'two', 'Sair'
-  ];
+  const dispatch = useDispatch();
+  const { display } = useSelector((state: RootState) => state.menuUser);
+  const { colors, title } = useContext(ThemeContext);
+  const userAplication = useSelector((state: RootState) => state.userAplication);
+  const navegate = useNavigate();
+
+  useEffect(() => {
+    dispatch(load(UtilsUserLocal.getTokenLogin()));
+  }, [dispatch])
+
+  const onCloseAll = () => {
+    onClose();
+    if (display === 'flex') {
+      dispatch(reset());
+    }
+  }
 
   const onShowMenu = (option: number) => {
-    if (show === 'flex' && option === 1) {
-      setShow("none");
+    console.log(option,display);
+    if (display === 'flex' && option === 1) {
+      dispatch(save('none'));
 
-    } else if (show === 'flex' && option === 2) {
-      setShow("none");
+    } else if (display === 'flex' && option === 2) {
+      dispatch(save('none'));
       alterTheme();
-    } else if (show === 'flex' && option === 3) {
-      setShow("none");
-
+    } else if (display === 'flex' && option === 3) {
+      dispatch(save('none'));
+      UtilsUserLocal.logout();
+      // console.log(UtilsUserLocal.getTokenLogin());
+      navegate('/')
+      window.location.reload();
     } else {
-      if(show === 'flex'){
-        setShow("none");
-      }else{
-        setShow("flex");
+      if (display === 'flex') {
+        dispatch(save('none'));
+      } else {
+        dispatch(save('flex'));
       }
     }
   }
 
   return (
-    <Container className="" style={{ boxShadow: '0px 15px 10px gray' }} onClick={onClose}>
+    <Container className="" style={{ boxShadow: '0px 15px 10px gray' }} onClick={onCloseAll}>
       <div className="flex text-left" style={{ width: '60%' }}>
         <button
           style={{
             backgroundColor: "transparent",
             border: 0,
             fontSize: "25px",
-            color: theme.colors.textLabel,
+            color: colors.textLabel,
             marginRight: '2rem'
           }}
           onClick={onClickMenu}
@@ -66,14 +84,22 @@ export const MainHeader: React.FC<Props> = ({ alterTheme, onClickMenu, onClose }
       {/* <h1>MH</h1> */}
       <div className="flex text-rigth">
         {/* <button onClick={alterTheme}>SetTema</button> */}
-        <div className="grid mr-3 text-xs" style={{ color: theme.colors.textLabel }}>
+        {/* <FaUser onClick={alterTheme} className="text-xl mr-2" style={{ color: colors.textLabel }}/> */}
+        <div className="grid mr-3 text-xs" style={{ color: colors.textLabel }}>
           <b>{userAplication.nome}</b>
-          <small style={{ marginTop: '-6px' }}>{userAplication.cargo}</small>
+          <small style={{ marginTop: '-2px', color: colors.warning }} >{
+          userAplication.cargo=== Cargo.REVENDA ? 'REVENDA':
+          userAplication.cargo=== Cargo.ADMIN ? 'ADMINISTRADOR':
+          userAplication.cargo=== Cargo.ESTOQUISTA ? 'ESTOQUISTA':
+          userAplication.cargo=== Cargo.GERENTE ? 'GERENTE':
+          userAplication.cargo=== Cargo.MASTER ? 'MASTER': 'CAIXA'
+          
+          }</small>
         </div>
-        <FaEllipsisV onClick={()=>onShowMenu(0)} className="text-2xl mt-1" style={{ cursor: 'pointer', color: theme.colors.textLabel }} />
-        {/* <FaTheaterMasks onClick={alterTheme} className="text-4xl" style={{ cursor: 'pointer', color: theme.colors.textLabel }} /> */}
+        <FaEllipsisV onClick={() => onShowMenu(0)} className="text-2xl hover:text-red-500" style={{ cursor: 'pointer', color: colors.textLabel, marginTop:'0px' }} />
+        {/* <FaTheaterMasks onClick={alterTheme} className="text-4xl" style={{ cursor: 'pointer', color: colors.textLabel }} /> */}
       </div>
-      <div className="div-menu card-local" style={{ display: show }}>
+      <div className="div-menu card-local" style={{ display: display }}>
         <label htmlFor="" className="flex items-center hover:text-blue-900 hover:font-bold cursor-pointer"
           onClick={() => onShowMenu(1)}
         >

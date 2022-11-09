@@ -1,3 +1,4 @@
+import { Cargo } from './../enums/index';
 export type UserAplicationType = {
   id: number;
   codigo: number;
@@ -10,6 +11,7 @@ export type UserAplicationType = {
   status: 'S' | 'N';
   password: string;
   celular: string;
-  cargo: string;
+  cargo: Cargo | null;
   roles: string;
+  token: string;
 }
