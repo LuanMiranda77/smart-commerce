@@ -25,10 +25,10 @@ export class UtilsUserLocal{
 
     public static getTokenLogin() : UserAplicationType {
         let key = persistLocalStorage("@TOKEN_KEY", '', 'get');
+        let userLogado = {} as UserAplicationType;
         if(key != null){
             const array = this.decrypt(key).split('&');
-            console.log(array);
-            const userLogado: UserAplicationType={
+            userLogado = {
                 id: Number(array[1]),
                 codigo:Number(array[3]),
                 cpf:array[5],
@@ -48,9 +48,10 @@ export class UtilsUserLocal{
                 roles:array[23],
                 token:array[25],
                 status: array[27]==="S"?"S":'N', 
-            } 
+            };
             return userLogado;
         }
+        return userLogado;
         
     }
 
