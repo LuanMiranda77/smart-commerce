@@ -19,7 +19,6 @@ export class AuthenticateService {
       const token = await api.post(this.auth, {email:process.env.REACT_APP_API_USER, password:process.env.REACT_APP_API_PASSWORD}).then(response =>{
           login(response.data);
           return response.data;
-
       });
       if(token){
           const response = await api.post(this.url+'/login', pEntity,{
@@ -44,8 +43,8 @@ export class AuthenticateService {
       }
   }
 
-  public async recuperarSenha(user: UserAplicationType){
-      const response = await api.post(this.url+'/recuperasenha', user)
+  public async recuperarSenha(pEntity: any){
+      const response = await api.post(this.url+'/recuperasenha', pEntity)
       .then( resp =>{
           return resp.data;
       })

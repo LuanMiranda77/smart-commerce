@@ -1,6 +1,7 @@
 import { Cargo } from './../../domain/enums/index';
 import { UserAplicationType } from '../../domain/types/user_aplication';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../index.store';
 
 const initialState = {
     id: 0,
@@ -61,6 +62,5 @@ export const usuarioSlice = createSlice({
     }
 });
 export const {nome, save, cargo, cpf, email, load, password, roles, telefone, setToken, reset } = usuarioSlice.actions;
-export const selectState = (state: UserAplicationType) => state;
-export const selectStateList = (state: { usuarios: Array<UserAplicationType>}) => state.usuarios;
+export const selectState = (state: RootState) => state.userAplication;
 export default usuarioSlice.reducer;

@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RegimeTributario } from '../../domain/enums';
 import { EstabelecimentoType } from './../../domain/types/estabelecimento';
 import { api } from "../../config/api";
+import { RootState } from '../index.store';
 
 const initialState = {
     razao: '',
@@ -53,5 +54,5 @@ export const estabelecimentoSlice = createSlice({
     }
 });
 export const {save, load, reset } = estabelecimentoSlice.actions;
-export const selectState = (state: EstabelecimentoType) => state;
+export const selectState = (state: RootState) => state.estabelecimento;
 export default estabelecimentoSlice.reducer;

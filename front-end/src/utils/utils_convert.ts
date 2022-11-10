@@ -25,6 +25,14 @@ export class UtilsConvert {
         return valor;
     }
 
+    static removeCaracterEspecial = (value: string) : string => {
+        let valor = '';
+        if (value !== undefined) {
+            valor = value.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        }
+        return valor;
+    }
+
     static convertArrayNumberToMoney(array: any[]) {
         let _array = array.map(valor => this.formatCurrency(valor));
         return _array;

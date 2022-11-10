@@ -20,7 +20,7 @@ import { ColumnsDataGridType } from '../../../../components/types';
 import { Container, TableContainer } from './styles';
 import { cargos } from './__mocks__';
 import { useDispatch, useSelector } from 'react-redux';
-import {selectStateList, usuarioSlice } from '../../../../store/slices/usuario.slice';
+import {selectState, usuarioSlice } from '../../../../store/slices/usuario.slice';
 import { UserAplicationType } from '../../../../domain/types/user_aplication';
 import { RootState } from '../../../../store/index.store';
 
@@ -31,7 +31,7 @@ import { RootState } from '../../../../store/index.store';
 
 function Usuario() {
   const dispatch = useDispatch();
-  const userAplication = useSelector((state:RootState)=> state.userAplication);
+  const userAplication = useSelector(selectState);
   // const {nome} = useSelector(selectState);
   // const userRed = useSelector();
 
@@ -40,7 +40,7 @@ function Usuario() {
   const [user, setUser] = useState<any>();
   const [showPoupAtivo, setShowPopupAtivo] = useState(false);
   const [showPoupInativo, setShowPopupInativo] = useState(false);
-  const [dataSource, setDataSource] = useState<Array<UserAplicationType>>(useSelector(selectStateList));
+  const [dataSource, setDataSource] = useState<Array<UserAplicationType>>([]);
   const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
 
 
@@ -194,7 +194,7 @@ function Usuario() {
     <TableContainer>
       <DataGridDefault
         columns={columns}
-        dataSource={useSelector(selectStateList)}
+        dataSource={[]}
         allowSorting={false}
         paginar={false}
         // showRowLines

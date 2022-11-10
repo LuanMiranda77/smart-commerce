@@ -1,6 +1,10 @@
 import TreeView from 'devextreme-react/tree-view';
-import React from 'react';
+import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import { Cargo } from '../../domain/enums';
+import { selectState } from '../../store/slices/usuario.slice';
 import { menus } from './lista';
 import { Container } from './styles';
 
@@ -10,9 +14,41 @@ interface MenuAsideProps {
 }
 
 export const MenuAside: React.FC<MenuAsideProps> = (props) => {
+  const userAplication = useSelector(selectState);
+  const [menusValid, setMenusValid] = useState<any>(menus);
   const navegar = useNavigate();
+
+  useEffect(()=>{
+    let lista = [];
+    if(userAplication.cargo === Cargo.GERENTE){
+      lista = _.filter(menusValid,(menu)=>{
+        if(menu.text === 'GERENCIA' || menu.text === 'ESTOQUE' || menu.text === "SPED"){
+          return menu;
+        }
+      });
+      setMenusValid(lista);
+    }
+    else  if(userAplication.cargo === Cargo.CAIXA){
+      setMenusValid([]);
+    }
+    else  if(userAplication.cargo === Cargo.ESTOQUISTA){
+      lista = _.filter(menusValid,(menu)=>{
+        if(menu.text === 'ESTOQUE'){
+          return menu;
+        }
+      });
+      setMenusValid(lista);
+    }
+
+
+  }, [userAplication.cargo]);
+
+  const validarUserPermissoes = () =>{
+    
+
+  }
+
   const onSelectMenu = (item: any) => {
-    console.log(item.itemData.text);
     let option = item.itemData.text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
     switch (option) {
       case 'usuarios':
@@ -63,7 +99,7 @@ export const MenuAside: React.FC<MenuAsideProps> = (props) => {
   return <Container>
     <TreeView
       id="treeview"
-      items={menus}
+      items={menusValid}
       width={'100%'}
       height={'100%'}
       searchMode={'contains'}

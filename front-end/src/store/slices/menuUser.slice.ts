@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../index.store';
 
 const initialState = {
     display: 'none'   
@@ -24,5 +25,5 @@ export const menuUserSlice = createSlice({
     }
 });
 export const {save, load, reset } = menuUserSlice.actions;
-export const selectState = (state: any) => state;
+export const selectState = (state: RootState) => state.menuUser;
 export default menuUserSlice.reducer;

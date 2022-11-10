@@ -1,5 +1,5 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useContext, useState } from "react";
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FieldValues, useForm } from "react-hook-form";
 import { FaArchive, FaCameraRetro, FaSave, FaStoreAlt, FaWindowClose } from "react-icons/fa";
 import { ThemeContext } from 'styled-components';
@@ -154,9 +154,9 @@ function Estabelecimento() {
           <InputDefault className="w-4/12 mr-5"
             label="Razão"
             type="text"
+            required
             register={register('razao')}
             errorMessage={errors.razao?.message}
-            required
             value={estabelecimento.razao}
 
           />

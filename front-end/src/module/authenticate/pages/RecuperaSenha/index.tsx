@@ -6,31 +6,46 @@ import {
   InputBase,
   Logo,
   ModalDefault,
+  ToastDefault,
 } from "../../../../components";
 import { Container } from "./styles";
 import icon from "../../../../assets/Logo/icon.svg";
 import { FaEnvelope } from "react-icons/fa";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FieldValues, useForm } from "react-hook-form";
+import * as yup from "yup";
+import { AuthenticateService } from "../services/usuarioService";
+import { response } from "express";
 /**
  *@Author
  *@Issue
  */
 
 function RecuperaSenha() {
-  toast.success("w");
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const open = () => {
-    setOpenModal(true);
-  };
 
-  const close = () => {
-    setOpenModal(false);
-  };
 
-  const body = (
-    <div>
-      <label htmlFor="">Dados pessoasi</label>
-    </div>
-  );
+  const [email, setEmail] = useState<string>('');
+  const service = new AuthenticateService();
+
+  const schema = yup.object().shape({
+    email: yup.string().email('O e-mail não é válido').required('O campo é obrigatório'),
+    // confirmePass: yup.string().oneOf([yup.ref("password")]).required('Digite a senha')
+  }).required();
+
+  const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  const onSend = (form: any) =>{
+    console.log(email, form);
+    service.recuperarSenha({email:email, password:""}).then(response=>{
+      toast.success('Sua solicitação vou enviada, verifique sua caixa de e-mail');
+    })
+    .catch(err=>{
+      toast.error(err.mensagemUsuario);
+    });
+  }
+
 
   return (
     <Container>
@@ -46,20 +61,25 @@ function RecuperaSenha() {
           <p>Para recuperar seu acesso preencha o campo com o e-mail</p>
           <p>cadastrado em sua conta do nosso app.</p>
         </small>
-        <div>
+        <form onSubmit={handleSubmit(onSend)}>
           <div className="flex mb-9">
             <FaEnvelope className="ml-2 mt-1.5" style={{ fontSize: '24px', position: 'absolute' }} />
-            <input className="input_line__field" style={{ paddingLeft: '2.5rem' }} type="email" placeholder="Digite o e-mail" name="email" id="email" />
+            <input className="input_line__field" style={{ paddingLeft: '2.5rem' }} type="email" placeholder="Digite o e-mail" id="email" 
+            required
+            {...register('email')}
+            value={email}
+            onChange={(event)=>setEmail(event.target.value)}
+            />
           </div>
+         {errors.email?.message}
           <ButtonBase
             model="btn_base"
             label="Enviar"
             className="primary-color my-5"
             size="small"
-            onClick={open}
+            type="submit"
           />
-          <ButtonIcon width="100%"  onClick={open} label="save" icon={<FaEnvelope/>}/>
-        </div>
+        </form>
         <div>
           <small className="p-4 font-bold text-sm">
             <p> Caso não tenha acesso ao e-mail cadastrado por favor entre em
@@ -99,13 +119,7 @@ function RecuperaSenha() {
 
 
       </div>
-      {/* <ToastDefault/> */}
-      <ModalDefault
-        title="Aviso"
-        isOpen={openModal}
-        children={body}
-        onRequestClose={close}
-      />
+      <ToastDefault/>
     </Container>
   );
 }
