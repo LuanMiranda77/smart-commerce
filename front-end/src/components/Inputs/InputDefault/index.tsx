@@ -27,6 +27,7 @@ export const InputDefault: React.FC<InputDefaultProps> = (props) =>(
             readOnly={props.readOnly ? props.readOnly:false}
             required={props.required ? props.required:false}
             {...props.register}
+            value={props.value}
           />
           <small className="text-red-500 absolute top-12 text-xs left-1 font-bold">{props.errorMessage}</small>
     </Container>

@@ -6,6 +6,7 @@ import { Container } from './styles';
 interface InputFileProdutoProps {
   //adicionar os props
   lado: 'left' | 'right';
+  upload: (event: any)=>void;
 }
 
 export const InputFileProduto: React.FC<InputFileProdutoProps> = (props) => {
@@ -31,7 +32,7 @@ export const InputFileProduto: React.FC<InputFileProdutoProps> = (props) => {
         <label htmlFor="file"><FaWindowClose className='text-red-500 text-2xl cursor-pointer' style={{ bottom: '0', marginTop: '5px' }} /></label>
       </div>
       : ''}
-    <input type="file" accept="image/png,image/jpeg" name='file' id='file' onChange={(event) => uploadImge(event)} />
+    <input type="file" accept="image/png,image/jpeg" name='file' id='file' onChange={(event) => props.upload(event)} />
     <div className='h-28 w-28 bg-gray-200 flex items-center justify-center border-2 border-blue-400 shadow-md'>
 
       {url === '' ?

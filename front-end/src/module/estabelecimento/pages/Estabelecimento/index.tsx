@@ -1,23 +1,23 @@
-import React, { useContext, useState } from "react";
 import { yupResolver } from '@hookform/resolvers/yup';
+import React, { useContext, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { FaArchive, FaCameraRetro, FaSave, FaStoreAlt, FaWindowClose } from "react-icons/fa";
+import { FaCameraRetro, FaSave, FaStoreAlt, FaWindowClose } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { ThemeContext } from 'styled-components';
 import * as yup from "yup";
 import {
   ButtonIcon, Divider, InputCheck, InputDefault,
   InputMask, InputSelectDefault, ToastDefault
 } from "../../../../components";
+import { RegimeTributario } from '../../../../domain/enums';
 import tipos from '../../../../helpers/help_lista_uf.json';
-import { Container, FormContainer } from './styles';
-import { regimes } from './__mooks';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/index.store';
 import { save } from '../../../../store/slices/estabelecimento.slice';
-import { UtilsValid } from '../../../../utils/utils_valid';
 import { UtilsGeral } from '../../../../utils/utils_geral';
-import { toast } from 'react-toastify';
-import { RegimeTributario } from '../../../../domain/enums';
+import { UtilsValid } from '../../../../utils/utils_valid';
+import { Container, FormContainer } from './styles';
+import { regimes } from './__mooks';
 
 
 function Estabelecimento() {
@@ -76,7 +76,7 @@ function Estabelecimento() {
       uf: uf.value,
       tel: form.tel,
       cel: form.cel,
-      logo:url,
+      logo: url,
       email: form.email,
     }
     ));
@@ -124,6 +124,29 @@ function Estabelecimento() {
             errorMessage={errors.doc?.message}
             value={checkCPF ? estabelecimento.cpf : estabelecimento.cnpj}
           />
+          {!checkCPF ?
+            <>
+              <InputDefault className="w-2/12 mr-5"
+                label={"Ins. Estadual"}
+                onChange={(e) => setCpfSemMask(e.target.value)}
+                max="11"
+                required type="number"
+              // register={register('doc')}
+              // errorMessage={errors.doc?.message}
+              // value={checkCPF ? estabelecimento.cpf : estabelecimento.cnpj}
+              />
+              <InputDefault className="w-2/12 mr-5"
+                label={"Ins. Municipal"}
+                onChange={(e) => setCpfSemMask(e.target.value)}
+                max="11"
+                type="number"
+              // register={register('doc')}
+              // errorMessage={errors.doc?.message}
+              // value={checkCPF ? estabelecimento.cpf : estabelecimento.cnpj}
+              />
+            </>
+            : ""
+          }
           <div className="w-3/12" >
             <InputSelectDefault label="Regime da empresa" options={regimes}
               defaultValue={regimes[0]}
@@ -132,10 +155,10 @@ function Estabelecimento() {
             />
           </div>
 
-          <div className='flex absolute' style={{left:'87vw', top:'18vh'}}>
+          <div className='flex absolute' style={{ left: '87vw', top: '18vh' }}>
             <div className='mr-2'>
               <label htmlFor="file"><FaCameraRetro className='text-blue-900 text-2xl cursor-pointer' style={{ bottom: '0', marginTop: '60px' }} /></label>
-              <label><FaWindowClose className='text-red-500 text-2xl cursor-pointer' style={{ bottom: '0', marginTop: '5px' }}  onClick={()=>setUrl('')}/></label>
+              <label><FaWindowClose className='text-red-500 text-2xl cursor-pointer' style={{ bottom: '0', marginTop: '5px' }} onClick={() => setUrl('')} /></label>
             </div>
             <input type="file" accept="image/png,image/jpeg" name='file' id='file' onChange={(event) => uploadImge(event)} />
             <div className='h-28 w-28 bg-gray-200 flex items-center justify-center border-2 border-blue-400 shadow-md'>
@@ -166,13 +189,15 @@ function Estabelecimento() {
             value={estabelecimento.nome}
             register={register('nome')}
           />
-          <InputDefault className="w-2/12 mr-5" label="Código IBGE"
-            type="number"
-            value={estabelecimento.codIbge}
-            register={register('codIbge')}
-            required
-          />
-          
+          {!checkCPF ?
+            <InputDefault className="w-2/12 mr-5" label="Código IBGE"
+              type="number"
+              value={estabelecimento.codIbge}
+              register={register('codIbge')}
+              required
+            />
+            : ""}
+
         </div>
       </div>
 

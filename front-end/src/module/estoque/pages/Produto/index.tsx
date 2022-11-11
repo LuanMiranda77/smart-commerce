@@ -415,7 +415,7 @@ function Produto() {
           </div>
           <InputDefault className='w-6/12 mb-5' label='Código de Barras' type='number' />
           <ContainerFoto>
-            <InputFileProduto lado='left' />
+            <InputFileProduto lado='left'  upload={()=>{}}/>
           </ContainerFoto>
           <InputDefault className='mb-5' label='Descrição' type='text' />
 

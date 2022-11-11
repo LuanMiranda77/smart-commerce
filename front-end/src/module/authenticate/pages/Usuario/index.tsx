@@ -1,6 +1,8 @@
 import _ from 'lodash';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FaPauseCircle, FaPenSquare, FaPlayCircle, FaPlus, FaSave } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { ThemeContext } from 'styled-components';
 import {
   ButtonBase,
@@ -17,12 +19,12 @@ import {
   TabsDefault
 } from "../../../../components";
 import { ColumnsDataGridType } from '../../../../components/types';
+import { Cargo } from '../../../../domain/enums';
+import { UserAplicationType } from '../../../../domain/types/user_aplication';
+import { selectState, usuarioSlice } from '../../../../store/slices/usuario.slice';
+import { UsuarioService } from '../services/usuarioService';
 import { Container, TableContainer } from './styles';
 import { cargos } from './__mocks__';
-import { useDispatch, useSelector } from 'react-redux';
-import {selectState, usuarioSlice } from '../../../../store/slices/usuario.slice';
-import { UserAplicationType } from '../../../../domain/types/user_aplication';
-import { RootState } from '../../../../store/index.store';
 
 /**
 *@Author
@@ -37,20 +39,51 @@ function Usuario() {
 
   const { colors, title } = useContext(ThemeContext);
   const [showModal, setShowModal] = useState(false);
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState<UserAplicationType>(userAplication);
   const [showPoupAtivo, setShowPopupAtivo] = useState(false);
   const [showPoupInativo, setShowPopupInativo] = useState(false);
   const [dataSource, setDataSource] = useState<Array<UserAplicationType>>([]);
   const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
+  const service = new UsuarioService();
+
+  useEffect(() => {
+    service.getUsuarios().then(response => {
+      setDataSource(response);
+      setDataSourceCopy(response);
+    }).catch(error => {
+        toast.error(error.mensagemUsuario);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   const renderCell = (element: any) => {
-    if (element.value === "S") {
+    if(element.value === "S"){
       return <div className='rounded-full h-6 text-center p-1' style={{ backgroundColor: colors.success }}><span className='font-bold text-white'>ATIVO</span></div>
     }
-    else if (element.value === "N") {
+
+    else if(element.value === "N"){
       return <div className='rounded-full  h-6 text-center p-1' style={{ backgroundColor: colors.error }}><span className='font-bold text-white'>INATIVO</span></div>
     }
+    
+    else if(element.columnIndex === 2){
+      let cargo = '';
+      if (element.value === Cargo.MASTER) {
+        cargo = 'MASTER';
+      } else if (element.value === Cargo.ADMIN) {
+        cargo = 'ADMIN';
+      } else if (element.value === Cargo.CAIXA) {
+        cargo = 'CAIXA';
+      } else if (element.value === Cargo.ESTOQUISTA) {
+        cargo = 'ESTOQUISTA';
+      } else if (element.value === Cargo.GERENTE) {
+        cargo = 'GERENTE';
+      } else {
+        cargo = 'REVENDA';
+      }
+      return <span className='font-bold' style={{ color: colors.info }}>{cargo}</span>
+    }
+
     else {
       return <div className='flex items-center justify-center'>
         {element.data.status === 'N' ?
@@ -66,16 +99,15 @@ function Usuario() {
   const columns = new Array<ColumnsDataGridType>();
   columns.push({ dataField: 'codigo', caption: 'CÓDIGO', alignment: 'left', dataType: 'string', width: 70, cssClass: 'font-bold column-1' });
   columns.push({ dataField: 'nome', caption: 'NOME', alignment: 'left', dataType: 'string', cssClass: 'font-bold' });
-  columns.push({ dataField: 'cargo', caption: 'CARGO', alignment: 'center', dataType: 'number', format: { type: 'fixedPoint', precision: 3 }, width: 150 });
-  columns.push({ dataField: 'email', caption: 'E-MAIL', alignment: 'left', dataType: 'string', cssClass: 'font-bold column-2', width: 250 });
+  columns.push({ dataField: 'cargo', caption: 'CARGO', alignment: 'center', dataType: '', format: { type: 'fixedPoint', precision: 3 }, width: 100, styleCell: renderCell });
+  columns.push({ dataField: 'email', caption: 'E-MAIL', alignment: 'left', dataType: 'string', cssClass: 'font-bold column-2', width: 220 });
   columns.push({ dataField: 'dataCriacao', caption: 'DATA CRIAÇÃO', alignment: 'center', dataType: 'date', width: 110 });
   columns.push({ dataField: 'telefone', caption: 'TELEFONE', alignment: 'center', dataType: 'date', width: 120 });
-  columns.push({ dataField: 'acesso', caption: 'ACESSO', alignment: 'center', dataType: 'date', width: 110 });
+  columns.push({ dataField: 'acesso', caption: 'ACESSO', alignment: 'center', dataType: 'date', width: 100 });
   columns.push({ dataField: 'status', caption: 'STATUS', alignment: 'center', dataType: 'number', width: 100, styleCell: renderCell });
   columns.push({ dataField: '', caption: '', alignment: 'center', dataType: '', width: 100, styleCell: renderCell });
 
-  const closeModal = () =>{
-    usuarioSlice.actions.reset();
+  const closeModal = () => {
     setShowModal(false);
   }
 
@@ -89,7 +121,7 @@ function Usuario() {
   }
 
   const onEdit = (user: any) => {
-    
+    setUser(user);
     setShowModal(true);
 
   }
@@ -97,29 +129,38 @@ function Usuario() {
   const showPopupConfirmeAction = (user: any, tipo: number) => {
     setUser(user);
     (tipo === 1 ? setShowPopupAtivo(true) : setShowPopupInativo(true));
-
   }
 
   const onAtive = (user: any) => {
-    let data = _.map(dataSourceCopy, (value) => {
-      if (user.codigo === value.codigo) {
-        value.status = 'S';
-      }
-      return value;
+    service.setStatus(user.id, "S").then(response => {
+      let data = _.map(dataSourceCopy, (value) => {
+        if (user.id === value.id) {
+          value.status = 'S';
+        }
+        return value;
+      });
+      setDataSource(data);
+      setShowPopupAtivo(false);
+    }).catch(error => {
+        setShowPopupAtivo(false);
+        toast.error(error.mensagemUsuario);
     });
-    setDataSource(data);
-    setShowPopupAtivo(false);
   }
 
   const onInative = (user: any) => {
-    let data = _.map(dataSourceCopy, (value) => {
-      if (user.codigo === value.codigo) {
-        value.status = 'N';
-      }
-      return value;
+    service.setStatus(user.id, "N").then(response => {
+      let data = _.map(dataSourceCopy, (value) => {
+        if (user.id === value.id) {
+          value.status = 'N';
+        }
+        return value;
+      });
+      setDataSource(data);
+      setShowPopupInativo(false);
+    }).catch(error => {
+      setShowPopupInativo(false);
+      toast.error(error.mensagemUsuario);
     });
-    setDataSource(data);
-    setShowPopupInativo(false);
   }
 
 
@@ -133,17 +174,17 @@ function Usuario() {
             <Divider tipo='horizontal' />
           </div>
           <div className='flex items-center justify-between'>
-            <InputMask className='w-2/12' label='CPF' mask={'999.999.999-99'} value={userAplication.cpf} onChange={(e)=> dispatch(usuarioSlice.actions.cpf(e.target.value))}/>
+            <InputMask className='w-2/12' label='CPF' mask={'999.999.999-99'} value={user.cpf} onChange={(e) => setUser({...user, cpf:e.target.value})} />
             <div className='rounded-full w-28 h-10 text-center p-2 font-bold text-white'
-              style={{ backgroundColor: userAplication.status === 'S' ? colors.success : colors.error }}
+              style={{ backgroundColor: user.status === 'S' ? colors.success : colors.error }}
             >
-              <p>{userAplication.status === 'S' ? 'ATIVO' : 'INATIVO'}</p>
+              <p>{user.status === 'S' ? 'ATIVO' : 'INATIVO'}</p>
             </div>
           </div>
           <div className='flex mt-3'>
-            <InputDefault className='w-4/12 mr-6' label='Nome' type='text' value={userAplication.nome} onChange={(e)=> dispatch(usuarioSlice.actions.nome(e.target.value))}/>
+            <InputDefault className='w-4/12 mr-6' label='Nome' type='text' value={user.nome} onChange={(e) => setUser({...user, nome:e.target.value})} />
             <div className='w-3/12'>
-              <InputSelectDefault label='Cargo' options={cargos} defaultValue={cargos[2]}  value={userAplication.cargo} onChange={(e)=> dispatch(usuarioSlice.actions.cargo(e.target.value))}/>
+              <InputSelectDefault label='Cargo' options={cargos} defaultValue={cargos[2]} value={_.find(cargos, {'value':user.cargo})} onChange={(e) => setUser({...user, cargo:e.target.value})} />
             </div>
           </div>
         </div>
@@ -151,15 +192,15 @@ function Usuario() {
         <div className='mb-7 text-left'>
           <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Contato</p>
           <Divider tipo='horizontal' />
-          <InputMask className='w-2/12' label='Celular' mask={'(99) 9.9999-9999'} value={userAplication.celular} onChange={(e)=> dispatch(usuarioSlice.actions.telefone(e.target.value))}/>
+          <InputMask className='w-3/12' label='Celular' mask={'(99) 9.9999-9999'} value={user.celular} onChange={(e) => setUser({...user, celular:e.target.value})} />
         </div>
 
         <div className='text-left'>
           <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Acesso</p>
           <Divider tipo='horizontal' />
-          <InputDefault className='w-5/12 mr-6' label='Email' type='email' value={userAplication.email} onChange={(e)=> dispatch(usuarioSlice.actions.email(e.target.value))}/>
+          <InputDefault className='w-5/12 mr-6' label='Email' type='email' value={user.email} onChange={(e) => setUser({...user, email:e.target.value})} />
           <div className='flex mt-3'>
-            <InputDefault className='w-2/12 mr-6' label='Senha' type='password' value={userAplication.password} onChange={(e)=> dispatch(usuarioSlice.actions.password(e.target.value))}/>
+            <InputDefault className='w-2/12 mr-6' label='Senha' type='password' value={user.password} onChange={(e) => setUser({...user, password:e.target.value})} />
             <InputDefault className='w-2/12 mr-6' label='Confirme senha' type='password' />
           </div>
         </div>
@@ -194,7 +235,7 @@ function Usuario() {
     <TableContainer>
       <DataGridDefault
         columns={columns}
-        dataSource={[]}
+        dataSource={dataSource}
         allowSorting={false}
         paginar={false}
         // showRowLines

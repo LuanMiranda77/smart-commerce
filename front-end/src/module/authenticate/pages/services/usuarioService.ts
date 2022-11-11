@@ -1,7 +1,6 @@
 import { api } from "../../../../config/api";
-import { login, logout} from "../../../../config/auth";
+import { login, logout } from "../../../../config/auth";
 import { UserAplicationType } from "../../../../domain";
-import { persistLocalStorage } from "../../../../utils/persistLocalStorage";
 import { UtilsUserLocal } from "../../../../utils/utils_userLocal";
 
 
@@ -9,7 +8,7 @@ import { UtilsUserLocal } from "../../../../utils/utils_userLocal";
 *@Author
 *@Issue
 */
-export class AuthenticateService {
+export class UsuarioService {
 
   url='api/usuario';
   auth='/token';
@@ -65,6 +64,31 @@ export class AuthenticateService {
       });
       return response;
   }
+
+  public async getUsuarios(){
+    const response = await api.get(this.url)
+    .then( resp =>{
+        return resp.data;
+    })
+    .catch(error => {
+        console.log(error);
+        return Promise.reject(error.response.data[0]);
+    });
+    return Promise.resolve(response);
+  }
+
+  public async setStatus( id:number, status: string){
+    const response = await api.put(this.url+`/status/${id}/${status}`)
+    .then( resp =>{
+        return resp.data;
+    })
+    .catch(error => {
+        console.log(error);
+        return Promise.reject(error.response.data[0]);
+    });
+    return Promise.resolve(response);
+  }
+  
     
   
 }

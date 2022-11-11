@@ -15,7 +15,7 @@ import { SizeLogo } from '../../../../domain/enums';
 import { UserAplicationType } from '../../../../domain/types/user_aplication';
 import { RootState } from '../../../../store/index.store';
 import { persistLocalStorage } from "../../../../utils/persistLocalStorage";
-import { AuthenticateService } from "../services/usuarioService";
+import { UsuarioService } from "../services/usuarioService";
 import { Container } from "./styles";
 import {load} from '../../../../store/slices/usuario.slice';
 
@@ -28,7 +28,7 @@ function Login() {
   const dispatch = useDispatch();
   const userAplication = useSelector((state: RootState) => state.userAplication);
 
-  const service = new AuthenticateService();
+  const service = new UsuarioService();
   const login = () => {
     service.login(user).then(response => {
       if (response.status !== "S") {

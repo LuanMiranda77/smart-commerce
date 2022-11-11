@@ -1,21 +1,15 @@
-import { useState } from "react";
-import { toast } from "react-toastify";
-import {
-  ButtonBase,
-  ButtonIcon,
-  InputBase,
-  Logo,
-  ModalDefault,
-  ToastDefault,
-} from "../../../../components";
-import { Container } from "./styles";
-import icon from "../../../../assets/Logo/icon.svg";
-import { FaEnvelope } from "react-icons/fa";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FieldValues, useForm } from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaEnvelope } from "react-icons/fa";
+import { toast } from "react-toastify";
 import * as yup from "yup";
-import { AuthenticateService } from "../services/usuarioService";
-import { response } from "express";
+import icon from "../../../../assets/Logo/icon.svg";
+import {
+  ButtonBase, ToastDefault
+} from "../../../../components";
+import { UsuarioService } from "../services/usuarioService";
+import { Container } from "./styles";
 /**
  *@Author
  *@Issue
@@ -25,7 +19,7 @@ function RecuperaSenha() {
 
 
   const [email, setEmail] = useState<string>('');
-  const service = new AuthenticateService();
+  const service = new UsuarioService();
 
   const schema = yup.object().shape({
     email: yup.string().email('O e-mail não é válido').required('O campo é obrigatório'),
@@ -36,14 +30,14 @@ function RecuperaSenha() {
     resolver: yupResolver(schema)
   });
 
-  const onSend = (form: any) =>{
+  const onSend = (form: any) => {
     console.log(email, form);
-    service.recuperarSenha({email:email, password:""}).then(response=>{
+    service.recuperarSenha({ email: email, password: "" }).then(response => {
       toast.success('Sua solicitação vou enviada, verifique sua caixa de e-mail');
     })
-    .catch(err=>{
-      toast.error(err.mensagemUsuario);
-    });
+      .catch(err => {
+        toast.error(err.mensagemUsuario);
+      });
   }
 
 
@@ -62,23 +56,25 @@ function RecuperaSenha() {
           <p>cadastrado em sua conta do nosso app.</p>
         </small>
         <form onSubmit={handleSubmit(onSend)}>
-          <div className="flex mb-9">
-            <FaEnvelope className="ml-2 mt-1.5" style={{ fontSize: '24px', position: 'absolute' }} />
-            <input className="input_line__field" style={{ paddingLeft: '2.5rem' }} type="email" placeholder="Digite o e-mail" id="email" 
-            required
-            {...register('email')}
-            value={email}
-            onChange={(event)=>setEmail(event.target.value)}
+          <>
+            <div className="flex mb-9">
+              <FaEnvelope className="ml-2 mt-1.5" style={{ fontSize: '24px', position: 'absolute' }} />
+              <input className="input_line__field" style={{ paddingLeft: '2.5rem' }} type="email" placeholder="Digite o e-mail" id="email"
+                required
+                {...register('email')}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </div>
+            {errors.email?.message}
+            <ButtonBase
+              model="btn_base"
+              label="Enviar"
+              className="primary-color my- "
+              size="small"
+              type="submit"
             />
-          </div>
-         {errors.email?.message}
-          <ButtonBase
-            model="btn_base"
-            label="Enviar"
-            className="primary-color my-5"
-            size="small"
-            type="submit"
-          />
+          </>
         </form>
         <div>
           <small className="p-4 font-bold text-sm">
@@ -119,7 +115,7 @@ function RecuperaSenha() {
 
 
       </div>
-      <ToastDefault/>
+      <ToastDefault />
     </Container>
   );
 }
