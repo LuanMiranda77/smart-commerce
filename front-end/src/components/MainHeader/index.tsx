@@ -9,6 +9,7 @@ import { Cargo } from "../../domain/enums";
 import { RootState } from "../../store/index.store";
 import { reset, save } from '../../store/slices/menuUser.slice';
 import { load } from "../../store/slices/usuario.slice";
+import { loadEstabelecimentos } from "../../store/slices/estabelecimentos.slice";
 import { persistLocalStorage } from "../../utils/persistLocalStorage";
 import { UtilsGeral } from "../../utils/utils_geral";
 import { UtilsUserLocal } from "../../utils/utils_userLocal";
@@ -30,7 +31,11 @@ export const MainHeader: React.FC<Props> = ({ alterTheme, onClickMenu, onClose }
   const navegate = useNavigate();
 
   useEffect(() => {
-    dispatch(load(UtilsUserLocal.getTokenLogin()));
+    let user = UtilsUserLocal.getTokenLogin();
+    if(user.cargo === Cargo.MASTER){
+      user.estabelecimento=0;
+    }
+    dispatch(load(user));
   }, [dispatch])
 
   const onCloseAll = () => {

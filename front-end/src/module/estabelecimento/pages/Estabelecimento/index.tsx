@@ -74,8 +74,8 @@ function Estabelecimento() {
       bairro: form.bairro,
       cidade: form.cidade,
       uf: uf.value,
-      tel: form.tel,
-      cel: form.cel,
+      foneFixo: form.tel,
+      celular1: form.cel,
       logo: url,
       email: form.email,
     }
@@ -112,7 +112,6 @@ function Estabelecimento() {
           <InputCheck css="p-2" label="usar CPF?"
             checked={checkCPF}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => setCheckCPF(event.currentTarget.checked)}
-
           />
         </div>
         <div className="flex mb-5">
@@ -180,7 +179,7 @@ function Estabelecimento() {
             required
             register={register('razao')}
             errorMessage={errors.razao?.message}
-            value={estabelecimento.razao}
+            // value={estabelecimento.razao}
 
           />
           <InputDefault className="w-4/12 mr-5" label="Nome Fantasia"
@@ -224,7 +223,7 @@ function Estabelecimento() {
             required
             register={register('tel')}
             errorMessage={errors.telefone?.message}
-            value={estabelecimento.tel}
+            value={estabelecimento.foneFixo}
           />
           <InputMask className="w-40 mr-5" label={"Celular"}
             mask={'(99) 9.9999-9999'}
@@ -232,7 +231,7 @@ function Estabelecimento() {
             required
             register={register('cel')}
             errorMessage={errors.cel?.message}
-            value={estabelecimento.cel}
+            value={estabelecimento.celular1}
           />
           <InputDefault className="w-4/12 mr-5" label="E-mail" type="email"
             required register={register('email')}

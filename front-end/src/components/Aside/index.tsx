@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import { Cargo } from '../../domain/enums';
 import { reset } from '../../store/slices/menuUser.slice';
-import { selectState } from '../../store/slices/usuario.slice';
+import { selectStateUser } from '../../store/slices/usuario.slice';
 import { Container, MenuContainer } from './styles';
 
 export function Aside() {
   const dispatch = useDispatch();
-  const userAplication = useSelector(selectState);
+  const userAplication = useSelector(selectStateUser);
 
   return <Container onClick={() => { dispatch(reset()) }}>
     <MenuContainer>

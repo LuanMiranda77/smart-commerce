@@ -1,6 +1,7 @@
 import { api } from "../../../../config/api";
 import { login, logout } from "../../../../config/auth";
 import { UserAplicationType } from "../../../../domain";
+import { Cargo } from "../../../../domain/enums";
 import { UtilsUserLocal } from "../../../../utils/utils_userLocal";
 
 
@@ -28,6 +29,9 @@ export class UsuarioService {
           .then( resp =>{
               let userLogado = resp.data;
               userLogado.token = token;
+              if(userLogado.cargo!== Cargo.MASTER){
+                userLogado.estabelecimento = resp.data.estabelecimento.id;
+              }
             //   persistLocalStorage<UserAplicationType>("@user-data", userLogado, 'set');
               UtilsUserLocal.setTokenLogin(userLogado);
               logout();
@@ -65,8 +69,20 @@ export class UsuarioService {
       return response;
   }
 
-  public async getUsuarios(){
-    const response = await api.get(this.url)
+  public async save(user: UserAplicationType){
+    const response = await api.post(this.url, user)
+    .then( resp =>{
+        return resp.data;
+    })
+    .catch(error => {
+        console.log(error);
+        return Promise.reject(error.response.data[0]);
+    });
+    return response;
+}
+
+  public async getUsuarios(estabelecimento: number){
+    const response = await api.get(this.url+`/estabelecimento/${estabelecimento}`)
     .then( resp =>{
         return resp.data;
     })

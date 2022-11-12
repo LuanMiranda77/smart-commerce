@@ -1,21 +1,26 @@
-import {RegimeTributario} from '../enums';
+import { RegimeTributario } from '../enums';
 
 export type EstabelecimentoType ={
     id: number | undefined,
-    razao: string,
-    nome:string | undefined,
     cnpj:string | undefined,
     cpf:string | undefined,
-    regime: RegimeTributario.MEI | RegimeTributario.SIMPLES | RegimeTributario.PRESUMIDO | RegimeTributario.REAL,
+    instEstadual: string | undefined,
+    instMunicipal: string | undefined,
+    razao: string,
+    nome:string | undefined,
     cep:string | undefined,
     logradouro: string| undefined,
     numero: string| undefined,
     bairro: string| undefined,
     cidade: string| undefined,
     uf: string| undefined,
-    tel: string| undefined,
-    cel: string| undefined,
-    email:string,
     logo: string| undefined,
     codIbge:string | undefined,
+    regime: RegimeTributario.MEI | RegimeTributario.SIMPLES | RegimeTributario.PRESUMIDO | RegimeTributario.REAL,
+    email:string,
+    email2:string | undefined,
+    foneFixo: string| undefined,
+    celular1: string,
+    celular2: string| undefined,
+    matrizId: string | undefined,
 }

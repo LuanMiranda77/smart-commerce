@@ -19,7 +19,8 @@ export class UtilsUserLocal{
         +user.cargo+'&'+this.geraStringAleatoria(20)+'&'
         +user.roles+'&'+this.geraStringAleatoria(15)+'&'
         +user.token+'&'+this.geraStringAleatoria(15)+'&'
-        +user.status+"&"+this.geraStringAleatoria(8));
+        +user.status+"&"+this.geraStringAleatoria(8)+'&'
+        +user.estabelecimento+"&"+this.geraStringAleatoria(8));
         persistLocalStorage("@TOKEN_KEY", data, 'set');
     }
 
@@ -28,6 +29,7 @@ export class UtilsUserLocal{
         let userLogado = {} as UserAplicationType;
         if(key != null){
             const array = this.decrypt(key).split('&');
+            console.log(array);
             userLogado = {
                 id: Number(array[1]),
                 codigo:Number(array[3]),
@@ -48,6 +50,7 @@ export class UtilsUserLocal{
                 roles:array[23],
                 token:array[25],
                 status: array[27]==="S"?"S":'N', 
+                estabelecimento:Number(array[29])
             };
             return userLogado;
         }

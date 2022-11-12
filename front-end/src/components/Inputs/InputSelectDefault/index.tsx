@@ -49,7 +49,7 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       className={'input ' + props.className}
       options={props.options}
       placeholder={props.placeholder}
-      isSearchable={props.isSearchable ? props.isSearchable : true}
+      isSearchable={props.isSearchable}
       isClearable={props.isClearable}
       defaultValue={props.defaultValue}
       autoFocus={props.autoFocus}

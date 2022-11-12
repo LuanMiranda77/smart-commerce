@@ -1,7 +1,8 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Container } from './styles';
 import { reset } from '../../store/slices/menuUser.slice';
+import { RootState } from '../../store/index.store';
 
 interface Props {
   children: React.ReactNode;
@@ -10,9 +11,13 @@ interface Props {
 
 export const Content: React.FC<Props> = ({ children, closeMenu }) => {
   const dispatch = useDispatch();
+  const { display } = useSelector((state: RootState) => state.menuUser);
   const close = () => {
     closeMenu();
-    dispatch(reset())
+    // dispatch(reset());
+    if (display === 'flex') {
+      dispatch(reset());
+    }
   }
   return <Container onClick={close} style={{ backgroundImage: '../../assets/Logo/logo.svg' }}>
     {children}

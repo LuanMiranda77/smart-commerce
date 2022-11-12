@@ -1,4 +1,5 @@
 import { Cargo } from './../enums/index';
+import { EstabelecimentoType } from './estabelecimento';
 export type UserAplicationType = {
   id: number;
   codigo: number;
@@ -14,4 +15,5 @@ export type UserAplicationType = {
   cargo: Cargo | null;
   roles: string;
   token: string;
+  estabelecimento: number | null | undefined
 }

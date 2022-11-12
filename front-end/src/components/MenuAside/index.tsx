@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { Cargo } from '../../domain/enums';
-import { selectState } from '../../store/slices/usuario.slice';
+import { selectStateUser } from '../../store/slices/usuario.slice';
 import { menus } from './lista';
 import { Container } from './styles';
 
@@ -14,7 +14,7 @@ interface MenuAsideProps {
 }
 
 export const MenuAside: React.FC<MenuAsideProps> = (props) => {
-  const userAplication = useSelector(selectState);
+  const userAplication = useSelector(selectStateUser);
   const [menusValid, setMenusValid] = useState<any>(menus);
   const navegar = useNavigate();
 

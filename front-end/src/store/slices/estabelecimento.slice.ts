@@ -1,58 +1,55 @@
-import { EstabelecimentoService } from './../../module/estabelecimento/pages/services/EstabelecimentoService';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RegimeTributario } from '../../domain/enums';
-import { EstabelecimentoType } from './../../domain/types/estabelecimento';
-import { api } from "../../config/api";
 import { RootState } from '../index.store';
+import { EstabelecimentoType } from './../../domain/types/estabelecimento';
+import { EstabelecimentoService } from './../../module/estabelecimento/pages/services/EstabelecimentoService';
 
 const initialState = {
+    id: undefined,
+    cnpj:'',
+    cpf:'',
+    instEstadual: '',
+    instMunicipal: '',
     razao: '',
-    nome:undefined,
-    cnpj:undefined,
-    cpf:undefined,
+    nome:'',
+    cep:'',
+    logradouro: '',
+    numero: '',
+    bairro: '',
+    cidade: '',
+    uf: '',
+    logo: '',
+    codIbge:'',
     regime: RegimeTributario.MEI,
-    cep:undefined,
-    logradouro: undefined,
-    numero: undefined,
-    bairro: undefined,
-    cidade: undefined,
-    uf: undefined,
-    tel:undefined,
-    cel:undefined,
     email:'',
-    logo: undefined,
-    codIbge:undefined,
-    
+    email2:'',
+    foneFixo: '',
+    celular1: '',
+    celular2: '',
+    matrizId: '',
 } as EstabelecimentoType;
 
 const service = new EstabelecimentoService();
-const url='api/Estabelecimento';
+const url='api/estabelecimento';
 
 export const estabelecimentoSlice = createSlice({
     name:'estabelecimento',
     initialState: initialState,
     reducers:{
 
-        load(state){
-            api.get(url).then( resp =>{
-                return {...state, estabelecimento: resp.data};
-            })
-            .catch(error => {
-                console.log(error.response.data);
-                return Promise.reject(error.response.data[0]);
-            });
+        load(state, action: PayloadAction<EstabelecimentoType>){
+           return state = {...action.payload}
         },
 
         save(state, action: PayloadAction<EstabelecimentoType>){
-             service.post(action.payload);
-             return {...state, estabelecimento: action.payload}
+             return state = {...action.payload}
         },
 
         reset(state){
-            return {...state, estabelecimento:initialState}
+            return state = {...initialState}
         },
     }
 });
 export const {save, load, reset } = estabelecimentoSlice.actions;
-export const selectState = (state: RootState) => state.estabelecimento;
+export const selectStateEstab = (state: RootState) => state.estabelecimento;
 export default estabelecimentoSlice.reducer;

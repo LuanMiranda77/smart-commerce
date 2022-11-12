@@ -1,6 +1,6 @@
 // import {createStore , combineReducers} from 'redux';
 import { configureStore } from '@reduxjs/toolkit'
-import {usuarioSlice, estabelecimentoSlice, menuUserSlice } from './slices';
+import {usuarioSlice, estabelecimentoSlice, menuUserSlice, estabelecimentosSlice } from './slices';
 
 
 
@@ -8,6 +8,7 @@ const storeConfig = configureStore({
     reducer:{
         userAplication: usuarioSlice.reducer,
         estabelecimento: estabelecimentoSlice.reducer,
+        estabelecimentos: estabelecimentosSlice.reducer,
         menuUser: menuUserSlice.reducer,
 
        

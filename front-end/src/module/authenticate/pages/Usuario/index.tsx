@@ -1,9 +1,13 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { response } from 'express';
 import _ from 'lodash';
 import { useContext, useEffect, useState } from 'react';
+import { FieldValues, useForm } from "react-hook-form";
 import { FaPauseCircle, FaPenSquare, FaPlayCircle, FaPlus, FaSave } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { ThemeContext } from 'styled-components';
+import * as yup from "yup";
 import {
   ButtonBase,
   ButtonIcon,
@@ -21,9 +25,12 @@ import {
 import { ColumnsDataGridType } from '../../../../components/types';
 import { Cargo } from '../../../../domain/enums';
 import { UserAplicationType } from '../../../../domain/types/user_aplication';
-import { selectState, usuarioSlice } from '../../../../store/slices/usuario.slice';
+import { selectStateEstab } from '../../../../store/slices/estabelecimento.slice';
+import { initialState, selectStateUser } from '../../../../store/slices/usuario.slice';
+import { UtilsGeral } from '../../../../utils/utils_geral';
+import { UtilsValid } from '../../../../utils/utils_valid';
 import { UsuarioService } from '../services/usuarioService';
-import { Container, TableContainer } from './styles';
+import { Container, FormContainer, TableContainer } from './styles';
 import { cargos } from './__mocks__';
 
 /**
@@ -32,41 +39,46 @@ import { cargos } from './__mocks__';
 */
 
 function Usuario() {
-  const dispatch = useDispatch();
-  const userAplication = useSelector(selectState);
-  // const {nome} = useSelector(selectState);
-  // const userRed = useSelector();
-
+  const userAplication = useSelector(selectStateUser);
+  const estabelecimento = useSelector(selectStateEstab);
   const { colors, title } = useContext(ThemeContext);
   const [showModal, setShowModal] = useState(false);
-  const [user, setUser] = useState<UserAplicationType>(userAplication);
+  const [user, setUser] = useState<UserAplicationType>(initialState);
   const [showPoupAtivo, setShowPopupAtivo] = useState(false);
   const [showPoupInativo, setShowPopupInativo] = useState(false);
   const [dataSource, setDataSource] = useState<Array<UserAplicationType>>([]);
   const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
+  const [confirmePass, SetConfirmePass] = useState('');
+  const { handleSubmit } = useForm();
   const service = new UsuarioService();
+  const[gridInstance, setGridInstance] = useState<any>();
+  const onSearch = (text: string) =>{
+    console.log(gridInstance);
+    
+  }
 
   useEffect(() => {
-    service.getUsuarios().then(response => {
-      setDataSource(response);
-      setDataSourceCopy(response);
-    }).catch(error => {
+    if (estabelecimento.id) {
+      service.getUsuarios(estabelecimento.id).then(response => {
+        setDataSource(response);
+        setDataSourceCopy(response);
+      }).catch(error => {
         toast.error(error.mensagemUsuario);
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      });
+    }
+  }, [estabelecimento]);
 
 
   const renderCell = (element: any) => {
-    if(element.value === "S"){
+    if (element.value === "S") {
       return <div className='rounded-full h-6 text-center p-1' style={{ backgroundColor: colors.success }}><span className='font-bold text-white'>ATIVO</span></div>
     }
 
-    else if(element.value === "N"){
+    else if (element.value === "N") {
       return <div className='rounded-full  h-6 text-center p-1' style={{ backgroundColor: colors.error }}><span className='font-bold text-white'>INATIVO</span></div>
     }
-    
-    else if(element.columnIndex === 2){
+
+    else if (element.columnIndex === 2) {
       let cargo = '';
       if (element.value === Cargo.MASTER) {
         cargo = 'MASTER';
@@ -97,32 +109,29 @@ function Usuario() {
   }
 
   const columns = new Array<ColumnsDataGridType>();
-  columns.push({ dataField: 'codigo', caption: 'CÓDIGO', alignment: 'left', dataType: 'string', width: 70, cssClass: 'font-bold column-1' });
+  columns.push({ dataField: 'codigo', caption: 'CÓDIGO', alignment: 'center', dataType: 'string', width: 70, cssClass: 'font-bold column-1', });
   columns.push({ dataField: 'nome', caption: 'NOME', alignment: 'left', dataType: 'string', cssClass: 'font-bold' });
-  columns.push({ dataField: 'cargo', caption: 'CARGO', alignment: 'center', dataType: '', format: { type: 'fixedPoint', precision: 3 }, width: 100, styleCell: renderCell });
+  columns.push({ dataField: 'cargo', caption: 'CARGO', alignment: 'center', dataType: '', format: { type: 'fixedPoint', precision: 3 }, width: 100, styleCell: renderCell, allowSearch:false });
   columns.push({ dataField: 'email', caption: 'E-MAIL', alignment: 'left', dataType: 'string', cssClass: 'font-bold column-2', width: 220 });
-  columns.push({ dataField: 'dataCriacao', caption: 'DATA CRIAÇÃO', alignment: 'center', dataType: 'date', width: 110 });
-  columns.push({ dataField: 'telefone', caption: 'TELEFONE', alignment: 'center', dataType: 'date', width: 120 });
-  columns.push({ dataField: 'acesso', caption: 'ACESSO', alignment: 'center', dataType: 'date', width: 100 });
-  columns.push({ dataField: 'status', caption: 'STATUS', alignment: 'center', dataType: 'number', width: 100, styleCell: renderCell });
-  columns.push({ dataField: '', caption: '', alignment: 'center', dataType: '', width: 100, styleCell: renderCell });
+  columns.push({ dataField: 'dataCriacao', caption: 'DATA CRIAÇÃO', alignment: 'center', dataType: 'date', width: 110, allowSearch:false });
+  columns.push({ dataField: 'telefone', caption: 'TELEFONE', alignment: 'center', dataType: 'date', width: 120, allowSearch:false });
+  columns.push({ dataField: 'acesso', caption: 'ACESSO', alignment: 'center', dataType: 'date', width: 100, allowSearch:false });
+  columns.push({ dataField: 'status', caption: 'STATUS', alignment: 'center', dataType: 'number', width: 100, styleCell: renderCell, allowSearch:false });
+  columns.push({ dataField: '', caption: '', alignment: 'center', dataType: '', width: 100, styleCell: renderCell, allowSearch:false });
 
   const closeModal = () => {
     setShowModal(false);
   }
 
-  const search = (nome: string) => {
-    if (nome !== '') {
-      let usuarios = dataSourceCopy.filter(produto => { return produto.nome.includes(nome) });
-      setDataSource(usuarios);
-    } else {
-      setDataSource(dataSourceCopy);
-    }
-  }
-
-  const onEdit = (user: any) => {
-    setUser(user);
-    setShowModal(true);
+  const search = (text: string) => {
+    console.log(gridInstance);
+    gridInstance?.option('searchPanel', {visible:false, text:text});
+    // if (nome !== '') {
+    //   let usuarios = dataSourceCopy.filter(produto => { return produto.nome.includes(nome) });
+    //   setDataSource(usuarios);
+    // } else {
+    //   setDataSource(dataSourceCopy);
+    // }
 
   }
 
@@ -142,8 +151,8 @@ function Usuario() {
       setDataSource(data);
       setShowPopupAtivo(false);
     }).catch(error => {
-        setShowPopupAtivo(false);
-        toast.error(error.mensagemUsuario);
+      setShowPopupAtivo(false);
+      toast.error(error.mensagemUsuario);
     });
   }
 
@@ -163,7 +172,44 @@ function Usuario() {
     });
   }
 
+  const onNovo = () => {
+    setShowModal(true);
+    setUser(initialState);
+  }
 
+  const onEdit = (user: any) => {
+    setUser(user);
+    setShowModal(true);
+  }
+
+  const onSave = (form: FieldValues) => {
+    console.log(user.password, confirmePass);
+    if(user.password.length>6){
+      toast.error(UtilsGeral.getEmogi()[3]+'A senha deve ter 6 caracteres ou mais');
+      return
+    }
+    else if(user.password !== confirmePass){
+      toast.error(UtilsGeral.getEmogi()[3]+'A senha que vc digitou não são iguais');
+      return
+    }
+    else if(user.cpf.length>0 && !UtilsValid.isValidCPF(user.cpf)){
+      toast.error(UtilsGeral.getEmogi()[3]+'Você digitou um CPF inválido');
+      return
+    }
+
+    service.save(user).then(response=>{
+      let array = dataSourceCopy;
+      array.push(response);
+      setDataSource(array);
+      setDataSourceCopy(array);
+    }).catch(error => {
+      toast.error(UtilsGeral.getEmogi()[3]+error.mensagemUsuario);
+    });
+
+  }
+
+
+  // =====================tabs do formulario=======================================
   const tabs = (tab: string) => {
     if (tab === 'tab1') {
       return <div className=''>
@@ -173,18 +219,24 @@ function Usuario() {
             <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Principais</p>
             <Divider tipo='horizontal' />
           </div>
-          <div className='flex items-center justify-between'>
-            <InputMask className='w-2/12' label='CPF' mask={'999.999.999-99'} value={user.cpf} onChange={(e) => setUser({...user, cpf:e.target.value})} />
-            <div className='rounded-full w-28 h-10 text-center p-2 font-bold text-white'
-              style={{ backgroundColor: user.status === 'S' ? colors.success : colors.error }}
-            >
-              <p>{user.status === 'S' ? 'ATIVO' : 'INATIVO'}</p>
-            </div>
-          </div>
+          <InputMask className='w-2/12' label='CPF' mask={'999.999.999-99'}
+            value={user.cpf}
+            onChange={(e) => setUser({ ...user, cpf: e.target.value })}
+          />
           <div className='flex mt-3'>
-            <InputDefault className='w-4/12 mr-6' label='Nome' type='text' value={user.nome} onChange={(e) => setUser({...user, nome:e.target.value})} />
+            <InputDefault className='w-4/12 mr-6' label='Nome' type='text'
+              value={user.nome}
+              onChange={(e) => setUser({ ...user, nome: e.target.value })}
+              required
+            />
             <div className='w-3/12'>
-              <InputSelectDefault label='Cargo' options={cargos} defaultValue={cargos[2]} value={_.find(cargos, {'value':user.cargo})} onChange={(e) => setUser({...user, cargo:e.target.value})} />
+              <InputSelectDefault label='Cargo'
+                options={cargos}
+                defaultValue={cargos[2]}
+                value={_.find(cargos, { 'value': user.cargo })}
+                onChange={(e) => setUser({ ...user, cargo: e.target.value })}
+                isSearchable={false}
+              />
             </div>
           </div>
         </div>
@@ -192,16 +244,32 @@ function Usuario() {
         <div className='mb-7 text-left'>
           <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Contato</p>
           <Divider tipo='horizontal' />
-          <InputMask className='w-3/12' label='Celular' mask={'(99) 9.9999-9999'} value={user.celular} onChange={(e) => setUser({...user, celular:e.target.value})} />
+          <InputMask className='w-3/12'
+            label='Celular'
+            mask={'(99) 9.9999-9999'}
+            value={user.celular}
+            onChange={(e) => setUser({ ...user, celular: e.target.value })} />
         </div>
 
         <div className='text-left'>
           <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Acesso</p>
           <Divider tipo='horizontal' />
-          <InputDefault className='w-5/12 mr-6' label='Email' type='email' value={user.email} onChange={(e) => setUser({...user, email:e.target.value})} />
+          <InputDefault className='w-5/12 mr-6' label='Email' type='email'
+            value={user.email}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            required
+          />
           <div className='flex mt-3'>
-            <InputDefault className='w-2/12 mr-6' label='Senha' type='password' value={user.password} onChange={(e) => setUser({...user, password:e.target.value})} />
-            <InputDefault className='w-2/12 mr-6' label='Confirme senha' type='password' />
+            <InputDefault className='w-2/12 mr-6' label='Senha' type='password'
+              value={user.password}
+              onChange={(e) => setUser({ ...user, password: e.target.value })}
+              required
+            />
+            <InputDefault className='w-2/12 mr-6' label='Confirme senha' type='password'
+              value={confirmePass}
+              onChange={(e) => SetConfirmePass(e.target.value)}
+              required
+            />
           </div>
         </div>
 
@@ -222,6 +290,7 @@ function Usuario() {
       </div>
     }
   }
+  // =========================the end================================
 
   return <Container className='card-local'>
     <div className='flex p-2 card-local'>
@@ -229,7 +298,7 @@ function Usuario() {
         <InputSearch onChange={(e) => search(e.currentTarget.value)} autoFocus />
       </div>
       <div className='w-1/12 mr-2'>
-        <ButtonIcon label="Novo" icon={<FaPlus />} width={'100%'} onClick={() => setShowModal(true)} />
+        <ButtonIcon label="Novo" icon={<FaPlus />} width={'100%'} onClick={onNovo} />
       </div>
     </div>
     <TableContainer>
@@ -244,29 +313,39 @@ function Usuario() {
         showColumnLines
         hoverStateEnabled
         isSelectRow
+        onInitialized={(e)=>setGridInstance(e.component)}
       />
     </TableContainer>
+
+    {/* =============modal =========================== */}
     <ModalDefault
       isOpen={showModal}
-      title='Cadastro de usuario'
+      title='FICHA DO USUÁRIO'
       onRequestClose={closeModal}
       width='75%'
       margin='1%'
       height='95%'
       left='12%'
     >
-      <div className='p-2'>
-
-        <TabsDefault className='w-6/12' tabs={[{ value: 'tab1', label: 'Informações' }, { value: 'tab2', label: 'Permissões' }]} onSelectTab={tabs} />
-
-        <footer className=''>
-          <div className="flex justify-end" style={{ bottom: 25, right: 15, position: 'absolute' }}>
-            <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={() => setShowModal(false)} />
-            <ButtonIcon className="mr-3" label="SALVAR" icon={<FaSave />} width={'50%'} />
+      <FormContainer onSubmit={handleSubmit(onSave)}>
+        <div className='p-2'>
+          <TabsDefault className='w-6/12' tabs={[{ value: 'tab1', label: 'Informações' }, { value: 'tab2', label: 'Permissões' }]} onSelectTab={tabs} />
+          {user.id ? <div className='rounded-full w-28 h-10 text-center p-2 font-bold text-white absolute top-16'
+            style={{ backgroundColor: user.status === 'S' ? colors.success : colors.error, left: 'calc(100% - 130px)' }}
+          >
+            <p>{user.status === 'S' ? 'ATIVO' : 'INATIVO'}</p>
           </div>
-        </footer>
-      </div>
-
+            :
+            ""
+          }
+          <footer className=''>
+            <div className="flex justify-end" style={{ bottom: 25, right: 15, position: 'absolute' }}>
+              <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={() => setShowModal(false)} />
+              <ButtonIcon className="mr-3" label="SALVAR" icon={<FaSave />} width={'50%'} type='submit' />
+            </div>
+          </footer>
+        </div>
+      </FormContainer>
     </ModalDefault>
 
     <DialogPopupConfirme title="Confirme" isOpen={showPoupInativo} onRequestClose={() => setShowPopupInativo(false)} onClickSim={() => onInative(user)}>

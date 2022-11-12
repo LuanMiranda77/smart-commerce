@@ -50,6 +50,10 @@ button {
   align-items: stretch;
 }
 
+.column-1{
+        color: ${props => props.theme.title ==='dark' ? props.theme.colors.textLabel: props.theme.colors.error };
+}
+
 .row{
   display: flex ;
 }

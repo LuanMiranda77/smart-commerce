@@ -11,6 +11,17 @@ export const Container  = styled.div`
 
 `;
 
+export const FormContainer  = styled.form`
+    //adicionar stylos
+
+@media screen and (max-width: 40em) {
+    //adicionar o stylo responsivo
+}
+
+`;
+
+
+
 export const TableContainer  = styled.div`
 
     //adicionar stylos
