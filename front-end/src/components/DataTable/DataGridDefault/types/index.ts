@@ -1,6 +1,6 @@
 import { string } from "prop-types"
 
-export type ColumnsDataGridType = {
+export type ColumnsDataGridType  = {
     dataField:string;
     caption: string;
     dataType: string | 'string';

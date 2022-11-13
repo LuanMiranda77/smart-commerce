@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { response } from 'express';
+import { Column, IColumnProps } from 'devextreme-react/data-grid';
 import _ from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { FieldValues, useForm } from "react-hook-form";
@@ -16,14 +16,11 @@ import {
   Divider,
   InputCheck,
   InputDefault,
-  InputMask,
-  InputSearch,
-  InputSelectDefault,
+  InputMask, InputSelectDefault,
   ModalDefault,
   TabsDefault
 } from "../../../../components";
-import { ColumnsDataGridType } from '../../../../components/types';
-import { Cargo } from '../../../../domain/enums';
+import { Cargo, Roles } from '../../../../domain/enums';
 import { UserAplicationType } from '../../../../domain/types/user_aplication';
 import { selectStateEstab } from '../../../../store/slices/estabelecimento.slice';
 import { initialState, selectStateUser } from '../../../../store/slices/usuario.slice';
@@ -31,12 +28,8 @@ import { UtilsGeral } from '../../../../utils/utils_geral';
 import { UtilsValid } from '../../../../utils/utils_valid';
 import { UsuarioService } from '../services/usuarioService';
 import { Container, FormContainer, TableContainer } from './styles';
+import { RolesInitial, RolesTypes } from './types';
 import { cargos } from './__mocks__';
-
-/**
-*@Author
-*@Issue
-*/
 
 function Usuario() {
   const userAplication = useSelector(selectStateUser);
@@ -48,13 +41,24 @@ function Usuario() {
   const [showPoupInativo, setShowPopupInativo] = useState(false);
   const [dataSource, setDataSource] = useState<Array<UserAplicationType>>([]);
   const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
-  const [confirmePass, SetConfirmePass] = useState('');
-  const { handleSubmit } = useForm();
+  const [roles, setRoles] = useState<RolesTypes>(RolesInitial);
+  const [gridInstance, setGridInstance] = useState<any>();
   const service = new UsuarioService();
-  const[gridInstance, setGridInstance] = useState<any>();
-  const onSearch = (text: string) =>{
+
+  const schema = yup.object().shape({
+    nome: yup.string().required('O campo é obrigatório'),
+    email: yup.string().email().required('O campo é obrigatório'),
+    password: yup.string().min(6, 'Digite no minímo 6 caracteres').required('O campo é obrigatório'),
+    confirmePass: yup.string().oneOf([yup.ref("password")], "As senhas não são iguais").required('O campo é obrigatório')
+  }).required();
+
+  const { register, handleSubmit, watch, reset, setValue, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  const onSearch = (text: string) => {
     console.log(gridInstance);
-    
+
   }
 
   useEffect(() => {
@@ -73,11 +77,9 @@ function Usuario() {
     if (element.value === "S") {
       return <div className='rounded-full h-6 text-center p-1' style={{ backgroundColor: colors.success }}><span className='font-bold text-white'>ATIVO</span></div>
     }
-
     else if (element.value === "N") {
       return <div className='rounded-full  h-6 text-center p-1' style={{ backgroundColor: colors.error }}><span className='font-bold text-white'>INATIVO</span></div>
     }
-
     else if (element.columnIndex === 2) {
       let cargo = '';
       if (element.value === Cargo.MASTER) {
@@ -108,16 +110,16 @@ function Usuario() {
     }
   }
 
-  const columns = new Array<ColumnsDataGridType>();
-  columns.push({ dataField: 'codigo', caption: 'CÓDIGO', alignment: 'center', dataType: 'string', width: 70, cssClass: 'font-bold column-1', });
+  const columns = new Array<IColumnProps>();
+  columns.push({ dataField: 'codigo', caption: 'CÓDIGO', alignment: 'center', dataType: 'string', width: 70, cssClass: 'font-bold column-1', groupIndex: 0 });
   columns.push({ dataField: 'nome', caption: 'NOME', alignment: 'left', dataType: 'string', cssClass: 'font-bold' });
-  columns.push({ dataField: 'cargo', caption: 'CARGO', alignment: 'center', dataType: '', format: { type: 'fixedPoint', precision: 3 }, width: 100, styleCell: renderCell, allowSearch:false });
+  columns.push({ dataField: 'cargo', caption: 'CARGO', alignment: 'center', dataType: '', format: { type: 'fixedPoint', precision: 3 }, width: 100, cellRender: renderCell, allowSearch: false, });
   columns.push({ dataField: 'email', caption: 'E-MAIL', alignment: 'left', dataType: 'string', cssClass: 'font-bold column-2', width: 220 });
-  columns.push({ dataField: 'dataCriacao', caption: 'DATA CRIAÇÃO', alignment: 'center', dataType: 'date', width: 110, allowSearch:false });
-  columns.push({ dataField: 'telefone', caption: 'TELEFONE', alignment: 'center', dataType: 'date', width: 120, allowSearch:false });
-  columns.push({ dataField: 'acesso', caption: 'ACESSO', alignment: 'center', dataType: 'date', width: 100, allowSearch:false });
-  columns.push({ dataField: 'status', caption: 'STATUS', alignment: 'center', dataType: 'number', width: 100, styleCell: renderCell, allowSearch:false });
-  columns.push({ dataField: '', caption: '', alignment: 'center', dataType: '', width: 100, styleCell: renderCell, allowSearch:false });
+  columns.push({ dataField: 'dataCriacao', caption: 'DATA CRIAÇÃO', alignment: 'center', dataType: 'date', width: 110, allowSearch: false });
+  columns.push({ dataField: 'telefone', caption: 'TELEFONE', alignment: 'center', dataType: 'date', width: 120, allowSearch: false });
+  columns.push({ dataField: 'acesso', caption: 'ACESSO', alignment: 'center', dataType: 'date', width: 100, allowSearch: false });
+  columns.push({ dataField: 'status', caption: 'STATUS', alignment: 'center', dataType: 'number', width: 100, cellRender: renderCell, allowSearch: false });
+  columns.push({ dataField: '', caption: '', alignment: 'center', dataType: '', width: 100, cellRender: renderCell, allowSearch: false });
 
   const closeModal = () => {
     setShowModal(false);
@@ -125,14 +127,13 @@ function Usuario() {
 
   const search = (text: string) => {
     console.log(gridInstance);
-    gridInstance?.option('searchPanel', {visible:false, text:text});
+    gridInstance?.option('searchPanel', { visible: false, text: text });
     // if (nome !== '') {
     //   let usuarios = dataSourceCopy.filter(produto => { return produto.nome.includes(nome) });
     //   setDataSource(usuarios);
     // } else {
     //   setDataSource(dataSourceCopy);
     // }
-
   }
 
   const showPopupConfirmeAction = (user: any, tipo: number) => {
@@ -174,36 +175,111 @@ function Usuario() {
 
   const onNovo = () => {
     setShowModal(true);
+    reset({ ...initialState })
     setUser(initialState);
   }
 
-  const onEdit = (user: any) => {
+  const onEdit = (user: UserAplicationType) => {
+    reset({ ...user });
+    setValue('confirmePass', user.password);
     setUser(user);
+    testRoles(user);
     setShowModal(true);
   }
 
-  const onSave = (form: FieldValues) => {
-    console.log(user.password, confirmePass);
-    if(user.password.length>6){
-      toast.error(UtilsGeral.getEmogi()[3]+'A senha deve ter 6 caracteres ou mais');
-      return
+  const testRoles = (user: UserAplicationType) => {
+    let roleState = roles;
+    if (user.roles.includes(Roles.Dashboard)) {
+      roleState = roles;
+      roleState.Dashboard = true;
+      setRoles(roleState);
     }
-    else if(user.password !== confirmePass){
-      toast.error(UtilsGeral.getEmogi()[3]+'A senha que vc digitou não são iguais');
-      return
+    if (user.roles.includes(Roles.CupomFiscal)) {
+      roleState = roles;
+      roleState.CupomFiscal = true;
+      setRoles(roleState);
     }
-    else if(user.cpf.length>0 && !UtilsValid.isValidCPF(user.cpf)){
-      toast.error(UtilsGeral.getEmogi()[3]+'Você digitou um CPF inválido');
-      return
+    if (user.roles.includes(Roles.NotaFiscal)) {
+      roleState = roles;
+      roleState.NotaFiscal = true;
+      setRoles(roleState);
     }
+    if (user.roles.includes(Roles.Usuarios)) {
+      roleState = roles;
+      roleState.Usuarios = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.Produto)) {
+      roleState = roles;
+      roleState.Produto = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.Categoria)) {
+      roleState = roles;
+      roleState.Categoria = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.MDE)) {
+      roleState = roles;
+      roleState.MDE = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.Contas)) {
+      roleState = roles;
+      roleState.Contas = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.PlanoContas)) {
+      roleState = roles;
+      roleState.PlanoContas = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.CurvaABC)) {
+      roleState = roles;
+      roleState.CurvaABC = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.EstoqueCritico)) {
+      roleState = roles;
+      roleState.EstoqueCritico = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.ExtratoVenda)) {
+      roleState = roles;
+      roleState.ExtratoVenda = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.ExtratoEntrada)) {
+      roleState = roles;
+      roleState.ExtratoEntrada = true;
+      setRoles(roleState);
+    }
+    if (user.roles.includes(Roles.DreFinanceiro)) {
+      roleState = roles;
+      roleState.DreFinanceiro = true;
+      setRoles(roleState);
+    }
+    console.log(roles);
+  }
 
-    service.save(user).then(response=>{
+  const onSave = (form: FieldValues) => {
+    console.log(form);
+    if (user.cpf.length > 0 && !UtilsValid.isValidCPF(user.cpf)) {
+      toast.error(UtilsGeral.getEmogi()[3] + 'Você digitou um CPF inválido');
+      return
+    }
+    setUser({...user, 
+      nome:form.nome,
+      email: form.email,
+      password: form.password,
+    });
+    console.log(user);
+    service.save(user, estabelecimento).then(response => {
       let array = dataSourceCopy;
       array.push(response);
       setDataSource(array);
-      setDataSourceCopy(array);
     }).catch(error => {
-      toast.error(UtilsGeral.getEmogi()[3]+error.mensagemUsuario);
+      toast.error(UtilsGeral.getEmogi()[3] + error.mensagemUsuario);
     });
 
   }
@@ -215,19 +291,20 @@ function Usuario() {
       return <div className=''>
 
         <div className='mb-5 text-left'>
-          <div className='mb-5'>
-            <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Principais</p>
+          <div>
+            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Principais</p>
             <Divider tipo='horizontal' />
           </div>
-          <InputMask className='w-2/12' label='CPF' mask={'999.999.999-99'}
-            value={user.cpf}
-            onChange={(e) => setUser({ ...user, cpf: e.target.value })}
-          />
-          <div className='flex mt-3'>
+          <div className='flex mt-1'>
+            <InputMask className='w-2/12 mr-6' label='CPF'
+              mask={'999.999.999-99'}
+              register={register('cpf')}
+              errorMessage={errors.cpf?.message}
+            />
             <InputDefault className='w-4/12 mr-6' label='Nome' type='text'
-              value={user.nome}
-              onChange={(e) => setUser({ ...user, nome: e.target.value })}
               required
+              register={register('nome')}
+              errorMessage={errors.nome?.message}
             />
             <div className='w-3/12'>
               <InputSelectDefault label='Cargo'
@@ -242,67 +319,116 @@ function Usuario() {
         </div>
 
         <div className='mb-7 text-left'>
-          <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Contato</p>
+          <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Contato</p>
           <Divider tipo='horizontal' />
-          <InputMask className='w-3/12'
+          <InputMask className='w-3/12 mt-1'
             label='Celular'
             mask={'(99) 9.9999-9999'}
-            value={user.celular}
-            onChange={(e) => setUser({ ...user, celular: e.target.value })} />
+            register={register('celular')}
+            errorMessage={errors.celular?.message}
+          />
         </div>
 
         <div className='text-left'>
-          <p className='font-bold text-blue-900' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) + ' !important' }}>Acesso</p>
+          <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Acesso</p>
           <Divider tipo='horizontal' />
-          <InputDefault className='w-5/12 mr-6' label='Email' type='email'
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
+          <InputDefault className='w-5/12 mr-6 mt-1' label='Email' type='email'
             required
+            register={register('email')}
+            errorMessage={errors.email?.message}
           />
-          <div className='flex mt-3'>
+          <div className='flex mt-2'>
             <InputDefault className='w-2/12 mr-6' label='Senha' type='password'
-              value={user.password}
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
               required
+              register={register('password')}
+              errorMessage={errors.password?.message}
             />
             <InputDefault className='w-2/12 mr-6' label='Confirme senha' type='password'
-              value={confirmePass}
-              onChange={(e) => SetConfirmePass(e.target.value)}
               required
+              register={register('confirmePass')}
+              errorMessage={errors.confirmePass?.message}
             />
           </div>
         </div>
 
       </div>
     } else {
-      return <div>
-        <div className='text-left'>
-          <p className='font-bold text-blue-900' >Principais</p>
-          <Divider tipo='horizontal' />
+      return <div className='flex'>
+
+        <div id='GERENCIA' className='mr-5'>
+          <div className='text-left mb-2'>
+            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }} >GERENCIA</p>
+            <Divider tipo='horizontal' />
+          </div>
+          <div className='p-2'>
+            <InputCheck label={Roles.Dashboard + '-Dashboard'} css='mb-3 text-sm' checked={roles?.Dashboard} onChange={(e) => { setRoles({ ...roles, Dashboard: e.target.checked }) }} />
+            <InputCheck label={Roles.CupomFiscal + '-Cupom fiscal'} css='mb-3 text-sm' checked={roles?.CupomFiscal} onChange={(e) => { setRoles({ ...roles, CupomFiscal: e.target.checked }) }} />
+            <InputCheck label={Roles.NotaFiscal + '-Nota fiscal'} css='mb-3 text-sm' checked={roles?.NotaFiscal} onChange={(e) => { setRoles({ ...roles, NotaFiscal: e.target.checked }) }} />
+            <InputCheck label={Roles.Usuarios + '-Usuários'} css='mb-3 text-sm' checked={roles?.Usuarios} onChange={(e) => { setRoles({ ...roles, Usuarios: e.target.checked }) }} />
+          </div>
         </div>
-        <div className='p-5'>
-          <InputCheck label='Estoque' css='mb-3' />
-          <InputCheck label='Financeiro' css='mb-3' />
-          <InputCheck label='Venda' css='mb-3' />
-          <InputCheck label='Configurações' css='mb-3' />
-          <InputCheck label='Usuários' />
+
+        <div id='ESTOQUE' className='mr-5'>
+          <div className='text-left mb-2'>
+            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }} >ESTOQUE</p>
+            <Divider tipo='horizontal' />
+          </div>
+          <div className='p-2'>
+            <InputCheck label='5-Produto' css='mb-3 text-sm' checked={roles?.Produto} onChange={(e) => { setRoles({ ...roles, Produto: e.target.checked }) }} />
+            <InputCheck label='6-Categoria' css='mb-3 text-sm' checked={roles?.Categoria} onChange={(e) => { setRoles({ ...roles, Categoria: e.target.checked }) }} />
+            <InputCheck label='7-MDE' css='mb-3 text-sm' checked={roles?.MDE} onChange={(e) => { setRoles({ ...roles, MDE: e.target.checked }) }} />
+          </div>
         </div>
+
+        <div id='FINANCEIRO' className='mr-5'>
+          <div className='text-left mb-2'>
+            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }} >FINANCEIRO</p>
+            <Divider tipo='horizontal' />
+          </div>
+          <div className='p-2'>
+            <InputCheck label='8-Contas' css='mb-3 text-sm' checked={roles?.Contas} onChange={(e) => { setRoles({ ...roles, Contas: e.target.checked }) }} />
+            <InputCheck label='9-Plano de contas' css='mb-3 text-sm' checked={roles?.PlanoContas} onChange={(e) => { setRoles({ ...roles, PlanoContas: e.target.checked }) }} />
+          </div>
+        </div>
+
+        <div id='RELATORIO' className='mr-5'>
+          <div className='text-left mb-2'>
+            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }} >RELATÓRIO</p>
+            <Divider tipo='horizontal' />
+          </div>
+          <div className='p-2'>
+            <InputCheck label='10-Curva ABC' css='mb-3 text-sm' checked={roles?.CurvaABC} onChange={(e) => { setRoles({ ...roles, CurvaABC: e.target.checked }) }} />
+            <InputCheck label='11-Estoque crítico' css='mb-3 text-sm' checked={roles?.EstoqueCritico} onChange={(e) => { setRoles({ ...roles, EstoqueCritico: e.target.checked }) }} />
+            <InputCheck label='12-Extrato venda' css='mb-3 text-sm' checked={roles?.ExtratoVenda} onChange={(e) => { setRoles({ ...roles, ExtratoVenda: e.target.checked }) }} />
+            <InputCheck label='13-Extrato entrada' css='mb-3 text-sm' checked={roles?.ExtratoEntrada} onChange={(e) => { setRoles({ ...roles, ExtratoEntrada: e.target.checked }) }} />
+            <InputCheck label='14-DRE financeiro' css='mb-3 text-sm' checked={roles?.DreFinanceiro} onChange={(e) => { setRoles({ ...roles, DreFinanceiro: e.target.checked }) }} />
+          </div>
+        </div>
+
       </div>
     }
   }
   // =========================the end================================
 
   return <Container className='card-local'>
-    <div className='flex p-2 card-local'>
+    {/* <div className='flex p-2 card-local'>
       <div className='w-11/12'>
         <InputSearch onChange={(e) => search(e.currentTarget.value)} autoFocus />
       </div>
       <div className='w-1/12 mr-2'>
         <ButtonIcon label="Novo" icon={<FaPlus />} width={'100%'} onClick={onNovo} />
       </div>
-    </div>
+    </div> */}
     <TableContainer>
       <DataGridDefault
+        isHeader
+        isSearch
+        cssSearch='w-11/12'
+        headerChildren={
+          <div className='w-1/12 mr-2'>
+            <ButtonIcon label="Novo" icon={<FaPlus />} width={'100%'} onClick={onNovo} />
+          </div>
+        }
         columns={columns}
         dataSource={dataSource}
         allowSorting={false}
@@ -313,8 +439,18 @@ function Usuario() {
         showColumnLines
         hoverStateEnabled
         isSelectRow
-        onInitialized={(e)=>setGridInstance(e.component)}
-      />
+        onInitialized={(e) => setGridInstance(e.component)}
+      >
+        <Column dataField='codigo' caption='CÓDIGO' alignment='center' dataType='string' width={70} cssClass='font-bold column-1' />
+        <Column dataField='nome' caption='NOME' alignment='left' dataType='string' cssClass='font-bold' />
+        <Column dataField='cargo' caption='CARGO' alignment='center' dataType='' width={100} cellRender={renderCell} allowSearch={false} />
+        <Column dataField='email' caption='E-MAIL' alignment='left' dataType='string' cssClass='font-bold column-2' width={220} />
+        <Column dataField='dataCriacao' caption='DATA CRIAÇÃO' alignment='center' dataType='date' width={110} allowSearch={false} />
+        <Column dataField='telefone' caption='TELEFONE' alignment='center' dataType='date' width={120} allowSearch={false} />
+        <Column dataField='acesso' caption='ACESSO' alignment='center' dataType='date' width={100} allowSearch={false} />
+        <Column dataField='status' caption='STATUS' alignment='center' dataType='number' width={100} cellRender={renderCell} allowSearch={false} />
+        <Column dataField='' caption='' alignment='center' dataType='' width={100} cellRender={renderCell} allowSearch={false} />
+      </DataGridDefault>
     </TableContainer>
 
     {/* =============modal =========================== */}
@@ -329,7 +465,10 @@ function Usuario() {
     >
       <FormContainer onSubmit={handleSubmit(onSave)}>
         <div className='p-2'>
-          <TabsDefault className='w-6/12' tabs={[{ value: 'tab1', label: 'Informações' }, { value: 'tab2', label: 'Permissões' }]} onSelectTab={tabs} />
+          <TabsDefault className='w-6/12'
+            tabs={[{ value: 'tab1', label: 'Informações' }, { value: 'tab2', label: 'Permissões' }]}
+            onSelectTab={tabs}
+          />
           {user.id ? <div className='rounded-full w-28 h-10 text-center p-2 font-bold text-white absolute top-16'
             style={{ backgroundColor: user.status === 'S' ? colors.success : colors.error, left: 'calc(100% - 130px)' }}
           >

@@ -1,3 +1,4 @@
+import { EstabelecimentoType } from './../../../../domain/types/estabelecimento';
 import { api } from "../../../../config/api";
 import { login, logout } from "../../../../config/auth";
 import { UserAplicationType } from "../../../../domain";
@@ -69,8 +70,10 @@ export class UsuarioService {
       return response;
   }
 
-  public async save(user: UserAplicationType){
-    const response = await api.post(this.url, user)
+  public async save(user: UserAplicationType, estabelecimento: EstabelecimentoType){
+    let u = {...user}
+    u.estabelecimento = estabelecimento;
+    const response = await api.post(this.url, u)
     .then( resp =>{
         return resp.data;
     })

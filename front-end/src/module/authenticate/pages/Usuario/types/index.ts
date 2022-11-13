@@ -1,0 +1,33 @@
+export type RolesTypes={
+    Dashboard: boolean,
+    CupomFiscal: boolean,
+    NotaFiscal: boolean,
+    Usuarios: boolean,
+    Produto: boolean,
+    Categoria: boolean,
+    MDE: boolean,
+    Contas: boolean,
+    PlanoContas: boolean,
+    CurvaABC: boolean,
+    EstoqueCritico: boolean,
+    ExtratoVenda: boolean,
+    ExtratoEntrada: boolean,
+    DreFinanceiro: boolean,
+}
+
+export const RolesInitial = {
+    Dashboard: false,
+    CupomFiscal: false,
+    NotaFiscal: false,
+    Usuarios: false,
+    Produto: false,
+    Categoria: false,
+    MDE: false,
+    Contas: false,
+    PlanoContas: false,
+    CurvaABC: false,
+    EstoqueCritico: false,
+    ExtratoVenda: false,
+    ExtratoEntrada: false,
+    DreFinanceiro: false,
+} as RolesTypes

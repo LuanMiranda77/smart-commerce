@@ -3,5 +3,5 @@ export const cargos=[
     {value:'A', label:'Admin'},
     {value:'E', label:'Estoquista'},
     {value:'G', label:'Gerente'},
-    {value:'OP', label:'Operador de Caixa'},
+    {value:'C', label:'Operador de Caixa'},
 ];
