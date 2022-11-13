@@ -31,3 +31,71 @@ export const RolesInitial = {
     ExtratoEntrada: false,
     DreFinanceiro: false,
 } as RolesTypes
+
+export const RolesInitialGerente = {
+    Dashboard: true,
+    CupomFiscal: true,
+    NotaFiscal: true,
+    Usuarios: true,
+    Produto: true,
+    Categoria: true,
+    MDE: true,
+    Contas: true,
+    PlanoContas: true,
+    CurvaABC: true,
+    EstoqueCritico: true,
+    ExtratoVenda: true,
+    ExtratoEntrada: true,
+    DreFinanceiro: true,
+} as RolesTypes
+
+export const RolesInitialEstoquista = {
+    Dashboard: false,
+    CupomFiscal: false,
+    NotaFiscal: false,
+    Usuarios: false,
+    Produto: true,
+    Categoria: true,
+    MDE: true,
+    Contas: false,
+    PlanoContas: false,
+    CurvaABC: false,
+    EstoqueCritico: false,
+    ExtratoVenda: false,
+    ExtratoEntrada: false,
+    DreFinanceiro: false,
+} as RolesTypes
+
+export const RolesInitialCaixa = {
+    Dashboard: false,
+    CupomFiscal: true,
+    NotaFiscal: false,
+    Usuarios: false,
+    Produto: false,
+    Categoria: false,
+    MDE: false,
+    Contas: false,
+    PlanoContas: false,
+    CurvaABC: false,
+    EstoqueCritico: false,
+    ExtratoVenda: false,
+    ExtratoEntrada: false,
+    DreFinanceiro: false,
+} as RolesTypes
+
+export const RolesInitialRevenda = {
+    Dashboard: true,
+    CupomFiscal: true,
+    NotaFiscal: true,
+    Usuarios: true,
+    Produto: true,
+    Categoria: true,
+    MDE: true,
+    Contas: true,
+    PlanoContas: true,
+    CurvaABC: true,
+    EstoqueCritico: true,
+    ExtratoVenda: true,
+    ExtratoEntrada: true,
+    DreFinanceiro: true,
+} as RolesTypes

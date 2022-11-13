@@ -48,7 +48,6 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
   // Specifying a currency globally
   const [gridInstance, setGridInstance] = useState<any>();
   const onSearch = (text: string) => {
-    console.log(gridInstance);
     gridInstance?.option('searchPanel', { visible: false, text: text });
   }
   return <Container>
@@ -78,6 +77,7 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
       onRowDblClick={props.onRowDblClick}
       onCellPrepared={props.onCellPrepared}
       noDataText={''}
+      // dateSerializationFormat='dd/MM/yyyyTHH:mm:ss' 
     >
       {props.isSelectRow ? <Selection mode={props.moduloSeletion} /> : null}
       <GroupPanel visible={props.columnGroup} />

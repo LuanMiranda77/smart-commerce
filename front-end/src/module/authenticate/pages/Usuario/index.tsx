@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Column, IColumnProps } from 'devextreme-react/data-grid';
 import _ from 'lodash';
+import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
 import { FieldValues, useForm } from "react-hook-form";
 import { FaPauseCircle, FaPenSquare, FaPlayCircle, FaPlus, FaSave } from 'react-icons/fa';
@@ -17,8 +18,7 @@ import {
   InputCheck,
   InputDefault,
   InputMask, InputSelectDefault,
-  ModalDefault,
-  TabsDefault
+  ModalDefault
 } from "../../../../components";
 import { Cargo, Roles } from '../../../../domain/enums';
 import { UserAplicationType } from '../../../../domain/types/user_aplication';
@@ -28,7 +28,7 @@ import { UtilsGeral } from '../../../../utils/utils_geral';
 import { UtilsValid } from '../../../../utils/utils_valid';
 import { UsuarioService } from '../services/usuarioService';
 import { Container, FormContainer, TableContainer } from './styles';
-import { RolesInitial, RolesTypes } from './types';
+import { RolesInitial, RolesInitialCaixa, RolesInitialEstoquista, RolesInitialGerente, RolesTypes } from './types';
 import { cargos } from './__mocks__';
 
 function Usuario() {
@@ -42,6 +42,7 @@ function Usuario() {
   const [dataSource, setDataSource] = useState<Array<UserAplicationType>>([]);
   const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
   const [roles, setRoles] = useState<RolesTypes>(RolesInitial);
+  const [listCargos, setListCargos] = useState(cargos);
   const [gridInstance, setGridInstance] = useState<any>();
   const service = new UsuarioService();
 
@@ -62,6 +63,10 @@ function Usuario() {
   }
 
   useEffect(() => {
+    if (userAplication.cargo !== Cargo.MASTER) {
+      let lista = cargos.filter(cargo => cargo.value !== Cargo.MASTER)
+      setListCargos(lista);
+    }
     if (estabelecimento.id) {
       service.getUsuarios(estabelecimento.id).then(response => {
         setDataSource(response);
@@ -111,15 +116,6 @@ function Usuario() {
   }
 
   const columns = new Array<IColumnProps>();
-  columns.push({ dataField: 'codigo', caption: 'CÓDIGO', alignment: 'center', dataType: 'string', width: 70, cssClass: 'font-bold column-1', groupIndex: 0 });
-  columns.push({ dataField: 'nome', caption: 'NOME', alignment: 'left', dataType: 'string', cssClass: 'font-bold' });
-  columns.push({ dataField: 'cargo', caption: 'CARGO', alignment: 'center', dataType: '', format: { type: 'fixedPoint', precision: 3 }, width: 100, cellRender: renderCell, allowSearch: false, });
-  columns.push({ dataField: 'email', caption: 'E-MAIL', alignment: 'left', dataType: 'string', cssClass: 'font-bold column-2', width: 220 });
-  columns.push({ dataField: 'dataCriacao', caption: 'DATA CRIAÇÃO', alignment: 'center', dataType: 'date', width: 110, allowSearch: false });
-  columns.push({ dataField: 'telefone', caption: 'TELEFONE', alignment: 'center', dataType: 'date', width: 120, allowSearch: false });
-  columns.push({ dataField: 'acesso', caption: 'ACESSO', alignment: 'center', dataType: 'date', width: 100, allowSearch: false });
-  columns.push({ dataField: 'status', caption: 'STATUS', alignment: 'center', dataType: 'number', width: 100, cellRender: renderCell, allowSearch: false });
-  columns.push({ dataField: '', caption: '', alignment: 'center', dataType: '', width: 100, cellRender: renderCell, allowSearch: false });
 
   const closeModal = () => {
     setShowModal(false);
@@ -177,6 +173,7 @@ function Usuario() {
     setShowModal(true);
     reset({ ...initialState })
     setUser(initialState);
+    setRoles(RolesInitial);
   }
 
   const onEdit = (user: UserAplicationType) => {
@@ -259,156 +256,106 @@ function Usuario() {
       roleState.DreFinanceiro = true;
       setRoles(roleState);
     }
-    console.log(roles);
+  }
+
+  const checkRoles = (): string => {
+    let rolesString: string = '';
+    if (roles.Dashboard) {
+      rolesString += Roles.Dashboard + "-";
+    }
+    if (roles.CupomFiscal) {
+      rolesString += Roles.CupomFiscal + "-";
+    }
+    if (roles.NotaFiscal) {
+      rolesString += Roles.NotaFiscal + "-";
+    }
+    if (roles.Usuarios) {
+      rolesString += Roles.Usuarios + "-";
+    }
+    if (roles.Produto) {
+      rolesString += Roles.Produto + "-";
+    }
+    if (roles.Categoria) {
+      rolesString += Roles.Categoria + "-";
+    }
+    if (roles.MDE) {
+      rolesString += Roles.MDE + "-";
+    }
+    if (roles.Contas) {
+      rolesString += Roles.Contas + "-";
+    }
+    if (roles.PlanoContas) {
+      rolesString += Roles.PlanoContas + "-";
+    }
+    if (roles.CurvaABC) {
+      rolesString += Roles.CurvaABC + "-";
+    }
+    if (roles.EstoqueCritico) {
+      rolesString += Roles.EstoqueCritico + "-";
+    }
+    if (roles.ExtratoVenda) {
+      rolesString += Roles.ExtratoVenda + "-";
+    }
+    if (roles.ExtratoEntrada) {
+      rolesString += Roles.ExtratoEntrada + "-";
+    }
+    if (roles.DreFinanceiro) {
+      rolesString += Roles.DreFinanceiro + "-";
+    }
+    return rolesString;
+  }
+
+  const onSelctCargo = (cargo: Cargo) => {
+    if (cargo === Cargo.GERENTE || cargo === Cargo.REVENDA || cargo === Cargo.MASTER || cargo === Cargo.ADMIN) {
+      setRoles(RolesInitialGerente);
+    } else if (cargo === Cargo.CAIXA) {
+      setRoles(RolesInitialCaixa);
+    } else {
+      setRoles(RolesInitialEstoquista);
+    }
+    setUser({ ...user, cargo: cargo })
+
   }
 
   const onSave = (form: FieldValues) => {
-    console.log(form);
-    if (user.cpf.length > 0 && !UtilsValid.isValidCPF(user.cpf)) {
+
+    if (form.cpf.length > 0 && !UtilsValid.isValidCPF(UtilsGeral.removeMask(form.cpf))) {
       toast.error(UtilsGeral.getEmogi()[3] + 'Você digitou um CPF inválido');
       return
     }
-    setUser({...user, 
-      nome:form.nome,
+    if (user.cargo == null) {
+      toast.error(UtilsGeral.getEmogi()[3] + 'Você esqueceu de selecionar o cargo.');
+      return
+    }
+    let userData = user;
+    userData = {
+      ...user,
+      cpf: form.cpf,
+      nome: form.nome,
       email: form.email,
       password: form.password,
-    });
-    console.log(user);
-    service.save(user, estabelecimento).then(response => {
-      let array = dataSourceCopy;
+      celular: UtilsGeral.removeMask(form.celular),
+      roles: checkRoles(),
+      estabelecimento: user.cargo !== Cargo.MASTER && user.cargo !== Cargo.REVENDA ? estabelecimento.id : null
+    }
+
+    service.save(userData).then(response => {
+      let array = dataSource;
       array.push(response);
       setDataSource(array);
+      setShowModal(false);
+      toast.success(UtilsGeral.getEmogi()[2]+" cadastrado com sucesso." );
     }).catch(error => {
       toast.error(UtilsGeral.getEmogi()[3] + error.mensagemUsuario);
     });
 
   }
 
-
-  // =====================tabs do formulario=======================================
-  const tabs = (tab: string) => {
-    if (tab === 'tab1') {
-      return <div className=''>
-
-        <div className='mb-5 text-left'>
-          <div>
-            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Principais</p>
-            <Divider tipo='horizontal' />
-          </div>
-          <div className='flex mt-1'>
-            <InputMask className='w-2/12 mr-6' label='CPF'
-              mask={'999.999.999-99'}
-              register={register('cpf')}
-              errorMessage={errors.cpf?.message}
-            />
-            <InputDefault className='w-4/12 mr-6' label='Nome' type='text'
-              required
-              register={register('nome')}
-              errorMessage={errors.nome?.message}
-            />
-            <div className='w-3/12'>
-              <InputSelectDefault label='Cargo'
-                options={cargos}
-                defaultValue={cargos[2]}
-                value={_.find(cargos, { 'value': user.cargo })}
-                onChange={(e) => setUser({ ...user, cargo: e.target.value })}
-                isSearchable={false}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className='mb-7 text-left'>
-          <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Contato</p>
-          <Divider tipo='horizontal' />
-          <InputMask className='w-3/12 mt-1'
-            label='Celular'
-            mask={'(99) 9.9999-9999'}
-            register={register('celular')}
-            errorMessage={errors.celular?.message}
-          />
-        </div>
-
-        <div className='text-left'>
-          <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Acesso</p>
-          <Divider tipo='horizontal' />
-          <InputDefault className='w-5/12 mr-6 mt-1' label='Email' type='email'
-            required
-            register={register('email')}
-            errorMessage={errors.email?.message}
-          />
-          <div className='flex mt-2'>
-            <InputDefault className='w-2/12 mr-6' label='Senha' type='password'
-              required
-              register={register('password')}
-              errorMessage={errors.password?.message}
-            />
-            <InputDefault className='w-2/12 mr-6' label='Confirme senha' type='password'
-              required
-              register={register('confirmePass')}
-              errorMessage={errors.confirmePass?.message}
-            />
-          </div>
-        </div>
-
-      </div>
-    } else {
-      return <div className='flex'>
-
-        <div id='GERENCIA' className='mr-5'>
-          <div className='text-left mb-2'>
-            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }} >GERENCIA</p>
-            <Divider tipo='horizontal' />
-          </div>
-          <div className='p-2'>
-            <InputCheck label={Roles.Dashboard + '-Dashboard'} css='mb-3 text-sm' checked={roles?.Dashboard} onChange={(e) => { setRoles({ ...roles, Dashboard: e.target.checked }) }} />
-            <InputCheck label={Roles.CupomFiscal + '-Cupom fiscal'} css='mb-3 text-sm' checked={roles?.CupomFiscal} onChange={(e) => { setRoles({ ...roles, CupomFiscal: e.target.checked }) }} />
-            <InputCheck label={Roles.NotaFiscal + '-Nota fiscal'} css='mb-3 text-sm' checked={roles?.NotaFiscal} onChange={(e) => { setRoles({ ...roles, NotaFiscal: e.target.checked }) }} />
-            <InputCheck label={Roles.Usuarios + '-Usuários'} css='mb-3 text-sm' checked={roles?.Usuarios} onChange={(e) => { setRoles({ ...roles, Usuarios: e.target.checked }) }} />
-          </div>
-        </div>
-
-        <div id='ESTOQUE' className='mr-5'>
-          <div className='text-left mb-2'>
-            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }} >ESTOQUE</p>
-            <Divider tipo='horizontal' />
-          </div>
-          <div className='p-2'>
-            <InputCheck label='5-Produto' css='mb-3 text-sm' checked={roles?.Produto} onChange={(e) => { setRoles({ ...roles, Produto: e.target.checked }) }} />
-            <InputCheck label='6-Categoria' css='mb-3 text-sm' checked={roles?.Categoria} onChange={(e) => { setRoles({ ...roles, Categoria: e.target.checked }) }} />
-            <InputCheck label='7-MDE' css='mb-3 text-sm' checked={roles?.MDE} onChange={(e) => { setRoles({ ...roles, MDE: e.target.checked }) }} />
-          </div>
-        </div>
-
-        <div id='FINANCEIRO' className='mr-5'>
-          <div className='text-left mb-2'>
-            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }} >FINANCEIRO</p>
-            <Divider tipo='horizontal' />
-          </div>
-          <div className='p-2'>
-            <InputCheck label='8-Contas' css='mb-3 text-sm' checked={roles?.Contas} onChange={(e) => { setRoles({ ...roles, Contas: e.target.checked }) }} />
-            <InputCheck label='9-Plano de contas' css='mb-3 text-sm' checked={roles?.PlanoContas} onChange={(e) => { setRoles({ ...roles, PlanoContas: e.target.checked }) }} />
-          </div>
-        </div>
-
-        <div id='RELATORIO' className='mr-5'>
-          <div className='text-left mb-2'>
-            <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }} >RELATÓRIO</p>
-            <Divider tipo='horizontal' />
-          </div>
-          <div className='p-2'>
-            <InputCheck label='10-Curva ABC' css='mb-3 text-sm' checked={roles?.CurvaABC} onChange={(e) => { setRoles({ ...roles, CurvaABC: e.target.checked }) }} />
-            <InputCheck label='11-Estoque crítico' css='mb-3 text-sm' checked={roles?.EstoqueCritico} onChange={(e) => { setRoles({ ...roles, EstoqueCritico: e.target.checked }) }} />
-            <InputCheck label='12-Extrato venda' css='mb-3 text-sm' checked={roles?.ExtratoVenda} onChange={(e) => { setRoles({ ...roles, ExtratoVenda: e.target.checked }) }} />
-            <InputCheck label='13-Extrato entrada' css='mb-3 text-sm' checked={roles?.ExtratoEntrada} onChange={(e) => { setRoles({ ...roles, ExtratoEntrada: e.target.checked }) }} />
-            <InputCheck label='14-DRE financeiro' css='mb-3 text-sm' checked={roles?.DreFinanceiro} onChange={(e) => { setRoles({ ...roles, DreFinanceiro: e.target.checked }) }} />
-          </div>
-        </div>
-
-      </div>
+  const formatDate = (date: any) => {
+    if (date.value) {
+      return <p>{moment(date.value, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY HH:mm:ss")}</p>
     }
   }
-  // =========================the end================================
 
   return <Container className='card-local'>
     {/* <div className='flex p-2 card-local'>
@@ -445,9 +392,9 @@ function Usuario() {
         <Column dataField='nome' caption='NOME' alignment='left' dataType='string' cssClass='font-bold' />
         <Column dataField='cargo' caption='CARGO' alignment='center' dataType='' width={100} cellRender={renderCell} allowSearch={false} />
         <Column dataField='email' caption='E-MAIL' alignment='left' dataType='string' cssClass='font-bold column-2' width={220} />
-        <Column dataField='dataCriacao' caption='DATA CRIAÇÃO' alignment='center' dataType='date' width={110} allowSearch={false} />
+        <Column dataField='dataCriacao' caption='DATA CRIAÇÃO' alignment='center' dataType='string' width={140} allowSearch={false} cellRender={formatDate} />
         <Column dataField='telefone' caption='TELEFONE' alignment='center' dataType='date' width={120} allowSearch={false} />
-        <Column dataField='acesso' caption='ACESSO' alignment='center' dataType='date' width={100} allowSearch={false} />
+        <Column dataField='acesso' caption='ACESSO' alignment='center' dataType='date' width={140} allowSearch={false} cellRender={formatDate} />
         <Column dataField='status' caption='STATUS' alignment='center' dataType='number' width={100} cellRender={renderCell} allowSearch={false} />
         <Column dataField='' caption='' alignment='center' dataType='' width={100} cellRender={renderCell} allowSearch={false} />
       </DataGridDefault>
@@ -458,17 +405,82 @@ function Usuario() {
       isOpen={showModal}
       title='FICHA DO USUÁRIO'
       onRequestClose={closeModal}
-      width='75%'
+      width='90%'
       margin='1%'
       height='95%'
-      left='12%'
+      left='5%'
     >
       <FormContainer onSubmit={handleSubmit(onSave)}>
-        <div className='p-2'>
-          <TabsDefault className='w-6/12'
-            tabs={[{ value: 'tab1', label: 'Informações' }, { value: 'tab2', label: 'Permissões' }]}
-            onSelectTab={tabs}
-          />
+        <div className='p-2 flex'>
+          <div className='w-4/12'>
+            <div className='mb-5 text-left'>
+              <div className='mb-2'>
+                <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Principais</p>
+                <Divider tipo='horizontal' />
+              </div>
+              <div className='flex mb-5'>
+                <InputMask className='w-5/12 mr-6' label='CPF'
+                  mask={'999.999.999-99'}
+                  register={register('cpf')}
+                  errorMessage={errors.cpf?.message}
+                />
+
+                <div className='w-7/12'>
+                  <InputSelectDefault label='Cargo'
+                    options={listCargos}
+                    // defaultValue={cargos[2]}
+                    value={_.find(listCargos, { 'value': user.cargo })}
+                    onChange={(e) => onSelctCargo(e.value)}
+                    isSearchable={false}
+                    placeholder='Selecione o cargo...'
+                    required
+                  />
+                </div>
+              </div>
+              <InputDefault className='w-full mr-6' label='Nome' type='text'
+                required
+                register={register('nome')}
+                errorMessage={errors.nome?.message}
+              />
+            </div>
+
+            <div className='mb-7 text-left'>
+              <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Contato</p>
+              <Divider tipo='horizontal' />
+              <InputMask className='w-6/12 mt-1'
+                label='Celular'
+                mask={'(99) 9.9999-9999'}
+                register={register('celular')}
+                errorMessage={errors.celular?.message}
+              />
+            </div>
+
+            <div className='text-left'>
+              <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Acesso</p>
+              <Divider tipo='horizontal' />
+              <InputDefault className='w-full mr-6 mt-1' label='Email' type='email'
+                required
+                register={register('email')}
+                errorMessage={errors.email?.message}
+              />
+              <div className='flex mt-2'>
+                <InputDefault className='w-6/12 mr-6' label='Senha' type='password'
+                  required
+                  register={register('password')}
+                  errorMessage={errors.password?.message}
+                />
+                <InputDefault className='w-6/12 mr-6' label='Confirme senha' type='password'
+                  required
+                  register={register('confirmePass')}
+                  errorMessage={errors.confirmePass?.message}
+                />
+              </div>
+            </div>
+
+          </div>
+
+          <Divider tipo='vertical' className='mr-3 ml-3 mt-4' />
+
           {user.id ? <div className='rounded-full w-28 h-10 text-center p-2 font-bold text-white absolute top-16'
             style={{ backgroundColor: user.status === 'S' ? colors.success : colors.error, left: 'calc(100% - 130px)' }}
           >
@@ -477,6 +489,66 @@ function Usuario() {
             :
             ""
           }
+          <div id='permissoes'>
+            <div className='mb-2 text-left w-full mb-3'>
+              <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) + ' !important' }}>Permissões</p>
+              <Divider tipo='horizontal' />
+            </div>
+
+            <div className='flex'>
+
+              <div id='GERENCIA' className='mr-5'>
+                <div className='text-left mb-2'>
+                  <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) }} >GERENCIA</p>
+                  <Divider tipo='horizontal' />
+                </div>
+                <div className='p-2'>
+                  <InputCheck label={Roles.Dashboard + '-Dashboard'} css='mb-3 text-sm' checked={roles?.Dashboard} onChange={(e) => { setRoles({ ...roles, Dashboard: e.target.checked }) }} />
+                  <InputCheck label={Roles.CupomFiscal + '-Cupom fiscal'} css='mb-3 text-sm' checked={roles?.CupomFiscal} onChange={(e) => { setRoles({ ...roles, CupomFiscal: e.target.checked }) }} />
+                  <InputCheck label={Roles.NotaFiscal + '-Nota fiscal'} css='mb-3 text-sm' checked={roles?.NotaFiscal} onChange={(e) => { setRoles({ ...roles, NotaFiscal: e.target.checked }) }} />
+                  <InputCheck label={Roles.Usuarios + '-Usuários'} css='mb-3 text-sm' checked={roles?.Usuarios} onChange={(e) => { setRoles({ ...roles, Usuarios: e.target.checked }) }} />
+                </div>
+              </div>
+
+              <div id='ESTOQUE' className='mr-5'>
+                <div className='text-left mb-2'>
+                  <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) }} >ESTOQUE</p>
+                  <Divider tipo='horizontal' />
+                </div>
+                <div className='p-2'>
+                  <InputCheck label={Roles.Produto + '-Produto'} css='mb-3 text-sm' checked={roles?.Produto} onChange={(e) => { setRoles({ ...roles, Produto: e.target.checked }) }} />
+                  <InputCheck label={Roles.Categoria + '-Categoria'} css='mb-3 text-sm' checked={roles?.Categoria} onChange={(e) => { setRoles({ ...roles, Categoria: e.target.checked }) }} />
+                  <InputCheck label={Roles.MDE + '-MDE'} css='mb-3 text-sm' checked={roles?.MDE} onChange={(e) => { setRoles({ ...roles, MDE: e.target.checked }) }} />
+                </div>
+              </div>
+
+              <div id='FINANCEIRO' className='mr-5'>
+                <div className='text-left mb-2'>
+                  <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) }} >FINANCEIRO</p>
+                  <Divider tipo='horizontal' />
+                </div>
+                <div className='p-2'>
+                  <InputCheck label={Roles.Contas + '-Contas'} css='mb-3 text-sm' checked={roles?.Contas} onChange={(e) => { setRoles({ ...roles, Contas: e.target.checked }) }} />
+                  <InputCheck label={Roles.PlanoContas + '-Plano de contas'} css='mb-3 text-sm' checked={roles?.PlanoContas} onChange={(e) => { setRoles({ ...roles, PlanoContas: e.target.checked }) }} />
+                </div>
+              </div>
+
+              <div id='RELATORIO' className='mr-5'>
+                <div className='text-left mb-2'>
+                  <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) }} >RELATÓRIO</p>
+                  <Divider tipo='horizontal' />
+                </div>
+                <div className='p-2'>
+                  <InputCheck label={Roles.CurvaABC + '-Curva ABC'} css='mb-3 text-sm' checked={roles?.CurvaABC} onChange={(e) => { setRoles({ ...roles, CurvaABC: e.target.checked }) }} />
+                  <InputCheck label={Roles.EstoqueCritico + '-Estoque crítico'} css='mb-3 text-sm' checked={roles?.EstoqueCritico} onChange={(e) => { setRoles({ ...roles, EstoqueCritico: e.target.checked }) }} />
+                  <InputCheck label={Roles.ExtratoVenda + '-Extrato venda'} css='mb-3 text-sm' checked={roles?.ExtratoVenda} onChange={(e) => { setRoles({ ...roles, ExtratoVenda: e.target.checked }) }} />
+                  <InputCheck label={Roles.ExtratoVenda + '-Extrato entrada'} css='mb-3 text-sm' checked={roles?.ExtratoEntrada} onChange={(e) => { setRoles({ ...roles, ExtratoEntrada: e.target.checked }) }} />
+                  <InputCheck label={Roles.DreFinanceiro + '-DRE financeiro'} css='mb-3 text-sm' checked={roles?.DreFinanceiro} onChange={(e) => { setRoles({ ...roles, DreFinanceiro: e.target.checked }) }} />
+                </div>
+              </div>
+            </div>
+
+          </div>
           <footer className=''>
             <div className="flex justify-end" style={{ bottom: 25, right: 15, position: 'absolute' }}>
               <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={() => setShowModal(false)} />

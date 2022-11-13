@@ -46,7 +46,6 @@ export const MainHeader: React.FC<Props> = ({ alterTheme, onClickMenu, onClose }
   }
 
   const onShowMenu = (option: number) => {
-    console.log(option,display);
     if (display === 'flex' && option === 1) {
       dispatch(save('none'));
 
@@ -56,7 +55,6 @@ export const MainHeader: React.FC<Props> = ({ alterTheme, onClickMenu, onClose }
     } else if (display === 'flex' && option === 3) {
       dispatch(save('none'));
       UtilsUserLocal.logout();
-      // console.log(UtilsUserLocal.getTokenLogin());
       navegate('/')
       window.location.reload();
     } else {

@@ -31,7 +31,6 @@ function RecuperaSenha() {
   });
 
   const onSend = (form: any) => {
-    console.log(email, form);
     service.recuperarSenha({ email: email, password: "" }).then(response => {
       toast.success('Sua solicitação vou enviada, verifique sua caixa de e-mail');
     })

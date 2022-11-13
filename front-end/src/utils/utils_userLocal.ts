@@ -29,7 +29,6 @@ export class UtilsUserLocal{
         let userLogado = {} as UserAplicationType;
         if(key != null){
             const array = this.decrypt(key).split('&');
-            console.log(array);
             userLogado = {
                 id: Number(array[1]),
                 codigo:Number(array[3]),

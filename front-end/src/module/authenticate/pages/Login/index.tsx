@@ -33,13 +33,13 @@ function Login() {
     service.login(user).then(response => {
       if (response.status !== "S") {
         toast.error("Seu usuario foi desativado! fale com administrador do sistema");
+        return
       }
       // dispatch(load(response));
       window.location.reload();
     }).catch(error => {
       toast.error(error.mensagemUsuario);
     });
-    console.log("sim");
   }
   return (
     <>
