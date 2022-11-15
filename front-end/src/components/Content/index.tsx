@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Container } from './styles';
 import { reset } from '../../store/slices/menuUser.slice';
 import { RootState } from '../../store/index.store';
+import logo from '../../assets/Logo/logo.svg';
 
 interface Props {
   children: React.ReactNode;
@@ -19,7 +20,7 @@ export const Content: React.FC<Props> = ({ children, closeMenu }) => {
       dispatch(reset());
     }
   }
-  return <Container onClick={close} style={{ backgroundImage: '../../assets/Logo/logo.svg' }}>
+  return <Container onClick={close}>
     {children}
   </Container>;
 }

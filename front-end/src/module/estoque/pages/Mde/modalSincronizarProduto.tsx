@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FaCreditCard, FaDollarSign, FaIdCard, FaMoneyCheckAlt, FaPlusSquare, FaSave } from 'react-icons/fa';
 import { ThemeContext } from 'styled-components';
-import { ButtonBase, ButtonIcon, InputCheck, InputDate, InputDefault, InputFileProduto, InputIcon, InputMook, InputNumber, InputSearch, InputSelectDefault, ModalDefault, ToastDefault } from "../../../../components";
+import { ButtonBase, ButtonIcon, InputCheck, InputDate, InputDefault, InputFileProduto, InputIcon, InputMook, InputNumber, InputSearch, InputSelectDefault, ModalDefault } from "../../../../components";
 import CountUp from 'react-countup';
 import { toast } from "react-toastify";
 import { ContainerFoto } from './styles';
@@ -244,6 +244,6 @@ export const ModalSincronizarProduto: React.FC<ModalProps> = (props) => {
         </div>
       </div>
     </div>
-    <ToastDefault />
+    {/* <ToastDefault /> */}
   </ModalDefault>;
 }

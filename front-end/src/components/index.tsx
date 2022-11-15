@@ -27,7 +27,7 @@ export { DialogPoupInfo } from './DialogPopup/DialogPopupInfo';
 export { DialogPopupConfirme } from './DialogPopup/DialogPopupConfirme';
 export { ModalDefault } from './Modal/ModalDefault';
 export { DialogPopupDefault } from './DialogPopup/DialogPopupDefault';
-export { ToastDefault } from './ToastDefault';
+// export { ToastDefault } from './ToastDefault';
 export { Logo } from './Logo';
 export { ButtonBase } from './Buttons/ButtonBase';
 export { IconButton } from './Buttons/IconButton';

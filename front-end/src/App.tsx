@@ -11,6 +11,7 @@ import 'react-dropdown/style.css';
 import 'devextreme/dist/css/dx.light.compact.css';
 import config from 'devextreme/core/config';
 import { locale } from 'devextreme/localization';
+import { ToastDefault } from './components/ToastDefault';
 
 
 Modal.setAppElement('#root');
@@ -25,6 +26,7 @@ function App() {
     <ThemeProvider theme={root.theme}>
       <Routes setDefaultTheme={root.setDefaultTheme} />
       <GlobalStyle />
+      <ToastDefault/>
     </ThemeProvider>
   )
 }

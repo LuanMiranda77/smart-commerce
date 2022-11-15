@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { FaCreditCard, FaDollarSign, FaFileUpload, FaIdCard, FaKickstarter, FaMoneyCheckAlt, FaPlus, FaSave, FaSink, FaSync, FaUserPlus } from 'react-icons/fa';
 import {GiStarProminences} from 'react-icons/gi';
 import { ThemeContext } from 'styled-components';
-import { ButtonBase, ButtonIcon, DataGridDefault, InputCheck, InputDate, InputDefault, InputIcon, InputMask, InputNumber, InputRadio, InputSearch, ModalDefault, SummaryCustom, SummaryDefault, ToastDefault } from "../../../../components";
+import { ButtonBase, ButtonIcon, DataGridDefault, InputCheck, InputDate, InputDefault, InputIcon, InputMask, InputNumber, InputRadio, InputSearch, ModalDefault, SummaryCustom, SummaryDefault } from "../../../../components";
 import CountUp from 'react-countup';
 import { toast } from "react-toastify";
 import { ModalSincronizarProduto } from './modalSincronizarProduto';
@@ -238,7 +238,7 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
 
     <ModalSincronizarProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} tipo={tipoCadastro} />
 
-    <ToastDefault />
+    {/* <ToastDefault /> */}
 
   </ModalDefault>;
 }

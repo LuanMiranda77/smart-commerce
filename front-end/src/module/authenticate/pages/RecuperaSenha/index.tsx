@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 import icon from "../../../../assets/Logo/icon.svg";
 import {
-  ButtonBase, ToastDefault
+  ButtonBase,
 } from "../../../../components";
 import { UsuarioService } from "../services/usuarioService";
 import { Container } from "./styles";
@@ -114,7 +114,7 @@ function RecuperaSenha() {
 
 
       </div>
-      <ToastDefault />
+      {/* <ToastDefault /> */}
     </Container>
   );
 }

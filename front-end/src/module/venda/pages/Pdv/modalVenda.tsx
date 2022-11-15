@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { FaFileExcel, FaFileExport, FaFileImport, FaFileInvoice, FaFileSignature } from 'react-icons/fa';
 import { toast } from "react-toastify";
 import { ThemeContext } from 'styled-components';
-import { ButtonIcon, DataGridDefault, InputSearch, InputSelectDefault, ModalDefault, ToastDefault } from "../../../../components";
+import { ButtonIcon, DataGridDefault, InputSearch, InputSelectDefault, ModalDefault, } from "../../../../components";
 import { ColumnsDataGridType } from '../../../../components/types';
 import { TableProduto } from './styles';
 import statusNota from './mooks/statusNotas.json';
@@ -156,7 +156,7 @@ const ModalVenda: React.FC<ModalProps> = (props) => {
         />
       </TableProduto>
     </div>
-    <ToastDefault />
+    {/* <ToastDefault /> */}
   </ModalDefault>;
 }
 

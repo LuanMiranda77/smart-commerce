@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FaCreditCard, FaDollarSign, FaIdCard, FaMoneyCheckAlt } from 'react-icons/fa';
 import { ThemeContext } from 'styled-components';
-import { ButtonBase, InputIcon, InputNumber, InputSearch, ModalDefault, ToastDefault } from "../../../../components";
+import { ButtonBase, InputIcon, InputNumber, InputSearch, ModalDefault } from "../../../../components";
 import CountUp from 'react-countup';
 import { PDVService } from '../services/PDVService';
 import { ResumoCaixaType } from './types';
@@ -122,7 +122,7 @@ const ModalCaixa: React.FC<ModalProps> = (props) => {
       }
       <i><FaDollarSign style={{ fontSize: '150px', position: 'absolute', left: '-25', top: '50px', zIndex: '1', color: '#cacaca' }} /></i>
     </div>
-    <ToastDefault/>
+    {/* <ToastDefault/> */}
   </ModalDefault>;
 }
 

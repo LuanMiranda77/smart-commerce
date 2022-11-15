@@ -11,7 +11,7 @@ export const Container  = styled.div`
     text-align: right;
     padding: 0.9rem;
     border-bottom: 1px solid ${props =>props.theme.colors.gray};
-    box-shadow: 15px 15px 10px gray;
+    box-shadow: 3px 3px 0px black;
 
     .teste{
         cursor: pointer;

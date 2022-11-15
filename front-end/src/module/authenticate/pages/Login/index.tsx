@@ -7,7 +7,6 @@ import { ThemeContext } from "styled-components";
 import bannerInferior from '../../../../assets/banner_inferior.svg';
 import bannerSuperior from '../../../../assets/banner_superior.svg';
 import icon from '../../../../assets/Logo/icon.svg';
-import { ToastDefault } from "../../../../components";
 import { ButtonBase } from "../../../../components/Buttons/ButtonBase";
 import { Logo } from '../../../../components/Logo';
 import { isAuthenticated } from "../../../../config/auth";
@@ -35,6 +34,7 @@ function Login() {
         toast.error("Seu usuario foi desativado! fale com administrador do sistema");
         return
       }
+      console.log(response);
       // dispatch(load(response));
       window.location.reload();
     }).catch(error => {
@@ -96,7 +96,7 @@ function Login() {
         </div>
       </Container>
       <img className="w-28 h-28" src={bannerInferior} alt='logo' style={{ position: 'absolute', width: '100%', bottom: '0', margin: '0', zIndex: '-1' }} />
-      <ToastDefault />
+      {/* <ToastDefault /> */}
     </>
   );
 }

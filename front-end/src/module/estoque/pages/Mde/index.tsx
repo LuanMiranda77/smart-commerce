@@ -3,7 +3,7 @@ import { FaArchive, FaDollarSign, FaFileDownload, FaFileImport, FaFileSignature,
 
 import { Body, Container, ContainerFiltro, ContainerTable } from './styles';
 import { ThemeContext } from 'styled-components';
-import { ButtonBase, ButtonIcon, DataGridDefault, InputDate, InputDefault, InputMask, InputSearch, InputSelectDefault, ModalDefault, SummaryDefault, ToastDefault } from "../../../../components";
+import { ButtonBase, ButtonIcon, DataGridDefault, InputDate, InputDefault, InputMask, InputSearch, InputSelectDefault, ModalDefault, SummaryDefault } from "../../../../components";
 import { status, tiposFiltroData } from './__mooks';
 import { ColumnsDataGridType } from "../../../../components/types";
 import { ModalEntrada } from "./modalEntrada";
@@ -252,7 +252,7 @@ function Mde() {
       </ContainerFiltro>
     </ModalDefault>
     <ModalEntrada showModal={showModalEntrada} closeModal={() => setShowModalEntrada(false)} tipo={tipoNota}/>
-    <ToastDefault />
+    {/* <ToastDefault /> */}
   </Container>;
 }
 export default Mde;

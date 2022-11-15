@@ -6,7 +6,10 @@ export const Container  = styled.div`
     grid-area: CT;
     background:${props => props.theme.colors.background};
     padding: 10px;
-    background-image:url('../../assets/Logo/logo.svg');
+    background-image:url(https://uploaddeimagens.com.br/images/004/163/503/full/Minha_%282%29.png?1668469297);
+    background-size: 15%;
+    background-position: center;
+    background-repeat: no-repeat;
 
     height:calc(100vh -50px);
     overflow-y:scroll;

@@ -21,15 +21,11 @@ export class UsuarioService {
           return response.data;
       });
       if(token){
-          const response = await api.post(this.url+'/login', pEntity,{
-            headers:{
-                'Authorization': token
-            }
-          })
-          .then( resp =>{
+         try{
+          const response = await api.post(this.url+'/login', pEntity).then( resp =>{
               let userLogado = resp.data;
               userLogado.token = token;
-              if(userLogado.cargo!== Cargo.MASTER){
+              if(userLogado.cargo != Cargo.MASTER && userLogado.cargo != Cargo.REVENDA){
                 userLogado.estabelecimento = resp.data.estabelecimento.id;
               }
             //   persistLocalStorage<UserAplicationType>("@user-data", userLogado, 'set');
@@ -38,11 +34,14 @@ export class UsuarioService {
               return resp.data;
           })
           .catch(error => {
+            console.error(error);
               console.log(error.response.data[0]);
-              
               return error.response.data[0] !== undefined ? Promise.reject(error.response.data[0]) : Promise.reject({mensagemUsuario:'Verifique o JWT'});
           });
           return response;
+        }catch(error){
+            console.error(error);
+        }
       }
   }
 
@@ -79,7 +78,19 @@ export class UsuarioService {
         return Promise.reject(error.response.data[0]);
     });
     return response;
-}
+ }
+
+ public async update(user: UserAplicationType){
+    const response = await api.put(this.url, user)
+    .then( resp =>{
+        return resp.data;
+    })
+    .catch(error => {
+        console.log(error);
+        return Promise.reject(error.response.data[0]);
+    });
+    return response;
+ }
 
   public async getUsuarios(estabelecimento: number){
     const response = await api.get(this.url+`/estabelecimento/${estabelecimento}`)

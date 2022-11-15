@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { FieldValues, useForm } from "react-hook-form";
 import { FaPauseCircle, FaPenSquare, FaPlayCircle, FaPlus, FaSave } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { ThemeContext } from 'styled-components';
 import * as yup from "yup";
 import {
@@ -170,6 +170,10 @@ function Usuario() {
   }
 
   const onNovo = () => {
+    if (!estabelecimento.id) {
+      toast.error('Selecione um estabelecimento.');
+      return
+    }
     setShowModal(true);
     reset({ ...initialState })
     setUser(initialState);
@@ -319,7 +323,7 @@ function Usuario() {
 
   const onSave = (form: FieldValues) => {
 
-    if (form.cpf.length > 0 && !UtilsValid.isValidCPF(UtilsGeral.removeMask(form.cpf))) {
+    if (user.cpf.length > 0 && !UtilsValid.isValidCPF(UtilsGeral.removeMask(user.cpf))) {
       toast.error(UtilsGeral.getEmogi()[3] + 'Você digitou um CPF inválido');
       return
     }
@@ -327,27 +331,47 @@ function Usuario() {
       toast.error(UtilsGeral.getEmogi()[3] + 'Você esqueceu de selecionar o cargo.');
       return
     }
+
     let userData = user;
     userData = {
       ...user,
-      cpf: form.cpf,
+      cpf:UtilsGeral.removeMask(user.cpf),
       nome: form.nome,
       email: form.email,
       password: form.password,
-      celular: UtilsGeral.removeMask(form.celular),
+      celular: UtilsGeral.removeMask(user.celular),
       roles: checkRoles(),
-      estabelecimento: user.cargo !== Cargo.MASTER && user.cargo !== Cargo.REVENDA ? estabelecimento.id : null
+      estabelecimento: user.cargo !== Cargo.MASTER && user.cargo !== Cargo.REVENDA ? estabelecimento.id : 1
     }
 
-    service.save(userData).then(response => {
-      let array = dataSource;
-      array.push(response);
-      setDataSource(array);
-      setShowModal(false);
-      toast.success(UtilsGeral.getEmogi()[2]+" cadastrado com sucesso." );
-    }).catch(error => {
-      toast.error(UtilsGeral.getEmogi()[3] + error.mensagemUsuario);
-    });
+    if (!userData.id) {
+      service.save(userData).then(response => {
+        let array = [...dataSource];
+        array.push(response);
+        setDataSource(array);
+        setShowModal(false);
+        toast.success(UtilsGeral.getEmogi()[1] + " Cadastrado com sucesso.");
+      }).catch(error => {
+        toast.error(UtilsGeral.getEmogi()[2] + error.mensagemUsuario);
+      });
+    } else {
+      userData.dataCriacao = moment(userData.dataCriacao).toDate();
+      userData.dataAtualizacao = moment(userData.dataAtualizacao).toDate();
+      service.update(userData).then(response => {
+        console.log(response);
+        let array = _.map(dataSource, (user) => {
+          if (user.id === response.id) {
+            user = { ...response }
+          }
+          return user;
+        });
+        setDataSource(array);
+        setShowModal(false);
+        toast.success(UtilsGeral.getEmogi()[1] + " Atualizado com sucesso.");
+      }).catch(error => {
+        toast.error(UtilsGeral.getEmogi()[2] + error.mensagemUsuario);
+      });
+    }
 
   }
 
@@ -386,9 +410,9 @@ function Usuario() {
         showColumnLines
         hoverStateEnabled
         isSelectRow
-        onInitialized={(e) => setGridInstance(e.component)}
+      // onInitialized={(e) => setGridInstance(e.component)}
       >
-        <Column dataField='codigo' caption='CÓDIGO' alignment='center' dataType='string' width={70} cssClass='font-bold column-1' />
+        <Column dataField='codigo' caption='CÓDIGO' alignment='center' dataType='string' width={100} cssClass='font-bold column-1' sortOrder={'asc'}/>
         <Column dataField='nome' caption='NOME' alignment='left' dataType='string' cssClass='font-bold' />
         <Column dataField='cargo' caption='CARGO' alignment='center' dataType='' width={100} cellRender={renderCell} allowSearch={false} />
         <Column dataField='email' caption='E-MAIL' alignment='left' dataType='string' cssClass='font-bold column-2' width={220} />
@@ -421,8 +445,8 @@ function Usuario() {
               <div className='flex mb-5'>
                 <InputMask className='w-5/12 mr-6' label='CPF'
                   mask={'999.999.999-99'}
-                  register={register('cpf')}
-                  errorMessage={errors.cpf?.message}
+                  value={user.cpf}
+                  onChange={(e)=>setUser({...user, cpf: e.target.value})}
                 />
 
                 <div className='w-7/12'>
@@ -450,8 +474,8 @@ function Usuario() {
               <InputMask className='w-6/12 mt-1'
                 label='Celular'
                 mask={'(99) 9.9999-9999'}
-                register={register('celular')}
-                errorMessage={errors.celular?.message}
+                value={user.celular}
+                onChange={(e)=>setUser({...user, celular: e.target.value})}
               />
             </div>
 
@@ -499,7 +523,7 @@ function Usuario() {
 
               <div id='GERENCIA' className='mr-5'>
                 <div className='text-left mb-2'>
-                  <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.primary) }} >GERENCIA</p>
+                  <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) }} >GERENCIA</p>
                   <Divider tipo='horizontal' />
                 </div>
                 <div className='p-2'>
@@ -535,7 +559,7 @@ function Usuario() {
 
               <div id='RELATORIO' className='mr-5'>
                 <div className='text-left mb-2'>
-                  <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.tertiary) }} >RELATÓRIO</p>
+                  <p className='font-bold text-xs' style={{ color: (title === 'dark' ? colors.textLabel : colors.error) }} >RELATÓRIO</p>
                   <Divider tipo='horizontal' />
                 </div>
                 <div className='p-2'>

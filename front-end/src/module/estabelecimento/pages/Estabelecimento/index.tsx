@@ -8,7 +8,7 @@ import { ThemeContext } from 'styled-components';
 import * as yup from "yup";
 import {
   ButtonIcon, Divider, InputCheck, InputDefault,
-  InputMask, InputSelectDefault, ToastDefault
+  InputMask, InputSelectDefault
 } from "../../../../components";
 import { RegimeTributario } from '../../../../domain/enums';
 import tipos from '../../../../helpers/help_lista_uf.json';
@@ -245,7 +245,7 @@ function Estabelecimento() {
       </footer>
     </FormContainer>
 
-    <ToastDefault />
+    {/* <ToastDefault /> */}
 
   </Container>;
 }
