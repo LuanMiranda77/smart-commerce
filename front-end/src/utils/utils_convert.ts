@@ -38,4 +38,50 @@ export class UtilsConvert {
         return _array;
     }
 
+    static setMaskCpfCnpj = (doc: string) : string =>{
+        let valor='';
+        if(doc.length === 11){
+            valor = doc.substring(0,3);
+            valor+='.';
+            valor+=  doc.substring(3,6);
+            valor+='.';
+            valor+=  doc.substring(6,9);
+            valor+='-';
+            valor+=  doc.substring(9,11);
+        }else if(doc.length === 14){
+            valor = doc.substring(0,2);
+            valor+='.';
+            valor+=  doc.substring(2,5);
+            valor+='.';
+            valor+=  doc.substring(5,8);
+            valor+='/';
+            valor+=  doc.substring(8,12);
+            valor+='-';
+            valor+=  doc.substring(12,14);
+        }
+        return valor;
+    }
+
+    static setMaskFone = (doc: string) : string =>{
+        let valor='';
+        if(doc.length === 10){
+            valor+='(';
+            valor+= doc.substring(0,2);
+            valor+=') ';
+            valor+=  doc.substring(2,6);
+            valor+='-';
+            valor+=  doc.substring(6,10);
+        }else if(doc.length === 11){
+            valor+='(';
+            valor+= doc.substring(0,2);
+            valor+=') ';
+            valor+=  doc.substring(2,3);
+            valor+='.';
+            valor+=  doc.substring(3,7);
+            valor+='-';
+            valor+=  doc.substring(7,11);
+        }
+        return valor;
+    }
+
 } 

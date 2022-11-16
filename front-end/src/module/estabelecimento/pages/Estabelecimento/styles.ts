@@ -31,3 +31,14 @@ export const FormContainer  = styled.form`
 
 `;
 
+export const TableContainer  = styled.div`
+
+    //adicionar stylos
+    height: calc(100vh - 125px);
+
+@media screen and (max-width: 40em) {
+    //adicionar o stylo responsivo
+}
+
+`;
+

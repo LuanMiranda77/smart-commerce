@@ -4,8 +4,8 @@ import { RootState } from '../index.store';
 import { EstabelecimentoType } from './../../domain/types/estabelecimento';
 import { EstabelecimentoService } from './../../module/estabelecimento/pages/services/EstabelecimentoService';
 
-const initialState = {
-    id: undefined,
+export const initialState = {
+    // id: undefined,
     cnpj:'',
     cpf:'',
     instEstadual: '',
@@ -48,8 +48,12 @@ export const estabelecimentoSlice = createSlice({
         reset(state){
             return state = {...initialState}
         },
+
+        initial(){
+            return initialState
+        }
     }
 });
-export const {save, load, reset } = estabelecimentoSlice.actions;
+export const {save, load, reset, initial } = estabelecimentoSlice.actions;
 export const selectStateEstab = (state: RootState) => state.estabelecimento;
 export default estabelecimentoSlice.reducer;

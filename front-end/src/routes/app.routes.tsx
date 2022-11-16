@@ -8,6 +8,7 @@ import Configuracao from '../module/config/pages/Configuracao';
 import Usuario from '../module/authenticate/pages/Usuario';
 import Mde from '../module/estoque/pages/Mde';
 import Estabelecimento from '../module/estabelecimento/pages/Estabelecimento';
+import Estabelecimentos from '../module/estabelecimento/pages/Estabelecimento/lista';
 import Pdv from '../module/venda/pages/Pdv';
 import { Layout } from "../components/Layout";
 import Dashboard from "../module/financeiro/pages/Dashboard";
@@ -31,7 +32,8 @@ const AppRoutes: React.FC<Props> = ({ setDefaultTheme }) => {
             <Route path="/configurar" element={<Configuracao />} />
             <Route path="/usuario" element={<Usuario />} />
             <Route path="/mde" element={<Mde />} />
-            <Route path="/estabelecimento" element={<Estabelecimento />} />
+            <Route path="/estabelecimento" element={<Estabelecimento showModal={true} tipo={2} closeModal={()=>{}} />} />
+            <Route path="/estabelecimentos" element={<Estabelecimentos />} />
             <Route path="/venda" element={<Pdv />} />
             <Route path="/financeiro" element={<Dashboard />} />
             <Route path="*" element={<Notfound />} />

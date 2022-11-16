@@ -26,5 +26,6 @@ export enum Roles{
     ExtratoVenda='12',
     ExtratoEntrada='13',
     DreFinanceiro='14',
+    SPED='15',
 }
 

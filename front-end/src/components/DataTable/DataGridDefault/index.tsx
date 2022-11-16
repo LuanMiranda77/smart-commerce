@@ -13,7 +13,7 @@ import { Container, Header } from './styles';
 interface DataGridDefaultProps {
   //adicionar os props
   dataSource: Object[];
-  columns: IColumnProps[];
+  columns?: IColumnProps[];
   showBorders?: boolean;
   showRowLines?: boolean;
   defaultPageSize?: number;

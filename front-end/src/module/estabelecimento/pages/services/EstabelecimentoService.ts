@@ -8,7 +8,7 @@ import { api } from "../../../../config/api";
 export class EstabelecimentoService {
 
     //end-point da api
-    url='api/Estabelecimento';
+    url='api/estabelecimento';
 
     //modelo de request post
     async post(pEntity: EstabelecimentoType){
