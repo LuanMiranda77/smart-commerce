@@ -1,4 +1,3 @@
-import { logout } from "../service/auth";
 
 export class UtilsValid {
     public static isValidEmail(email: string) {
