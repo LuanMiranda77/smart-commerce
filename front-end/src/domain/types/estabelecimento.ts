@@ -23,4 +23,5 @@ export type EstabelecimentoType ={
     celular1: string,
     celular2: string| undefined,
     matrizId: string | undefined,
+    status:string,
 }

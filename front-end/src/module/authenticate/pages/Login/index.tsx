@@ -17,6 +17,8 @@ import { persistLocalStorage } from "../../../../utils/persistLocalStorage";
 import { UsuarioService } from "../services/usuarioService";
 import { Container } from "./styles";
 import {load} from '../../../../store/slices/usuario.slice';
+import { DialogPopupDefault, DialogPopupInfo } from "../../../../components";
+import { FcHighPriority } from "react-icons/fc";
 
 
 function Login() {
@@ -30,7 +32,10 @@ function Login() {
   const service = new UsuarioService();
   const login = () => {
     service.login(user).then(response => {
-      if (response.status !== "S") {
+      if(response.status === "B"){
+        toast.error("Seu usuario foi b! fale com administrador do sistema");
+      }
+      else if (response.status !== "S") {
         toast.error("Seu usuario foi desativado! fale com administrador do sistema");
         return
       }
@@ -97,6 +102,17 @@ function Login() {
       </Container>
       <img className="w-28 h-28" src={bannerInferior} alt='logo' style={{ position: 'absolute', width: '100%', bottom: '0', margin: '0', zIndex: '-1' }} />
       {/* <ToastDefault /> */}
+      <DialogPopupInfo title="Aviso" isOpen={true}  onRequestClose={()=>{}}>
+        <div className="" style={{color:theme.colors.error}}>
+          <div className="flex justify-center">
+            <FcHighPriority style={{fontSize:'60px', textAlign:'center'}}/>
+          </div>
+          <div>
+            <p className="text-xl font-bold mb-2">O estabelecimento que você esta tentando acessar foi bloqueado</p>
+            <p  className="text-xl font-bold">Entre em contato com o nosso suporte</p>
+          </div>
+        </div>
+        </DialogPopupInfo>
     </>
   );
 }

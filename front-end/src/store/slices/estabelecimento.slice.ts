@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RegimeTributario } from '../../domain/enums';
 import { RootState } from '../index.store';
 import { EstabelecimentoType } from './../../domain/types/estabelecimento';
-import { EstabelecimentoService } from './../../module/estabelecimento/pages/services/EstabelecimentoService';
+// import { EstabelecimentoService } from './../../module/estabelecimento/pages/services/EstabelecimentoService';
 
 export const initialState = {
     // id: undefined,
@@ -29,7 +29,7 @@ export const initialState = {
     matrizId: '',
 } as EstabelecimentoType;
 
-const service = new EstabelecimentoService();
+// const service = new EstabelecimentoService();
 const url='api/estabelecimento';
 
 export const estabelecimentoSlice = createSlice({

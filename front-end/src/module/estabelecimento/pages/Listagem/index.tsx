@@ -9,7 +9,7 @@ import {
     DialogPopupConfirme
 } from "../../../../components";
 import { EstabelecimentoType } from '../../../../domain';
-import { EstabelecimentoService } from '../services/EstabelecimentoService';
+import { get, setStatus } from '../services/EstabelecimentoService';
 import { TableContainer } from './styles';
 import { ThemeContext } from 'styled-components';
 import { RegimeTributario } from '../../../../domain/enums';
@@ -25,14 +25,14 @@ function ListEstabelecimentos() {
     const dispatch = useDispatch();
     const [dataSource, setDataSource] = useState<Array<EstabelecimentoType>>([]);
     const [estabelecimento, setEstabelecimento] = useState<EstabelecimentoType>(initialState);
-    const service = new EstabelecimentoService();
+    // const service = new EstabelecimentoService();
     const { colors, title } = useContext(ThemeContext);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [showPoupAtivo, setShowPopupAtivo] = useState<boolean>(false);
     const [showPoupInativo, setShowPopupInativo] = useState<boolean>(false);
 
     useEffect(() => {
-        service.get().then(response => {
+        get().then(response => {
             let data = _.map(response, (est)=>{
                 if(est.cpf){
                     est.doc = est.cpf;
@@ -57,35 +57,35 @@ function ListEstabelecimentos() {
       }
     
       const onAtive = (estabelecimento: EstabelecimentoType) => {
-        // service.setStatus(user.id, "S").then(response => {
-        //   let data = _.map(dataSourceCopy, (value) => {
-        //     if (user.id === value.id) {
-        //       value.status = 'S';
-        //     }
-        //     return value;
-        //   });
-        //   setDataSource(data);
-        //   setShowPopupAtivo(false);
-        // }).catch(error => {
-        //   setShowPopupAtivo(false);
-        //   toast.error(error.mensagemUsuario);
-        // });
+        setStatus(estabelecimento.id, "S").then(response => {
+          let data = _.map(dataSource, (value) => {
+            if (estabelecimento.id === value.id) {
+              value.status = 'S';
+            }
+            return value;
+          });
+          setDataSource(data);
+          setShowPopupAtivo(false);
+        }).catch(error => {
+          setShowPopupAtivo(false);
+          toast.error(error.mensagemUsuario);
+        });
       }
     
       const onInative = (estabelecimento: EstabelecimentoType) => {
-        // service.setStatus(user.id, "N").then(response => {
-        //   let data = _.map(dataSourceCopy, (value) => {
-        //     if (user.id === value.id) {
-        //       value.status = 'N';
-        //     }
-        //     return value;
-        //   });
-        //   setDataSource(data);
-        //   setShowPopupInativo(false);
-        // }).catch(error => {
-        //   setShowPopupInativo(false);
-        //   toast.error(error.mensagemUsuario);
-        // });
+        setStatus(estabelecimento.id, "N").then(response => {
+          let data = _.map(dataSource, (value) => {
+            if (estabelecimento.id === value.id) {
+              value.status = 'N';
+            }
+            return value;
+          });
+          setDataSource(data);
+          setShowPopupInativo(false);
+        }).catch(error => {
+          setShowPopupInativo(false);
+          toast.error(error.mensagemUsuario);
+        });
       }
 
     const onNovo = () => {

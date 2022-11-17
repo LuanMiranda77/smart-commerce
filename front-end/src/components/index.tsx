@@ -23,7 +23,7 @@ export { ButtonIcon } from './Buttons/ButtonIcon';
 export { InputIcon } from './Inputs/InputIcon';
 export { InputDefault } from './Inputs/InputDefault';
 export { SummaryCustom } from './Summary/SummaryCustom';
-export { DialogPoupInfo } from './DialogPopup/DialogPopupInfo';
+export { DialogPopupInfo } from './DialogPopup/DialogPopupInfo';
 export { DialogPopupConfirme } from './DialogPopup/DialogPopupConfirme';
 export { ModalDefault } from './Modal/ModalDefault';
 export { DialogPopupDefault } from './DialogPopup/DialogPopupDefault';

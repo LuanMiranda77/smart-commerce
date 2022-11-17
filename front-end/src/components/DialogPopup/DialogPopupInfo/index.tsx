@@ -13,7 +13,7 @@ interface DialogPoupInfoProps {
   onRequestClose: () => void;
 }
 
-export const DialogPoupInfo: React.FC<DialogPoupInfoProps> = (props) => {
+export const DialogPopupInfo: React.FC<DialogPoupInfoProps> = (props) => {
   const { colors } = useContext(ThemeContext);
   return (
     <Container>
@@ -62,16 +62,16 @@ export const DialogPoupInfo: React.FC<DialogPoupInfoProps> = (props) => {
         </div>
         <div className="w-full p-2" style={{ marginTop: "10px" }}>
           <div className="w-full h-20 text-center">{props.children}</div>
-          <div className="w-full text-center">
-            <ButtonBase
-              label="OK"
-              model="btn_base"
-              className="tertiary-color mr-5 p-2"
-              size="mini"
-              onClick={props.onRequestClose}
-            />
-          </div>
         </div>
+        <footer className="w-full text-center absolute" style={{top:'82%'}}>
+          <ButtonBase
+            label="OK"
+            model="btn_base"
+            className="primary-color"
+            size="mini"
+            onClick={props.onRequestClose}
+          />
+        </footer>
       </Modal>
     </Container>
   );
