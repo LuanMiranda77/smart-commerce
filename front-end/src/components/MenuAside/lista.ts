@@ -6,6 +6,7 @@ import paper from '../../assets/icons/paper.png';
 import rel from '../../assets/load.gif';
 import sped from '../../assets/icons/sped.png';
 import loja from '../../assets/icons/loja.png';
+import config from '../../assets/icons/config.png';
 import { Roles } from '../../domain/enums';
 export const menus = [
   {
@@ -146,10 +147,17 @@ export const menus = [
     ],
   },{
     id: '4',
-    text: 'ESTABELECIMENTO',
+    text: 'CONFIGURAÇÕES',
     expanded: false,
-    icon:loja,
-    role:Roles.SPED
+    icon:config,
+    items:[
+      { id: '4.1',
+      text: 'Estabelecimento',
+      expanded: false,
+      icon:loja,
+      role:Roles.SPED,}
+
+    ]
   },
   {
     id: '5',

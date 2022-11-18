@@ -6,8 +6,7 @@ import { EstabelecimentoType } from './../../domain/types/estabelecimento';
 
 export const initialState = {
     // id: undefined,
-    cnpj:'',
-    cpf:'',
+    cnpjCpf:'',
     instEstadual: '',
     instMunicipal: '',
     razao: '',

@@ -11,16 +11,18 @@ import {
   ButtonBase,
   ButtonIcon, Divider, InputCheck, InputDefault,
   InputMask, InputSelectDefault, ModalDefault
-} from "../../../../components";
-import { EstabelecimentoType } from '../../../../domain';
-import { RegimeTributario } from '../../../../domain/enums';
-import tipos from '../../../../helpers/help_lista_uf.json';
-import { RootState } from '../../../../store/index.store';
-import { save, selectStateEstab } from '../../../../store/slices/estabelecimento.slice';
-import { UtilsGeral } from '../../../../utils/utils_geral';
-import { UtilsValid } from '../../../../utils/utils_valid';
+} from "../../../../../../components";
+import { EstabelecimentoType } from '../../../../../../domain';
+import { RegimeTributario } from '../../../../../../domain/enums';
+import tipos from '../../../../../../helpers/help_lista_uf.json';
+import { RootState } from '../../../../../../store/index.store';
+import { selectStateEstab } from '../../../../../../store/slices/estabelecimento.slice';
+import { UtilsGeral } from '../../../../../../utils/utils_geral';
+import { UtilsValid } from '../../../../../../utils/utils_valid';
 import { Container, FormContainer } from './styles';
 import { regimes } from './__mocks__';
+import {save} from '../../../services/EstabelecimentoService';
+import { UtilsConvert } from '../../../../../../utils/utils_convert';
 
 interface ModalProps {
   showModal: boolean;
@@ -40,16 +42,29 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
   const [regime, setRegime] = useState<any>(regimes[0]);
   const [uf, setUF] = useState<any>();
 
+  const schema = yup.object().shape({
+    razao: yup.string().min(5, 'Digite no minímo 5 letras').required('O campo é obrigatório'),
+    nome: yup.string().min(5, 'Digite no minímo 5 letras').required('O campo é obrigatório'),
+    email: yup.string().email('E-mail inválido').required('O campo é obrigatório'),
+    tel: yup.string().min(14, "Telefone incompleto").required('O campo é obrigatório'),
+    cel: yup.string().min(16, "Celular incompleto").required('O campo é obrigatório'),
+  }).required();
+
+  const { register, handleSubmit, watch, reset, setValue, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+
   useEffect(()=>{
     let estTemp;
     if(props.tipo===1){
-      setEstabelecimento(props.estabelecimento);
       estTemp = props.estabelecimento;
+      setEstabelecimento(props.estabelecimento);
     }else{
       estTemp = estabelecimentoSelect;
       setEstabelecimento(estabelecimentoSelect);
     }
-    if(estTemp?.cpf && estTemp.cpf.length>0){
+    if(estTemp?.cnpjCpf && estTemp.cnpjCpf.length===11){
       setCheckCPF(true);
     }else{
       setCheckCPF(false);
@@ -59,50 +74,50 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
     setRegime(regime);
 
     let uf  = _.find(tipos.estados, {'value': estTemp?.uf} );
-    setUF(uf);
+    
+    if(estTemp?.id){
+      setUF(uf);
+      reset({...estTemp});
+      setValue('cnpjCpf', estTemp.cnpjCpf)
+      setValue('cel', estTemp.celular1)
+      setValue('tel', estTemp.foneFixo)
+    }else{
+      setUF("");
+      reset({...estTemp});
+      setValue('cnpjCpf', estTemp?.cnpjCpf)
+      setValue('cel', estTemp?.celular1)
+      setValue('tel', estTemp?.foneFixo)
+    }
 
   },[estabelecimentoSelect, props.estabelecimento, props.tipo]);
 
-  const schema = yup.object().shape({
-    razao: yup.string().min(5, 'Digite no minímo 5 letras').required('O campo é obrigatório'),
-    doc: yup.string().required('O campo é obrigatório'),
-    email: yup.string().email().required('O campo é obrigatório'),
-    tel: yup.string().required('O campo é obrigatório'),
-    codIbge: yup.number().min(7, 'Digite no minímo 7 números').required('O campo é obrigatório'),
-    // confirmePass: yup.string().oneOf([yup.ref("password")]).required('Digite a senha')
-  }).required();
+ 
 
   const eventClose = () => {
     props.closeModal();
   }
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  });
-
+ 
   const onSave = (form: FieldValues) => {
-    console.log(form, uf);
-    let doc = UtilsGeral.removeMask(form.doc);
+
+    let doc = UtilsGeral.removeMask(form.cnpjCpf);
     if (doc.length === 11 && !UtilsValid.isValidCPF(doc)) {
-      toast.error(UtilsGeral.getEmogi()[2] + ' Ops! O CPF digitado é inválido.');
+      toast.error(UtilsGeral.getEmoji(2) + ' Ops! O CPF digitado é inválido.');
       return
     }
     else if (doc.length > 11 && !UtilsValid.isValidCNPJ(doc)) {
-      toast.error(UtilsGeral.getEmogi()[2] + ' Ops! O CNPJ digitado é inválido.');
+      toast.error(UtilsGeral.getEmoji(2) + ' Ops! O CNPJ digitado é inválido.');
       return
     }
-    // else if (!UtilsValid.isValidEmail(form.email)) {
-    //   toast.error(UtilsGeral.getEmogi()[2] + ' Ops! O e-mail digitado é inválido.');
-    //   return
-    // }
 
     if(estabelecimento!==undefined){
-      dispatch(save({
+      save({
         ...estabelecimento,
-        cpf: doc.length === 11 ? doc : undefined,
-        cnpj: doc.length > 11 ? doc : undefined,
+        cnpjCpf:  doc,
         razao: form.razao,
         nome: form.nome,
+        instEstadual: form.instEstadual,
+        instMunicipal: form.instMunicipal,
         regime: regime.value === RegimeTributario.MEI ? RegimeTributario.MEI :
           regime.value === RegimeTributario.SIMPLES ? RegimeTributario.SIMPLES :
             regime.value === RegimeTributario.PRESUMIDO ? RegimeTributario.PRESUMIDO :
@@ -113,23 +128,21 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
         bairro: form.bairro,
         cidade: form.cidade,
         uf: uf.value,
-        foneFixo: form.tel,
-        celular1: form.cel,
+        foneFixo: UtilsGeral.removeMask(form.tel),
+        celular1: UtilsGeral.removeMask(form.cel),
         logo: url,
         email: form.email,
-      }
-      ));
+        status:'S'
+      }) 
+      .then(response =>{
+        toast.success(UtilsGeral.getEmoji(1)+"Efetuado com sucesso!"); 
+        setEstabelecimento({...response});
+        eventClose();
+      })
+      .catch(error=>{ toast.error(UtilsGeral.getEmoji(2) + error.mensagemUsuario)});
     }
 
   }
-
-  const onEdit = () => {
-
-  }
-
-  const beforeMaskedValueChange = (oldState: any) => {
-    console.log(oldState, cpfSemMask);
-  };
 
   const [url, setUrl] = useState('');
   const uploadImge = (event: any) => {
@@ -160,30 +173,29 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
               mask={checkCPF ? "999.999.999-99" : "99.999.999/9999-99"}
               onChange={(e) => setCpfSemMask(e.target.value)}
               required
-              value={checkCPF ? estabelecimento?.cpf : estabelecimento?.cnpj}
+              register={register('cnpjCpf')}
+              // value={estabelecimento?.cnpjCpf}
             />
             {!checkCPF ?
               <>
                 <InputDefault className="w-2/12 mr-5"
+                  type="number"
                   label={"Ins. Estadual"}
-                  onChange={(e) => setCpfSemMask(e.target.value)}
                   max="11"
-                  required type="number"
-                // register={register('doc')}
-                // errorMessage={errors.doc?.message}
-                // value={checkCPF ? estabelecimento.cpf : estabelecimento.cnpj}
+                  required 
+                  register={register('instEstadual')}
+      
                 />
                 <InputDefault className="w-2/12 mr-5"
-                  label={"Ins. Municipal"}
-                  onChange={(e) => setCpfSemMask(e.target.value)}
-                  max="11"
                   type="number"
-                // register={register('doc')}
-                // errorMessage={errors.doc?.message}
-                // value={checkCPF ? estabelecimento.cpf : estabelecimento.cnpj}
+                  label={"Ins. Municipal"}
+                  max="11"
+                  register={register('instMunicipal')}
+                 
                 />
               </>
-              : ""
+              :
+              <></>
             }
             <div className="w-3/12" >
               <InputSelectDefault label="Regime da empresa" options={regimes}
@@ -224,17 +236,19 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
             <InputDefault className="w-4/12 mr-5" label="Nome Fantasia"
               type="text"
               name='nome'
-              value={estabelecimento?.nome}
+              required
               register={register('nome')}
+              errorMessage={errors.nome?.message}
             />
             {!checkCPF ?
               <InputDefault className="w-2/12 mr-5" label="Código IBGE"
                 type="number"
-                value={estabelecimento?.codIbge}
-                register={register('codIbge')}
                 required
+                register={register('codIbge')}
               />
-              : ""}
+              : 
+              <></>
+            }
 
           </div>
         </div>
@@ -243,13 +257,13 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
           <p className="font-bold" style={{ color: (theme.title === 'dark' ? theme.colors.textLabel : theme.colors.primary) }}>Endereço</p>
           <Divider tipo="horizontal" className="mb-2" />
           <div className="flex mb-4">
-            <InputMask className="w-1/12 mr-5" label="CEP" mask={'99999-999'} register={register('cep')} value={estabelecimento?.cep} />
-            <InputDefault className="w-5/12 mr-5" label="Logradouro" type="text" register={register('logradouro')} value={estabelecimento?.logradouro} />
-            <InputDefault className="w-2/12 mr-5" label="Número" type="text" register={register('numero')} value={estabelecimento?.numero} />
+            <InputMask className="w-1/12 mr-5" label="CEP" mask={'99999-999'} register={register('cep')} />
+            <InputDefault className="w-5/12 mr-5" label="Logradouro" type="text" register={register('logradouro')}  />
+            <InputDefault className="w-2/12 mr-5" label="Número" type="text" register={register('numero')} />
           </div>
           <div className="flex">
-            <InputDefault className="w-3/12 mr-5" label="Bairro" type="text" register={register('bairro')} value={estabelecimento?.bairro} />
-            <InputDefault className="w-3/12 mr-5" label="Cidade" type="text" register={register('cidade')} value={estabelecimento?.cidade} />
+            <InputDefault className="w-3/12 mr-5" label="Bairro" type="text" register={register('bairro')} />
+            <InputDefault className="w-3/12 mr-5" label="Cidade" type="text" register={register('cidade')} />
             <div className="w-2/12" >
               <InputSelectDefault label="UF" options={tipos.estados} placeholder='Estado...' value={uf} onChange={(e) => setUF(e)} />
             </div>
@@ -261,21 +275,20 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
             <InputMask className="w-40 mr-5" label="Telefone" mask={'(99) 9999-9999'}
               required
               register={register('tel')}
-              errorMessage={errors.telefone?.message}
-              value={estabelecimento?.foneFixo}
+              errorMessage={errors.tel?.message}
+
             />
             <InputMask className="w-40 mr-5" label={"Celular"}
               mask={'(99) 9.9999-9999'}
-              onChange={(e) => setCpfSemMask(e.target.value)}
               required
               register={register('cel')}
               errorMessage={errors.cel?.message}
-              value={estabelecimento?.celular1}
             />
             <InputDefault className="w-4/12 mr-5" label="E-mail" type="email"
-              required register={register('email')}
+              required 
+              register={register('email')}
               errorMessage={errors.email?.message}
-              value={estabelecimento?.email} />
+              />
           </div>
         </div>
 

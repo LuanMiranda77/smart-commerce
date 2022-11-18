@@ -1,8 +1,10 @@
-import { EstabelecimentoType } from './../../../../domain/types/estabelecimento';
+import { EstabelecimentoType } from '../../../../domain/types/estabelecimento';
 import { api } from "../../../../config/api";
+import { ConfigModulo } from '../../../../domain/types/configModulo';
 
     //end-point da api
     const url='api/estabelecimento';
+    const urlModo='api/modulo';
 
     //modelo de request post
     export  async function save(pEntity: EstabelecimentoType){
@@ -38,5 +40,28 @@ import { api } from "../../../../config/api";
         });
       return response;
     }
+
+    export  async function saveModulo(pEntity: ConfigModulo){
+      const response = await api.post(urlModo, pEntity).then( resp =>{
+            return resp.data;
+        })
+        .catch(error => {
+            console.log(error.response.data);
+            return Promise.reject(error.response.data[0]);
+        });;
+      return response;
+    }
+
+    export  async function  getModulo(estabelecimento: number){
+      const response = await api.get(urlModo+`/${estabelecimento}`).then( resp =>{
+            return resp.data;
+        })
+        .catch(error => {
+            console.log(error.response.data);
+            return Promise.reject(error.response.data[0]);
+        });
+      return response;
+    }
+
     
   

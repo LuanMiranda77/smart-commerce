@@ -1,3 +1,4 @@
+import { response } from 'express';
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,6 +38,7 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
       user.estabelecimento = 0;
     }
     api.get(`api/estabelecimento/estabelecimentos/${user.estabelecimento}/${user.cargo}`).then(resp => {
+      resp.data = [..._.orderBy(resp.data,['nome'], ['asc'])];
       if (resp.data.length === 1) {
         dispatch(load(resp.data[0]));
       } 
@@ -65,7 +67,7 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
       return options;
     }).catch(error => {
       console.log(error.response.data);
-      return toast.error(UtilsGeral.getEmogi()[3] + " " + error.response.data[0].mensagemUsuario);
+      return toast.error(UtilsGeral.getEmoji(2) + " " + error.response.data[0].mensagemUsuario);
     });
   }, [selectedEstabelecimento])
 
@@ -93,7 +95,7 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
       :
       <div className='ml-1' style={{marginTop:'-3px'}}>
         <p className='text-lg font-bold' style={{color: colors.textLabel}}>{estabelecimento.nome}</p>
-        <p className='text-xs' style={{color: colors.warning}}>CNPJ: {estabelecimento.cnpj}</p>
+        <p className='text-xs' style={{color: colors.warning}}>CNPJ/CPF: {estabelecimento.cnpjCpf}</p>
       </div>
     }
     <ModalLoad isOpen={modalShow} mensage='Carregando dados iniciais do estabelecimento aguarde...' onRequestClose={()=>setModalShow(false)}/>

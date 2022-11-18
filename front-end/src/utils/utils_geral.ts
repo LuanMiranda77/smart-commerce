@@ -1,8 +1,9 @@
 
 export class UtilsGeral {
 
-    public static getEmogi() {
-        return ['🤑', '😀', '😱', '😰', '😥'];
+    public static getEmoji(index: number) : string{
+        let lista = ['🤑', '😀', '😱', '😰', '😥'];
+        return lista[index];
     }
 
 

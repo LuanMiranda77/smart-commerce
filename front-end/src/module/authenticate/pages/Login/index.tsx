@@ -25,6 +25,8 @@ function Login() {
   const theme = useContext(ThemeContext);
   const navegate = useNavigate();
   const [showPass, setShowPass] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
+
   const [user, setUser] = useState<Object>({ email: '', password: '' });
   const dispatch = useDispatch();
   const userAplication = useSelector((state: RootState) => state.userAplication);
@@ -33,7 +35,7 @@ function Login() {
   const login = () => {
     service.login(user).then(response => {
       if(response.status === "B"){
-        toast.error("Seu usuario foi b! fale com administrador do sistema");
+        setShowInfo(true);
       }
       else if (response.status !== "S") {
         toast.error("Seu usuario foi desativado! fale com administrador do sistema");
@@ -102,7 +104,7 @@ function Login() {
       </Container>
       <img className="w-28 h-28" src={bannerInferior} alt='logo' style={{ position: 'absolute', width: '100%', bottom: '0', margin: '0', zIndex: '-1' }} />
       {/* <ToastDefault /> */}
-      <DialogPopupInfo title="Aviso" isOpen={true}  onRequestClose={()=>{}}>
+      <DialogPopupInfo title="Aviso" isOpen={showInfo}  onRequestClose={()=> setShowInfo(false)}>
         <div className="" style={{color:theme.colors.error}}>
           <div className="flex justify-center">
             <FcHighPriority style={{fontSize:'60px', textAlign:'center'}}/>

@@ -19,8 +19,8 @@ function Dashboard() {
       const cardFaturamentoTotal = (
             <div className="p-2">
                   <header className="w-full">
-                        <p className="font-bold lg:text-4xl">Faturamento Total {UtilsGeral.getEmogi()[0]}</p>
-                        <p className="font-bold text-sm lg:text-lg">Fique de olho na sua empresa! {UtilsGeral.getEmogi()[2]}</p>
+                        <p className="font-bold lg:text-4xl">Faturamento Total {UtilsGeral.getEmoji(0)}</p>
+                        <p className="font-bold text-sm lg:text-lg">Fique de olho na sua empresa! {UtilsGeral.getEmoji(2)}</p>
                   </header>
                   <div className="h-full text-right" >
                         <div>
