@@ -8,12 +8,14 @@ import { toast } from "react-toastify";
 import { ModalSincronizarProduto } from './modalSincronizarProduto';
 import { ContainerEntradaNota, ContainerProdutoSync, ContainerTable } from './styles';
 import { ColumnsDataGridType } from '../../../../components/types';
+import { NFeEntradaType } from '../../../../domain/types/nfe_entrada';
 
 // import { Container } from './styles';
 interface ModalProps {
   showModal: boolean;
   closeModal: () => void;
   tipo: number;
+  nota: NFeEntradaType;
 }
 
 export const ModalEntrada: React.FC<ModalProps> = (props) => {
@@ -147,7 +149,7 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
           <InputMask className="w-6/12 mr-5 " label="CNPJ" type="number" mask={'99.999.999/9999-99'} />
           <i><FaUserPlus style={{ fontSize: '40px', marginTop: '25px', color: theme.colors.primary }} /></i>
         </div>
-        <InputDefault className=" mr-5 mb-2" label="Fornecedor" type="text" />
+        <InputDefault className=" mr-5 mb-2" label="Fornecedor" type="text"  value={props.nota.fornecedor}/>
         <p className="text-left text-xs font-bold ">Cálculo do imposto</p>
         <hr className="" style={{ border: '1px solid' + theme.colors.gray }} />
         <div className='grid grid-cols-3 gap-2 p-2'>

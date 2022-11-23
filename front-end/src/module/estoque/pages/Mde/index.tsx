@@ -1,28 +1,27 @@
-import React, { useContext, useEffect, useState } from "react"
-import { FaArchive, FaDollarSign, FaFileDownload, FaFileImport, FaFileSignature, FaFileUpload, FaFunnelDollar, FaPlus, FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
+import { useContext, useState } from "react";
+import { FaFileDownload, FaFileImport, FaFileSignature, FaFileUpload, FaFunnelDollar, FaPlus, FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 
-import { Body, Container, ContainerFiltro, ContainerTable } from './styles';
-import { ThemeContext } from 'styled-components';
-import { ButtonBase, ButtonIcon, DataGridDefault, InputDate, InputDefault, InputMask, InputSearch, InputSelectDefault, ModalDefault, SummaryDefault } from "../../../../components";
-import { status, tiposFiltroData } from './__mooks';
-import { ColumnsDataGridType } from "../../../../components/types";
-import { ModalEntrada } from "./modalEntrada";
-import CountUp from 'react-countup';
+import { Column } from "devextreme-react/data-grid";
 import _ from 'lodash';
+import CountUp from 'react-countup';
 import { toast } from "react-toastify";
+import { ThemeContext } from 'styled-components';
+import { ButtonBase, ButtonIcon, ButtonUpload, DataGridDefault, InputDate, InputDefault, InputMask, InputSearch, InputSelectDefault, ModalDefault } from "../../../../components";
+import { ModalEntrada } from "./modalEntrada";
+import { Body, Container, ContainerFiltro, ContainerTable } from './styles';
+import { status, tiposFiltroData } from './__mooks';
+import { colors } from "react-select/dist/declarations/src/theme";
+import { NFeEntradaType, initialState } from "../../../../domain/types/nfe_entrada";
+import { selectState } from "../../../../store/slices/menuUser.slice";
 
-/**
-*@Author
-*@Issue
-*/
 
 function Mde() {
-  const theme = useContext(ThemeContext);
+  const {title, colors} = useContext(ThemeContext);
   const [showModalEntrada, setShowModalEntrada] = useState(false);
   const [showModalFiltro, setShowModalFiltro] = useState(false);
   const [tamanhoIpuntCnpjCpf, setTamanhoIpuntCnpjCpf] = useState(0);
   const [tipoNota, setTipoNota] = useState(0);
-  const [notaSelect, setNotaSelect] = useState<any>();
+  const [notaSelect, setNotaSelect] = useState<NFeEntradaType>(initialState);
 
   const actionNota = (nota: any) => {
     let compra = nota.data
@@ -38,34 +37,19 @@ function Mde() {
 
   const renderCell = (element: any) => {
     if (element.value === "M") {
-      return <span className='font-bold text-white' style={{ color: theme.colors.success }}>MANIFESTA</span>
+      return <span className='font-bold text-white' style={{ color: colors.success }}>MANIFESTA</span>
     } else if (element.value === "A") {
-      return <span className='font-bold text-white' style={{ color: theme.colors.error, fontSize: '12px' }}>A MANIFESTAR</span>
+      return <span className='font-bold text-white' style={{ color: colors.error, fontSize: '12px' }}>A MANIFESTAR</span>
     } else if (element.value === "E") {
-      return <span className='font-bold text-white' style={{ color: theme.colors.warning, fontSize: '12px' }}>AVULSA</span>
+      return <span className='font-bold text-white' style={{ color: colors.warning, fontSize: '12px' }}>AVULSA</span>
     } else if (element.value === "S") {
-      return <i className='text-lg cursor-pointer' style={{ color: theme.colors.primary }}><FaRegCheckCircle className='ml-5' title='Nota incluida no sistema' /></i>
+      return <i className='text-lg cursor-pointer' style={{ color: colors.primary }}><FaRegCheckCircle className='ml-5' title='Nota incluida no sistema' /></i>
     } else if (element.value === "N") {
-      return <i className='text-lg cursor-pointer' style={{ color: theme.colors.error }}><FaRegTimesCircle id='buttonAction' className='ml-5' title='Nota não incluida no sistema' /></i>
+      return <i className='text-lg cursor-pointer' style={{ color: colors.error }}><FaRegTimesCircle id='buttonAction' className='ml-5' title='Nota não incluida no sistema' /></i>
     } else {
-      return <i className='text-lg cursor-pointer' style={{ color: theme.colors.primary }} onClick={() => setShowModalEntrada(true)}><FaFileImport id='buttonAction' className='' title='Realizar entrada da nota' /></i>
+      return <i className='text-lg cursor-pointer' style={{ color: colors.primary }} onClick={() => setShowModalEntrada(true)}><FaFileImport id='buttonAction' className='ml-3' title='Realizar entrada da nota' /></i>
     }
   }
-
-  const columns = new Array<ColumnsDataGridType>();
-  columns.push({ dataField: 'numero', caption: 'NÚMERO', alignment: 'left', dataType: 'string', width: 100, cssClass: 'font-bold column-1' });
-  columns.push({ dataField: 'emissao', caption: 'EMISSÃO', alignment: 'center', dataType: 'date', width: 95, cssClass: 'font-bold' });
-  columns.push({ dataField: 'cnpj', caption: 'CNPJ/CPF', alignment: '', dataType: 'string', width: 150 });
-  columns.push({ dataField: 'fornecedor', caption: 'FORNECEDOR', alignment: 'left', dataType: 'number', });
-  columns.push({ dataField: 'vlrbruto', caption: 'VLR.BRUTO', alignment: 'center', dataType: 'number', format: { type: 'fixedPoint', precision: 2 }, width: 110 });
-  // columns.push({ dataField: 'vlricms', caption: 'VLR.ICMS', alignment: 'center', dataType: 'number', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 110 });
-  // columns.push({ dataField: 'vlrdesconto', caption: 'VLR.DESCONTO', alignment: 'right', dataType: 'number', cssClass: 'font-bold', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 150 });
-  // columns.push({ dataField: 'vlrliquido', caption: 'VLR.LÍQUIDO', alignment: 'right', dataType: 'number', cssClass: 'font-bold', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 150 });
-  columns.push({ dataField: 'status', caption: 'STATUS', alignment: 'center', dataType: 'number', cssClass: 'font-bold text-sx', allowSearch: false, width: 120, styleCell: renderCell });
-  columns.push({ dataField: 'manifesto', caption: 'MANIFESTO', alignment: 'center', dataType: 'date', allowSearch: false, width: 100 });
-  columns.push({ dataField: 'entrada', caption: 'ENTRADA', alignment: 'center', dataType: 'date', cssClass: 'font-bold', allowSearch: false, width: 95 });
-  columns.push({ dataField: 'incluida', caption: 'INCLUIDA', alignment: 'center', dataType: 'number', cssClass: 'font-bold', allowSearch: false, width: 90, styleCell: renderCell });
-  columns.push({ dataField: '', caption: '', alignment: 'center', dataType: '', cssClass: '', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 50, styleCell: renderCell });
 
   const data = [
     { numero: '12368498', emissao: '11/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'CADA', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
@@ -154,15 +138,25 @@ function Mde() {
 
   }
 
-  return <Container className="card-local w-full h-full p-3 font-bold" style={{ backgroundColor: (theme.title === 'dark' ? theme.colors.tertiary : theme.colors.white) }}>
-    <header className="flex text-xl font-bold items-center justify-between mb-1 h-6" style={{ color: theme.colors.primary }}>
-      <div className="flex items-center justify-between" style={{ backgroundColor: (theme.title === 'dark' ? theme.colors.tertiary : theme.colors.white), borderRadius: '8px' }}>
+  const uploadXml = (files: FileList | null) => {
+    console.log(files);
+  };
+
+  const onNovo = () => {
+    setNotaSelect(initialState);
+    setTipoNota(0);
+    setShowModalEntrada(true);
+  };
+
+  return <Container className="card-local w-full h-full p-3 font-bold" style={{ backgroundColor: (title === 'dark' ? colors.tertiary : colors.white) }}>
+    <header className="flex text-xl font-bold items-center justify-between mb-1 h-6" style={{ color: colors.primary }}>
+      <div className="flex items-center justify-between" style={{ backgroundColor: (title === 'dark' ? colors.tertiary : colors.white), borderRadius: '8px' }}>
         <i className="mr-1"><FaFileUpload /></i>
         <label htmlFor="">Notas de entrada</label>
       </div>
       <div className="text-sm text-center">
         <b className="mr-2">Certificado: fskksiiskkaii</b>
-        <b style={{ color: theme.colors.error }}>Vencimento:12/05/2022</b>
+        <b style={{ color: colors.error }}>Vencimento:12/05/2022</b>
       </div>
       <div>
         <ButtonIcon className="text-sm mr-3" label="FILTRAR" icon={<FaFunnelDollar />} width='100%' style={{ height: '28px' }} onClick={() => setShowModalFiltro(true)} />
@@ -175,35 +169,36 @@ function Mde() {
           <InputSelectDefault label="Status" options={status} autoFocus placeholder="Selecione..." onChange={(e) => filterStatus(e.value)} defaultValue={status[0]} />
         </div>
         <div className="text-xs">
-          <ButtonIcon className="text-sm mr-10 mb-1" label="CARREGAR NOTAS RECENTES" icon={<FaFileDownload />} width='100%' style={{ backgroundColor: theme.colors.success }} />
+          <ButtonIcon className="text-sm mr-10 mb-1" label="CARREGAR NOTAS RECENTES" icon={<FaFileDownload />} width='100%' style={{ backgroundColor: colors.success }} />
           <div className="text-center">
             <p className="font-bold">Última consulta: <span className="font-normal">12/12/2022 19:09:35</span></p>
-            <p className="font-bold">Tempo restante: <span style={{ color: theme.colors.error }}>09:06</span> </p>
+            <p className="font-bold">Tempo restante: <span style={{ color: colors.error }}>09:06</span> </p>
           </div>
         </div>
       </div>
       <div className="h-10 flex ">
-        <div className="w-8/12">
+        <div className="w-4/12">
           <InputSearch onChange={(e) => search(e.currentTarget.value)} />
         </div>
-        <ButtonIcon className="mr-3" label="Novo" icon={<FaPlus />} width={'12%'} style={{ marginTop: '-3px' }} onClick={()=>setTipoNota(0)}/>
-        <ButtonIcon className="mr-3" label="Importar XML" icon={<FaFileUpload />} width={'18%'} style={{ marginTop: '-3px', border: '2px solid ' + theme.colors.primary, background: 'white', color: theme.colors.primary }} />
-        <ButtonIcon className="mr-3" label="Manifestar nota" icon={<FaFileSignature />} width={'19%'} style={{ marginTop: '-3px' }} color={theme.colors.warning} onClick={onManifestar} />
-        <div className="linha-vertical h-8 m-2" style={{ marginTop: '-1px' }}></div>
-        <div className="w-20 text-xs font-bold text-center">
-          <p>Quantidade</p>
-          <CountUp end={150000} prefix='' separator="" decimal="" decimals={0} />
-        </div>
-        <div className="linha-vertical h-8 m-2" style={{ marginTop: '-1px' }}></div>
-        <div className="w-40 text-xs font-bold text-right">
-          <p>Valor total</p>
-          <CountUp end={150000000} prefix='R$ ' separator="." decimal="," decimals={2} />
+        <div className="w-8/12 flex">
+          <ButtonIcon className="mr-3" label="Entrada avulso" icon={<FaPlus />} width={'170px'} style={{ marginTop: '-3px' }} onClick={onNovo}/>
+          <ButtonUpload className="mr-3" label="Importar XML" color={colors.primary} boderColor={colors.primary} width={'160px'} style={{ marginTop: '-3px' }} multiple upload={(e)=> uploadXml(e.target.files)} />
+          <ButtonIcon className="mr-3" label="Manifestar nota" icon={<FaFileSignature />} width={'170px'} style={{ marginTop: '-3px' }} color={colors.warning} onClick={onManifestar} />
+          <div className="linha-vertical h-8 m-2" style={{ marginTop: '-1px' }}></div>
+          <div className="w-20 text-xs font-bold text-center">
+            <p>Quantidade</p>
+            <CountUp end={150000} prefix='' separator="" decimal="" decimals={0} />
+          </div>
+          <div className="linha-vertical h-8 m-2" style={{ marginTop: '-1px' }}></div>
+          <div className="w-40 text-xs font-bold text-right">
+            <p>Valor total</p>
+            <CountUp end={150000000} prefix='R$ ' separator="." decimal="," decimals={2} />
+          </div>
         </div>
       </div>
       <hr className="mb-3" style={{ marginTop: '-5px' }} />
       <ContainerTable>
         <DataGridDefault
-          columns={columns}
           dataSource={dataSource}
           paginar={false}
           showBorders
@@ -213,14 +208,29 @@ function Mde() {
           isSelectRow
           moduloSeletion='single'
           onSelectionChanged={(e) => setNotaSelect(e.selectedRowsData[0])}
-        />
+        >
+          <Column dataField= 'numero' caption= 'NÚMERO' alignment= 'left' dataType= 'string' width={100} cssClass= 'font-bold column-1' />
+          <Column dataField= 'emissao' caption= 'EMISSÃO' alignment= 'center' dataType= 'date' width={95} cssClass= 'font-bold' />
+          <Column dataField= 'cnpj' caption= 'CNPJ/CPF' alignment= '' dataType= 'string' width={150} />
+          <Column dataField= 'fornecedor' caption= 'FORNECEDOR' alignment= 'left' dataType= 'number' />
+          <Column dataField= 'vlrbruto' caption= 'VLR.BRUTO' alignment= 'center' dataType= 'number' format={{type:'fixedPoint', precision:2}} width={110} />
+          {/* <Column dataField= 'vlricms' caption= 'VLR.ICMS' alignment= 'center' dataType= 'number' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={110} />
+          <Column dataField= 'vlrdesconto' caption= 'VLR.DESCONTO' alignment= 'right' dataType= 'number' cssClass= 'font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={150} />
+          <Column dataField= 'vlrliquido' caption= 'VLR.LÍQUIDO' alignment= 'right' dataType= 'number' cssClass= 'font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={150} /> */}
+          <Column dataField= 'status' caption= 'STATUS' alignment= 'center' dataType= 'number' cssClass= 'font-bold text-sx' allowSearch={false} width={ 120} cellRender={renderCell}  />
+          <Column dataField= 'manifesto' caption= 'MANIFESTO' alignment= 'center' dataType= 'date' allowSearch={false} width={100} />
+          <Column dataField= 'entrada' caption= 'ENTRADA' alignment= 'center' dataType= 'date' cssClass= 'font-bold' allowSearch={false} width={95} />
+          <Column dataField= 'incluida' caption= 'INCLUIDA' alignment= 'center' dataType= 'number' cssClass= 'font-bold' allowSearch={false} width={90} cellRender={renderCell}  />
+          <Column dataField= '' caption= '' alignment= 'center' dataType= '' cssClass= '' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={50} cellRender={renderCell} />
+        </DataGridDefault>
       </ContainerTable>
     </Body>
+
     <ModalDefault isOpen={showModalFiltro} title='FILTRAR NOTAS' onRequestClose={() => setShowModalFiltro(false)} width='50%' left="22%" height="75%" margin="5%">
       <ContainerFiltro className="bg-white w-full p-3">
         <div className="text-left font-bold mb-5">
           <p className="text-xs">Filtro por data</p>
-          <hr className="mb-2" style={{ border: '1px solid' + theme.colors.gray }} />
+          <hr className="mb-2" style={{ border: '1px solid' + colors.gray }} />
           <div className="flex items-center mt-3">
             <div className="w-full mr-5">
               <InputSelectDefault label="Tipo" options={tiposFiltroData} defaultValue={tiposFiltroData[0]} />
@@ -232,7 +242,7 @@ function Mde() {
 
         <div className="text-left text-xs font-bold">
           <p>Informações diversas</p>
-          <hr className="mb-5" style={{ border: '1px solid' + theme.colors.gray }} />
+          <hr className="mb-5" style={{ border: '1px solid' + colors.gray }} />
           <div className="w-full">
             <InputDefault className="w-3/12 mr-5 mb-5" label="Número da nota" type="number" />
             <div className="flex w-full">
@@ -251,7 +261,8 @@ function Mde() {
         </div>
       </ContainerFiltro>
     </ModalDefault>
-    <ModalEntrada showModal={showModalEntrada} closeModal={() => setShowModalEntrada(false)} tipo={tipoNota}/>
+
+    <ModalEntrada showModal={showModalEntrada} closeModal={() => setShowModalEntrada(false)} tipo={tipoNota} nota={notaSelect}/>
     {/* <ToastDefault /> */}
   </Container>;
 }

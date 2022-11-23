@@ -6,6 +6,9 @@ export const Container  = styled.div`
     label{
         /* color: ${color => (color.theme.title === 'dark' ? color.theme.colors.textLabel : color.theme.colors.primary)} */
     }
+    input[type='file']{
+        display: none;
+    }
 
 @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
