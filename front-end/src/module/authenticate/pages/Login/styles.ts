@@ -34,6 +34,7 @@ export const Container = styled.header`
     border-radius: 10px 0px 0px 10px;
     margin-left: 1rem;
     padding: 1rem;
+    height: 62vh;
   }
 
   .div-right {
@@ -45,6 +46,7 @@ export const Container = styled.header`
     border-radius: 0 10px 10px 0;
     padding: 1rem;
     margin-right: 1rem;
+    height: 62vh;
   }
 
   .olho {

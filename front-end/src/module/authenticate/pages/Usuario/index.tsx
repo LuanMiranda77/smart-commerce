@@ -68,6 +68,7 @@ function Usuario() {
       setListCargos(lista);
     }
     if (estabelecimento.id) {
+      console.log(estabelecimento);
       service.getUsuarios(estabelecimento.id).then(response => {
         setDataSource(response);
         setDataSourceCopy(response);

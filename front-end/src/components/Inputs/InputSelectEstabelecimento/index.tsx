@@ -2,6 +2,7 @@ import { response } from 'express';
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { ThemeContext } from 'styled-components';
@@ -23,6 +24,7 @@ interface InputSelectEstabelecimentoProps {
 }
 
 export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProps> = () => {
+  const navegate = useNavigate();
   const [options, setOptions] = useState(new Array<any>());
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [selectedEstabelecimento, setSelectedEstabelecimento] = useState<any>();
@@ -67,7 +69,11 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
       return options;
     }).catch(error => {
       console.log(error.response.data);
-      return toast.error(UtilsGeral.getEmoji(2) + " " + error.response.data[0].mensagemUsuario);
+      if(error.response.data.message && error.response.data.message === 'Access Denied'){
+        UtilsUserLocal.logout();
+        navegate("/");
+      }
+      return toast.error(UtilsGeral.getEmoji(2) + " " + error.response.data.message);
     });
   }, [selectedEstabelecimento])
 

@@ -13,15 +13,24 @@ import { status, tiposFiltroData } from './__mooks';
 import { colors } from "react-select/dist/declarations/src/theme";
 import { NFeEntradaType, initialState } from "../../../../domain/types/nfe_entrada";
 import { selectState } from "../../../../store/slices/menuUser.slice";
+import { MdeService } from "../services/MdeService";
+import { response } from "express";
+import { DowloadService } from "../../../services/dowloadDoc";
+import { UploadService } from "../../../services/uploadDoc";
+import { selectStateEstab } from "../../../../store/slices/estabelecimento.slice";
+import { useSelector } from "react-redux";
+import xml2js from 'xml2js';
 
 
 function Mde() {
+  const estabelecimento = useSelector(selectStateEstab);
   const {title, colors} = useContext(ThemeContext);
   const [showModalEntrada, setShowModalEntrada] = useState(false);
   const [showModalFiltro, setShowModalFiltro] = useState(false);
   const [tamanhoIpuntCnpjCpf, setTamanhoIpuntCnpjCpf] = useState(0);
   const [tipoNota, setTipoNota] = useState(0);
   const [notaSelect, setNotaSelect] = useState<NFeEntradaType>(initialState);
+  // href="./CarregadorArquivos1?c=<%= arq.getCodigo() %>&ct=<%= arq.getContentType() %>"
 
   const actionNota = (nota: any) => {
     let compra = nota.data
@@ -135,11 +144,30 @@ function Mde() {
       toast.error("Nota já foi incluida não é possivel o manifesto.");
       return
     }
+    if(estabelecimento.id){
+      DowloadService.get('33220200074569000100550100003043831231851691','xml', estabelecimento.id);
+    }
 
   }
 
   const uploadXml = (files: FileList | null) => {
-    console.log(files);
+    if(files){
+
+      let parser = new xml2js.Parser();
+      parser.parseString(files[0], function (err, result) {
+        console.dir(result);
+        console.log('Done');
+      });
+      
+      // var reader  = new FileReader();
+      // reader.readAsDataURL(files[0]);
+
+      // console.log(estabelecimento, Array.from(files));
+      // UploadService.post(estabelecimento, Array.from(files))?.then(response=>{
+      //   console.log(response);
+      // })
+      // .catch(err=>{console.error(err)});
+    }
   };
 
   const onNovo = () => {
@@ -209,7 +237,7 @@ function Mde() {
           moduloSeletion='single'
           onSelectionChanged={(e) => setNotaSelect(e.selectedRowsData[0])}
         >
-          <Column dataField= 'numero' caption= 'NÚMERO' alignment= 'left' dataType= 'string' width={100} cssClass= 'font-bold column-1' />
+          <Column dataField= 'numero' caption= 'NÚMERO' alignment= 'left' dataType= 'string' width={100} cssClass= 'font-bold column-1'  />
           <Column dataField= 'emissao' caption= 'EMISSÃO' alignment= 'center' dataType= 'date' width={95} cssClass= 'font-bold' />
           <Column dataField= 'cnpj' caption= 'CNPJ/CPF' alignment= '' dataType= 'string' width={150} />
           <Column dataField= 'fornecedor' caption= 'FORNECEDOR' alignment= 'left' dataType= 'number' />

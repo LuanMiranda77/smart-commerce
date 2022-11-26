@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { FaEnvelope, FaExpeditedssl, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FcHighPriority } from "react-icons/fc";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -7,18 +8,12 @@ import { ThemeContext } from "styled-components";
 import bannerInferior from '../../../../assets/banner_inferior.svg';
 import bannerSuperior from '../../../../assets/banner_superior.svg';
 import icon from '../../../../assets/Logo/icon.svg';
+import { DialogPopupInfo } from "../../../../components";
 import { ButtonBase } from "../../../../components/Buttons/ButtonBase";
-import { Logo } from '../../../../components/Logo';
-import { isAuthenticated } from "../../../../config/auth";
-import { SizeLogo } from '../../../../domain/enums';
-import { UserAplicationType } from '../../../../domain/types/user_aplication';
 import { RootState } from '../../../../store/index.store';
-import { persistLocalStorage } from "../../../../utils/persistLocalStorage";
 import { UsuarioService } from "../services/usuarioService";
 import { Container } from "./styles";
-import {load} from '../../../../store/slices/usuario.slice';
-import { DialogPopupDefault, DialogPopupInfo } from "../../../../components";
-import { FcHighPriority } from "react-icons/fc";
+import logo from '../../../../assets/Logo/logo.svg';
 
 
 function Login() {
@@ -50,8 +45,10 @@ function Login() {
   }
   return (
     <>
-      <img className="w-28 h-28" src={bannerSuperior} alt='logo' style={{ position: 'absolute', width: '100vw', top: '0', margin: '0', zIndex: '-1' }} />
+      <img src={bannerSuperior} alt='logo' style={{ position: 'absolute', width: '100vw', top: '0', margin: '0', zIndex: '-1' }} />
+
       <Container >
+
         <div className="div-left">
           <div className="">
             <h3 style={{ color: theme.title === 'light' ? theme.colors.tertiary : theme.colors.textLabel }}>
@@ -93,17 +90,20 @@ function Login() {
             </div>
           </div>
         </div>
+
         <div className="div-right">
-          <Logo size={SizeLogo.MEDIUM}></Logo>
-          <h1 className="p-3">Melhor solução para seu comércio varejista e atacadista</h1>
+          <img className="w-4/12" src={logo} alt="logo" />
+          <h1 className="p-2">Melhor solução para seu comércio varejista e atacadista</h1>
           <h2 className="p-2">Tudo com um toque ou um click de distância!</h2>
           <h2 className="p-2">Tenha mais tempo para sua familia</h2>
-          <h2 className="p-2 mb-10">O GERENCIAMENTE da sua empresa na palma da mão</h2>
+          <h2 className="mb-10">O GERENCIAMENTE da sua empresa na palma da mão</h2>
           <h2 className="p-3" style={{ color: theme.title === 'light' ? theme.colors.secondary : theme.colors.textLabel }}>www.smartcommerce.com/atendimento</h2>
         </div>
+
       </Container>
-      <img className="w-28 h-28" src={bannerInferior} alt='logo' style={{ position: 'absolute', width: '100%', bottom: '0', margin: '0', zIndex: '-1' }} />
-      {/* <ToastDefault /> */}
+
+      <img src={bannerInferior} alt='banner' style={{ position: 'absolute', width: '100vw', bottom: '0', margin: '0', zIndex: '-1' }} />
+
       <DialogPopupInfo title="Aviso" isOpen={showInfo}  onRequestClose={()=> setShowInfo(false)}>
         <div className="" style={{color:theme.colors.error}}>
           <div className="flex justify-center">
@@ -115,6 +115,7 @@ function Login() {
           </div>
         </div>
         </DialogPopupInfo>
+        
     </>
   );
 }
