@@ -19,7 +19,6 @@ import { DowloadService } from "../../../services/dowloadDoc";
 import { UploadService } from "../../../services/uploadDoc";
 import { selectStateEstab } from "../../../../store/slices/estabelecimento.slice";
 import { useSelector } from "react-redux";
-import xml2js from 'xml2js';
 
 
 function Mde() {
@@ -153,11 +152,6 @@ function Mde() {
   const uploadXml = (files: FileList | null) => {
     if(files){
 
-      let parser = new xml2js.Parser();
-      parser.parseString(files[0], function (err, result) {
-        console.dir(result);
-        console.log('Done');
-      });
       
       // var reader  = new FileReader();
       // reader.readAsDataURL(files[0]);
