@@ -1,35 +1,37 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { FaFileDownload, FaFileImport, FaFileSignature, FaFileUpload, FaFunnelDollar, FaPlus, FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 
 import { Column } from "devextreme-react/data-grid";
 import _ from 'lodash';
+import moment from "moment";
 import CountUp from 'react-countup';
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { ThemeContext } from 'styled-components';
 import { ButtonBase, ButtonIcon, ButtonUpload, DataGridDefault, InputDate, InputDefault, InputMask, InputSearch, InputSelectDefault, ModalDefault } from "../../../../components";
-import { ModalEntrada } from "./modalEntrada";
-import { Body, Container, ContainerFiltro, ContainerTable } from './styles';
-import { status, tiposFiltroData } from './__mooks';
-import { colors } from "react-select/dist/declarations/src/theme";
-import { NFeEntradaType, initialState } from "../../../../domain/types/nfe_entrada";
-import { selectState } from "../../../../store/slices/menuUser.slice";
-import { MdeService } from "../services/MdeService";
-import { response } from "express";
+import { mdeInitialState, MdeType } from "../../../../domain/types/nfe_entrada";
+import { selectStateEstab } from "../../../../store/slices/estabelecimento.slice";
+import { UtilsConvert } from "../../../../utils/utils_convert";
+import { UtilsGeral } from "../../../../utils/utils_geral";
 import { DowloadService } from "../../../services/dowloadDoc";
 import { UploadService } from "../../../services/uploadDoc";
-import { selectStateEstab } from "../../../../store/slices/estabelecimento.slice";
-import { useSelector } from "react-redux";
+import { ModalEntrada } from "./modalEntrada";
+import { Body, Container, ContainerFiltro, ContainerTable } from './styles';
+import { ErrorImport, status, tiposFiltroData } from './__mooks';
+import {TbDatabaseExport} from 'react-icons/tb';
 
 
 function Mde() {
   const estabelecimento = useSelector(selectStateEstab);
   const {title, colors} = useContext(ThemeContext);
   const [showModalEntrada, setShowModalEntrada] = useState(false);
+  const [showPopupInfo, setShowPopupInfo] = useState(false);
   const [showModalFiltro, setShowModalFiltro] = useState(false);
   const [tamanhoIpuntCnpjCpf, setTamanhoIpuntCnpjCpf] = useState(0);
   const [tipoNota, setTipoNota] = useState(0);
-  const [notaSelect, setNotaSelect] = useState<NFeEntradaType>(initialState);
-  // href="./CarregadorArquivos1?c=<%= arq.getCodigo() %>&ct=<%= arq.getContentType() %>"
+  const [notaSelect, setNotaSelect] = useState<MdeType>(mdeInitialState);
+ const [arrayErro, setArrayErro] = useState<Array<ErrorImport>>([]);
+  
 
   const actionNota = (nota: any) => {
     let compra = nota.data
@@ -44,15 +46,15 @@ function Mde() {
   }
 
   const renderCell = (element: any) => {
-    if (element.value === "M") {
+    if (element.columnIndex === 5 && element.value === "M") {
       return <span className='font-bold text-white' style={{ color: colors.success }}>MANIFESTA</span>
-    } else if (element.value === "A") {
+    } else if (element.columnIndex === 5 && element.value === "N") {
       return <span className='font-bold text-white' style={{ color: colors.error, fontSize: '12px' }}>A MANIFESTAR</span>
-    } else if (element.value === "E") {
+    } else if (element.columnIndex === 5 && element.value === "A") {
       return <span className='font-bold text-white' style={{ color: colors.warning, fontSize: '12px' }}>AVULSA</span>
-    } else if (element.value === "S") {
+    } else if (element.columnIndex === 8 && element.value === "S") {
       return <i className='text-lg cursor-pointer' style={{ color: colors.primary }}><FaRegCheckCircle className='ml-5' title='Nota incluida no sistema' /></i>
-    } else if (element.value === "N") {
+    } else if (element.columnIndex === 8 && element.value === "N") {
       return <i className='text-lg cursor-pointer' style={{ color: colors.error }}><FaRegTimesCircle id='buttonAction' className='ml-5' title='Nota não incluida no sistema' /></i>
     } else {
       return <i className='text-lg cursor-pointer' style={{ color: colors.primary }} onClick={() => setShowModalEntrada(true)}><FaFileImport id='buttonAction' className='ml-3' title='Realizar entrada da nota' /></i>
@@ -60,13 +62,13 @@ function Mde() {
   }
 
   const data = [
-    { numero: '12368498', emissao: '11/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'CADA', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
-    { numero: '98984225', emissao: '31/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'KAKA D', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
-    { numero: '1154889', emissao: '21/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
-    { numero: '1245', emissao: '10/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '45687', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '697', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '1125', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
+    { numero: '12368498', emissao: '11/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'CADA', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
+    { numero: '98984225', emissao: '31/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'KAKA D', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
+    { numero: '1154889', emissao: '21/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
+    { numero: '1245', emissao: '10/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
+    { numero: '45687', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
+    { numero: '697', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
+    { numero: '1125', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
     { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
     { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
     { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
@@ -86,7 +88,7 @@ function Mde() {
     { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
     { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
     { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'E', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
+    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
   ];
 
   const [dataSource, setDataSource] = useState(data);
@@ -108,9 +110,9 @@ function Mde() {
   const filterStatus = (status: string) => {
     if (status !== '') {
       let notas = dataSourceCopy;
-      if (status === 'NE') {
+      if (status === 'E') {
         notas = dataSourceCopy.filter((e) => {
-          if (e.entrada !== '') {
+          if (e.incluida !== 'N') {
             return e;
           }
         });
@@ -135,7 +137,7 @@ function Mde() {
       toast.error("Selecione uma nota para realizar o manifesto.");
       return
     }
-    else if(notaSelect.status === "E"){
+    else if(notaSelect.status === "A"){
       toast.error("Nota de entrada avulsa não pode ser manifestada.");
       return
     }
@@ -150,25 +152,74 @@ function Mde() {
   }
 
   const uploadXml = (files: FileList | null) => {
-    if(files){
 
-      
-      // var reader  = new FileReader();
-      // reader.readAsDataURL(files[0]);
+    let arrayErros: ErrorImport[] = [];
+    if(files && files.length <= 20){
+      for(let i=0; i < files.length; i++){
+        let file = files.item(i);
+        if(file){
+          if((file.size / 1024) > 2048) {
+            toast.error("Operação cancelada: pemitido aquivos de até 2 mega, aquivo:"+ file.name+" maior que 2 mega");
+            return
+          }
+          UploadService.post(estabelecimento, file).then().catch(err=>{
+            let erro =err.response.data.message.split("&");
+            if(files.length===1){
+              toast.error(UtilsGeral.getEmoji(2)+erro[0]);
+            }else{
 
-      // console.log(estabelecimento, Array.from(files));
-      // UploadService.post(estabelecimento, Array.from(files))?.then(response=>{
-      //   console.log(response);
-      // })
-      // .catch(err=>{console.error(err)});
+              let obj = {} as ErrorImport;
+              obj.id=i+1;
+              obj.error = erro[0];
+              obj.cnpjCpf = erro[1];
+              obj.nome = erro[2];
+              obj.chave = erro[3];
+              obj.valor = erro[4];
+              obj.dateEmisao = erro[5];
+
+              arrayErros.push(obj);
+              setArrayErro([...arrayErros]);
+              setShowPopupInfo(true);
+            }
+
+          });
+        }
+      }
+    }else{
+      toast.info("Operação cancelada: permitido apenas 20 xmls de até 2mb cada.");
     }
   };
 
   const onNovo = () => {
-    setNotaSelect(initialState);
+    setNotaSelect(mdeInitialState);
     setTipoNota(0);
     setShowModalEntrada(true);
   };
+
+ 
+
+  const listaErros = (
+    <div className="overflow-y-auto" style={{height:"calc(100vh - 110px)"}}>
+        {arrayErro.map((error, key)=> {
+          return(
+            <div key={key}>
+              <div className="text-left">
+                <p><strong className="mr-1">Erro:</strong><strong className="text-red-700">{error.error}</strong></p>
+                <p><strong className="mr-1">Chave:</strong><label>{error.chave}</label></p>
+                <p><strong className="mr-1">Emissão:</strong><label>{moment(error.dateEmisao).format("DD/MM/YYYY")}</label></p>
+                <p><strong className="mr-1">Fornecedor:</strong><label>{UtilsConvert.setMaskCpfCnpj(error.cnpjCpf)} - {error.nome}</label></p>
+                <p><strong className="mr-1">Valor:</strong><label>{UtilsConvert.formatCurrency(Number(error.valor))}</label></p>
+              </div>
+              <hr className="mb-5"/>
+            </div>
+          )
+        })
+        }
+
+    </div>
+  );
+
+  const lista = useMemo(()=>listaErros,[arrayErro]);
 
   return <Container className="card-local w-full h-full p-3 font-bold" style={{ backgroundColor: (title === 'dark' ? colors.tertiary : colors.white) }}>
     <header className="flex text-xl font-bold items-center justify-between mb-1 h-6" style={{ color: colors.primary }}>
@@ -198,6 +249,7 @@ function Mde() {
           </div>
         </div>
       </div>
+
       <div className="h-10 flex ">
         <div className="w-4/12">
           <InputSearch onChange={(e) => search(e.currentTarget.value)} />
@@ -212,12 +264,18 @@ function Mde() {
             <CountUp end={150000} prefix='' separator="" decimal="" decimals={0} />
           </div>
           <div className="linha-vertical h-8 m-2" style={{ marginTop: '-1px' }}></div>
-          <div className="w-40 text-xs font-bold text-right">
+          <div className="w-30 text-xs font-bold text-right">
             <p>Valor total</p>
             <CountUp end={150000000} prefix='R$ ' separator="." decimal="," decimals={2} />
           </div>
+          <div className="linha-vertical h-8 m-2" style={{ marginTop: '-1px' }}></div>
+          <div className="ml-2">
+            <TbDatabaseExport title="Exportar xmls das notas" className="text-3xl cursor-pointer" style={{color:colors.error}}/>
+          </div>
+
         </div>
       </div>
+
       <hr className="mb-3" style={{ marginTop: '-5px' }} />
       <ContainerTable>
         <DataGridDefault
@@ -285,6 +343,28 @@ function Mde() {
     </ModalDefault>
 
     <ModalEntrada showModal={showModalEntrada} closeModal={() => setShowModalEntrada(false)} tipo={tipoNota} nota={notaSelect}/>
+
+    <ModalDefault title="Aviso de erros na importação" isOpen={showPopupInfo} onRequestClose={()=>setShowPopupInfo(false)} width="50vw" left="24vw"  margin="1rem" height="95vh">
+      {/* <div className="overflow-y-auto" style={{height:"calc(100vh - 100px)"}}>
+        {arrayErro.map((error)=> {
+          return(
+            <>
+              <div className="text-left">
+                <p><strong className="mr-1">Erro:</strong><strong className="text-red-700">{error.error}</strong></p>
+                <p><strong className="mr-1">Chave:</strong><label>{error.chave}</label></p>
+                <p><strong className="mr-1">Emissão:</strong><label>{moment(error.dateEmisao).format("DD/MM/YYYY")}</label></p>
+                <p><strong className="mr-1">Fornecedor:</strong><label>{UtilsConvert.setMaskCpfCnpj(error.cnpjCpf)} - {error.nome}</label></p>
+                <p><strong className="mr-1">Valor:</strong><label>{UtilsConvert.formatCurrency(Number(error.valor))}</label></p>
+              </div>
+              <hr className="mb-5"/>
+            </>
+          )
+        })
+        }
+
+      </div> */}
+      {lista}
+    </ModalDefault>
     {/* <ToastDefault /> */}
   </Container>;
 }

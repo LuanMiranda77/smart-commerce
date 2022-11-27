@@ -18,19 +18,13 @@ export const UploadService = {
     //    return await api.post(url, objTO);
     // }
 
-    async post (estabelecimento: EstabelecimentoType, files: Array<File>){
-        let resp;
-        for (let f of files) {
-          if (f && f.size < 5e6) {
-            const formData = new FormData();
-            formData.append('file', f);
-            let teste = new File([], ""+estabelecimento.id);
-            formData.append('estabelecimento', teste);
-            console.log(formData);
-            resp = await api.post(url, formData);
-          }
-  
-        }
-        return resp;
-      }
+    async post (estabelecimento: EstabelecimentoType, file: File){
+
+        const formData = new FormData();
+        formData.append('file', file);
+        let teste = new File([], ""+estabelecimento.id);
+        formData.append('estabelecimento', teste);
+        return  await api.post(url, formData);
+
+    }
 }

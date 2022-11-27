@@ -153,7 +153,7 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
 
   const form = () => {
     return (<>
-      <header className="flex text-xl font-bold items-center justify-between mb-1 h-6" style={{ color: theme.colors.primary }}>
+      <header className="flex text-xl font-bold items-center justify-between mb-1 h-6" style={{ color: theme.colors.primary,  marginTop: (props.tipo === 1 ? '-1.5rem' : '-5px') }}>
         <div className="flex items-center justify-between" style={{ backgroundColor: (theme.title === 'dark' ? theme.colors.tertiary : theme.colors.white), borderRadius: '8px' }}>
           <i className="mr-1"><FaStoreAlt /></i>
           <label htmlFor="">Informações Principais</label>
@@ -161,14 +161,14 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
       </header>
       <Divider tipo="horizontal" />
       <FormContainer onSubmit={handleSubmit(onSave)}>
-        <div id='informacoes' className="mb-5">
+        <div id='informacoes' className="mb-3">
           <div>
             <InputCheck css="p-2" label="usar CPF?"
               checked={checkCPF}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => setCheckCPF(event.currentTarget.checked)}
             />
           </div>
-          <div className="flex mb-5">
+          <div className="flex mb-3">
             <InputMask className="w-2/12 mr-5" label={checkCPF ? "CPF" : "CNPJ"}
               mask={checkCPF ? "999.999.999-99" : "99.999.999/9999-99"}
               onChange={(e) => setCpfSemMask(e.target.value)}
@@ -224,7 +224,7 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
           </div>
 
           <div className="flex">
-            <InputDefault className="w-4/12 mr-5"
+            <InputDefault className="w-5/12 mr-5"
               label="Razão"
               type="text"
               required
@@ -233,7 +233,7 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
             // value={estabelecimento.razao}
 
             />
-            <InputDefault className="w-4/12 mr-5" label="Nome Fantasia"
+            <InputDefault className="w-5/12 mr-5" label="Nome Fantasia"
               type="text"
               name='nome'
               required
@@ -292,7 +292,7 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
           </div>
         </div>
 
-        <footer className="flex justify-end" style={{ bottom: 25, right: 15, position: 'absolute' }}>
+        <footer className="flex justify-end" style={{ bottom: 18, right: 10, position: 'absolute' }}>
           {props.tipo === 1 ?
             <>
               <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={eventClose} />
@@ -309,7 +309,7 @@ const FormEstabelecimento: React.FC<ModalProps> = (props) => {
 
   return <>
     {props.tipo === 1 ?
-      <ModalDefault key={"#modalcaixa"} title={'FICHA DO ESTABELECIMENTO'} isOpen={props.showModal} onRequestClose={eventClose} width='95%' height='95%' left='1%' margin='2%'>
+      <ModalDefault key={"modalEstab"} title={'FICHA DO ESTABELECIMENTO'} isOpen={props.showModal} onRequestClose={eventClose} width='96%' height='95%' left='1%' margin='1%'>
         <div className='p-3'>
           {form()}
         </div>

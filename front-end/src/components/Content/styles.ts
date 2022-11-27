@@ -12,7 +12,7 @@ export const Container  = styled.div`
     background-repeat: no-repeat;
 
     height:calc(100vh -50px);
-    overflow-y:scroll;
+    overflow-y:auto;
 
     /* ::-webkit-scrollbar{
         width:10px;

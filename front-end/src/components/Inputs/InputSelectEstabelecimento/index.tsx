@@ -38,6 +38,10 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
     let user = UtilsUserLocal.getTokenLogin();
     if (user.cargo == Cargo.MASTER || user.cargo == Cargo.REVENDA) {
       user.estabelecimento = 0;
+      let est =  persistLocalStorage('@selected-est', "", 'get');
+      dispatch(load(est));
+    }else{
+      persistLocalStorage('@selected-est', "", 'remove');
     }
     api.get(`api/estabelecimento/estabelecimentos/${user.estabelecimento}/${user.cargo}`).then(resp => {
       resp.data = [..._.orderBy(resp.data,['nome'], ['asc'])];
@@ -57,12 +61,6 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
           })
         });
         setOptions(lista);
-        dispatch(load(lista[0]));
-        // let selectEstabelecimento = persistLocalStorage('@selected-est', '', 'get');
-        // if(selectEstabelecimento){
-        //   setSelectedEstabelecimento(selectedEstabelecimento);
-        //   dispatch(load(selectEstabelecimento));
-        // }
         dispatch(loadEstabelecimentos(resp.data));
       }
       setModalShow(false);
@@ -80,8 +78,10 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
   const onSelect = (event: any) => {
     let selectEstabelecimento = _.find(estabelecimentos, { 'id': event.value });
     if (selectEstabelecimento) {
-      // persistLocalStorage('@selected-est', selectEstabelecimento, 'set');
-      // setSelectedEstabelecimento(selectEstabelecimento);
+      let user = UtilsUserLocal.getTokenLogin();
+      if (user.cargo == Cargo.MASTER || user.cargo == Cargo.REVENDA) {
+          persistLocalStorage('@selected-est', selectEstabelecimento, 'set');
+      }
       dispatch(load(selectEstabelecimento));
     }
   }
@@ -97,6 +97,7 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
         isClearable={true}
         onChange={(e) => { onSelect(e) }}
         // defaultValue={options[0]}
+        value={_.find(options, {'value':estabelecimento.id})}
       />
       :
       <div className='ml-1' style={{marginTop:'-3px'}}>

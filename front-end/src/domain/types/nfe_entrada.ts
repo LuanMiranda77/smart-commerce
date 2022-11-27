@@ -1,16 +1,14 @@
-import { initial } from "lodash";
 
-export type NFeEntradaType = {
+export type MdeType = {
     id: number | undefined;
-    codigo:number  | undefined; 
-    estabelecimento: number | null ;
+    estabelecimento: number;
+    serie: number;
     numNota:string ;
     chaveAcesso:string ;
     dataEmissao:Date;
     dataManifesto:Date | null ;
-    dataEntrada:Date ;
+    dataEntrada:Date | null ;
     cnpjCpf:string ;
-    insEst:string ;
     fornecedor:string ;
     valorTotalNota:number ; //vProd
     valorDesc:number ;
@@ -26,19 +24,19 @@ export type NFeEntradaType = {
     valorOutros:number ;
     numProtocolo:string ;
     numNSU: string ;
-    status: "M" | "N" | "A" | "E";
+    status: "M" | "N" | "A"; //M = manifesta  & N = a manifesta & A = nota avulsa
     incluida:"S" | "N";
 }
 
-export const initialState = {
-    codigo: 0,
-    estabelecimento:null,
+export const mdeInitialState = {
+    estabelecimento:0,
     numNota: "",
+    serie:1,
     chaveAcesso:"",
     dataEmissao: new Date(),
     dataManifesto: null,
-    dataEntrada: new Date(),
-    insEst:"",
+    dataEntrada: null,
+    cnpjCpf:'',
     fornecedor:"",
     valorTotalNota:0, //vProd
     valorDesc:0,
@@ -57,4 +55,4 @@ export const initialState = {
     status: "N",
     incluida:"N",
 
-} as NFeEntradaType
+} as MdeType
