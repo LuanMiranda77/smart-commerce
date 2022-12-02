@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { FaFileDownload, FaFileImport, FaFileSignature, FaFileUpload, FaFunnelDollar, FaPlus, FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 
 import { Column } from "devextreme-react/data-grid";
@@ -19,6 +19,9 @@ import { ModalEntrada } from "./modalEntrada";
 import { Body, Container, ContainerFiltro, ContainerTable } from './styles';
 import { ErrorImport, status, tiposFiltroData } from './__mooks';
 import {TbDatabaseExport} from 'react-icons/tb';
+import { MdeService } from "../services/MdeService";
+import { info } from "console";
+import { one } from "devextreme/events";
 
 
 function Mde() {
@@ -30,7 +33,23 @@ function Mde() {
   const [tamanhoIpuntCnpjCpf, setTamanhoIpuntCnpjCpf] = useState(0);
   const [tipoNota, setTipoNota] = useState(0);
   const [notaSelect, setNotaSelect] = useState<MdeType>(mdeInitialState);
- const [arrayErro, setArrayErro] = useState<Array<ErrorImport>>([]);
+  const [arrayErro, setArrayErro] = useState<Array<ErrorImport>>([]);
+  const [dataSource, setDataSource] = useState<Array<any>>([]);
+  const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
+
+  useEffect(()=>{
+    if(estabelecimento.id){
+      let dtIni = moment().subtract(60, 'days').format('YYYY-MM-DD');
+      let dtFin = moment().format('YYYY-MM-DD');
+      MdeService.getList({estabelecimento: estabelecimento.id, dtIni: dtIni, dtFin: dtFin, tipo:1}).then(resp=>{
+        setDataSource(resp.data);
+        setDataSourceCopy(resp.data);
+      })
+      .catch(error=>{
+        toast.error(error.mensagemUsuario);
+      });
+    }
+  },[estabelecimento]);
   
 
   const actionNota = (nota: any) => {
@@ -57,47 +76,15 @@ function Mde() {
     } else if (element.columnIndex === 8 && element.value === "N") {
       return <i className='text-lg cursor-pointer' style={{ color: colors.error }}><FaRegTimesCircle id='buttonAction' className='ml-5' title='Nota não incluida no sistema' /></i>
     } else {
-      return <i className='text-lg cursor-pointer' style={{ color: colors.primary }} onClick={() => setShowModalEntrada(true)}><FaFileImport id='buttonAction' className='ml-3' title='Realizar entrada da nota' /></i>
+      return <i className='text-lg cursor-pointer' style={{ color: colors.primary }} onClick={()=>setShowModalEntrada(true)}><FaFileImport id='buttonAction' className='ml-3' title='Realizar entrada da nota' /></i>
     }
   }
 
-  const data = [
-    { numero: '12368498', emissao: '11/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'CADA', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
-    { numero: '98984225', emissao: '31/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'KAKA D', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
-    { numero: '1154889', emissao: '21/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '', incluida: 'N' },
-    { numero: '1245', emissao: '10/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '45687', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '697', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '1125', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'N', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'M', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-    { numero: '12368978', emissao: '01/05/2022', cnpj: '03.406.025/0001-35', fornecedor: 'LUZIA DO LINDO', vlrbruto: 1502, vlricms: 12, vlrdesconto: 32, vlrliquido: 1432, status: 'A', manifesto: '12/05/2022', entrada: '15/05/2022', incluida: 'S' },
-  ];
-
-  const [dataSource, setDataSource] = useState(data);
-  const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
   const search = (desc: any) => {
     if (desc !== '') {
       let notas = dataSourceCopy;
       if (!isNaN(parseFloat(desc)) && isFinite(desc)) {
-        notas = dataSourceCopy.filter(produto => { return produto.numero.includes(desc) });
+        notas = dataSourceCopy.filter(produto => { return produto.numNota.includes(desc) });
       } else {
         notas = dataSourceCopy.filter(produto => { return produto.fornecedor.includes(desc.toUpperCase()) });
       }
@@ -142,7 +129,7 @@ function Mde() {
       return
     }
     else if(notaSelect.status === "M"){
-      toast.error("Nota já foi incluida não é possivel o manifesto.");
+      toast.error("Nota já manifestada não é possivel o manifesto novamente.");
       return
     }
     if(estabelecimento.id){
@@ -162,7 +149,13 @@ function Mde() {
             toast.error("Operação cancelada: pemitido aquivos de até 2 mega, aquivo:"+ file.name+" maior que 2 mega");
             return
           }
-          UploadService.post(estabelecimento, file).then().catch(err=>{
+          UploadService.post(estabelecimento, file).then(resp=>{
+            let array = [...dataSource];
+            console.log(resp.data);
+            array.push({...resp.data});
+            setDataSource(array);
+            setDataSourceCopy(array);
+          }).catch(err=>{
             let erro =err.response.data.message.split("&");
             if(files.length===1){
               toast.error(UtilsGeral.getEmoji(2)+erro[0]);
@@ -196,6 +189,17 @@ function Mde() {
     setShowModalEntrada(true);
   };
 
+  const onEntadaMde = (nota: MdeType) => {
+    setTipoNota(1);
+    setNotaSelect(nota);
+    if(estabelecimento.id){
+      console.log(nota);
+      MdeService.getListProdutXml(estabelecimento.id, nota.chaveAcesso)
+      .then()
+      .catch();
+    }
+    // setShowModalEntrada(true);
+  };
  
 
   const listaErros = (
@@ -287,19 +291,19 @@ function Mde() {
           rowAlternationEnabled
           isSelectRow
           moduloSeletion='single'
-          onSelectionChanged={(e) => setNotaSelect(e.selectedRowsData[0])}
+          onSelectionChanged={(e) => onEntadaMde(e.selectedRowsData[0])}
         >
-          <Column dataField= 'numero' caption= 'NÚMERO' alignment= 'left' dataType= 'string' width={100} cssClass= 'font-bold column-1'  />
-          <Column dataField= 'emissao' caption= 'EMISSÃO' alignment= 'center' dataType= 'date' width={95} cssClass= 'font-bold' />
-          <Column dataField= 'cnpj' caption= 'CNPJ/CPF' alignment= '' dataType= 'string' width={150} />
+          <Column dataField= 'numNota' caption= 'NÚMERO' alignment= 'left' dataType= 'string' width={100} cssClass= 'font-bold column-1'  />
+          <Column dataField= 'dataEmissao' caption= 'EMISSÃO' alignment= 'center' dataType= 'date' width={95} cssClass= 'font-bold' />
+          <Column dataField= 'cnpjCpf' caption= 'CNPJ/CPF' alignment= '' dataType= 'string' width={150} />
           <Column dataField= 'fornecedor' caption= 'FORNECEDOR' alignment= 'left' dataType= 'number' />
-          <Column dataField= 'vlrbruto' caption= 'VLR.BRUTO' alignment= 'center' dataType= 'number' format={{type:'fixedPoint', precision:2}} width={110} />
-          {/* <Column dataField= 'vlricms' caption= 'VLR.ICMS' alignment= 'center' dataType= 'number' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={110} />
-          <Column dataField= 'vlrdesconto' caption= 'VLR.DESCONTO' alignment= 'right' dataType= 'number' cssClass= 'font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={150} />
-          <Column dataField= 'vlrliquido' caption= 'VLR.LÍQUIDO' alignment= 'right' dataType= 'number' cssClass= 'font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={150} /> */}
+          <Column dataField= 'valorTotalNota' caption= 'VLR.BRUTO' alignment= 'center' dataType= 'number' format={{type:'fixedPoint', precision:2}} width={110} />
+          {/* <Column dataField= 'valorIcms' caption= 'VLR.ICMS' alignment= 'center' dataType= 'number' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={110} />
+          <Column dataField= 'valorDesc' caption= 'VLR.DESCONTO' alignment= 'right' dataType= 'number' cssClass= 'font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={150} />
+          <Column dataField= 'valorTotalNotaLiquido' caption= 'VLR.LÍQUIDO' alignment= 'right' dataType= 'number' cssClass= 'font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={150} /> */}
           <Column dataField= 'status' caption= 'STATUS' alignment= 'center' dataType= 'number' cssClass= 'font-bold text-sx' allowSearch={false} width={ 120} cellRender={renderCell}  />
-          <Column dataField= 'manifesto' caption= 'MANIFESTO' alignment= 'center' dataType= 'date' allowSearch={false} width={100} />
-          <Column dataField= 'entrada' caption= 'ENTRADA' alignment= 'center' dataType= 'date' cssClass= 'font-bold' allowSearch={false} width={95} />
+          <Column dataField= 'dataManifesto' caption= 'MANIFESTO' alignment= 'center' dataType= 'date' allowSearch={false} width={100} />
+          <Column dataField= 'dataEntrada' caption= 'ENTRADA' alignment= 'center' dataType= 'date' cssClass= 'font-bold' allowSearch={false} width={95} />
           <Column dataField= 'incluida' caption= 'INCLUIDA' alignment= 'center' dataType= 'number' cssClass= 'font-bold' allowSearch={false} width={90} cellRender={renderCell}  />
           <Column dataField= '' caption= '' alignment= 'center' dataType= '' cssClass= '' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={50} cellRender={renderCell} />
         </DataGridDefault>

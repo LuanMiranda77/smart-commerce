@@ -1,6 +1,7 @@
 
 export type MdeType = {
     id: number | undefined;
+    codigo: number;
     estabelecimento: number;
     serie: number;
     numNota:string ;

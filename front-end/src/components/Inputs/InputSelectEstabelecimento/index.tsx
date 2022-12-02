@@ -67,10 +67,8 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
       return options;
     }).catch(error => {
       console.log(error.response.data);
-      if(error.response.data.message && error.response.data.message === 'Access Denied'){
         UtilsUserLocal.logout();
         navegate("/");
-      }
       return toast.error(UtilsGeral.getEmoji(2) + " " + error.response.data.message);
     });
   }, [selectedEstabelecimento])

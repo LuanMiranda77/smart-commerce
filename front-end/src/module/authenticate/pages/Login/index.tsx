@@ -51,10 +51,12 @@ function Login() {
 
         <div className="div-left">
           <div className="">
-            <h3 style={{ color: theme.title === 'light' ? theme.colors.tertiary : theme.colors.textLabel }}>
-              <img className="w-28 h-28" src={icon} alt='logo' />Seu negócio na palma de sua mão!</h3>
-            <div style={{ margin: "2rem" }}>
-              <div className="flex mb-9">
+            <h3 style={{ color: theme.title === 'light' ? theme.colors.tertiary : theme.colors.textLabel, marginTop:'-5px' }}>
+              <img className="w-20 h-20" src={icon} alt='logo' />
+              Seu negócio na palma de sua mão!
+            </h3>
+            <div style={{ margin: "1.5rem" }}>
+              <div className="flex mb-6">
                 <FaEnvelope className="ml-2 mt-1.5" style={{ fontSize: '24px', position: 'absolute' }} />
                 <input className="input_line__field" style={{ paddingLeft: '2.5rem' }} type="email"
                   placeholder="Digite o e-mail" name="email" id="email"
@@ -81,7 +83,7 @@ function Login() {
               </div>
             </div>
             <div style={{ width: "100%", textAlign: "center" }}>
-              <ButtonBase label="ENTRAR" model="btn_base" className="primary-color mb-3" size="small" onClick={login} />
+              <ButtonBase label="ENTRAR" model="btn_base" className="primary-color mb-1" size="small" onClick={login} />
               <Link to={'/recupera-senha'}>
                 <label htmlFor="entrar" className="font-bold label-senha"
                   style={{ color: theme.title === 'light' ? theme.colors.primary : theme.colors.black }}>Esqueceu a senha?
@@ -96,7 +98,7 @@ function Login() {
           <h1 className="p-2">Melhor solução para seu comércio varejista e atacadista</h1>
           <h2 className="p-2">Tudo com um toque ou um click de distância!</h2>
           <h2 className="p-2">Tenha mais tempo para sua familia</h2>
-          <h2 className="mb-10">O GERENCIAMENTE da sua empresa na palma da mão</h2>
+          <h2 className="mb-1">O GERENCIAMENTE da sua empresa na palma da mão</h2>
           <h2 className="p-3" style={{ color: theme.title === 'light' ? theme.colors.secondary : theme.colors.textLabel }}>www.smartcommerce.com/atendimento</h2>
         </div>
 

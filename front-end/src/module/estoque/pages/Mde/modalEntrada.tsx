@@ -8,14 +8,14 @@ import { toast } from "react-toastify";
 import { ModalSincronizarProduto } from './modalSincronizarProduto';
 import { ContainerEntradaNota, ContainerProdutoSync, ContainerTable } from './styles';
 import { ColumnsDataGridType } from '../../../../components/types';
-import { NFeEntradaType } from '../../../../domain/types/nfe_entrada';
+import { MdeType } from '../../../../domain/types/nfe_entrada';
 
 // import { Container } from './styles';
 interface ModalProps {
   showModal: boolean;
   closeModal: () => void;
   tipo: number;
-  nota: NFeEntradaType;
+  nota: MdeType;
 }
 
 export const ModalEntrada: React.FC<ModalProps> = (props) => {

@@ -1,4 +1,5 @@
 import { Upload } from "devextreme-react/file-manager";
+import moment from "moment";
 import { BsDownload } from "react-icons/bs";
 import { api } from "../../../../config/api";
 
@@ -16,8 +17,8 @@ export const MdeService = {
     },
 
     //modelo de request get
-    get(){
-      return api.get(url);
+    getList(data: any){
+      return api.get(url+`/${data.estabelecimento}/${data.dtIni}/${data.dtFin}/${data.tipo}`);
     },
 
     upload(files: Array<File>){
@@ -33,5 +34,9 @@ export const MdeService = {
       }
       return resp;
     },
+
+    async getListProdutXml(estabelecimento: number, chave: string){
+        return await api.get(`${url+'/produtosxml?est='+estabelecimento}&chave=${chave}`);
+    }
   
 }
