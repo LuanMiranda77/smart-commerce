@@ -11,6 +11,6 @@ export const InputDate: React.FC<InputDateProps> = (props) => {
   const theme = useContext(ThemeContext);
   return <Container className='input-group' {...props}>
     <label className='font-bold input-label' htmlFor={props.label} style={{ color: (theme.title === 'dark' ? theme.colors.textLabel : theme.colors.primary) }}>{props.label}</label>
-    <input id={props.label} className='input-field' type='date' />
+    <input id={props.label} className='input-field' type='date' value={props.value} onChange={props.onChange} readOnly={props.readOnly ? props.readOnly:false}/>
   </Container>;
 }

@@ -9,6 +9,13 @@ import { ModalSincronizarProduto } from './modalSincronizarProduto';
 import { ContainerEntradaNota, ContainerProdutoSync, ContainerTable } from './styles';
 import { ColumnsDataGridType } from '../../../../components/types';
 import { MdeType } from '../../../../domain/types/nfe_entrada';
+import { Column } from 'devextreme-react/data-grid';
+import moment from 'moment';
+import { MdeService } from '../services/MdeService';
+import { selectStateEstab } from '../../../../store/slices/estabelecimento.slice';
+import { useSelector } from 'react-redux';
+import { response } from 'express';
+import { ProdutoXml } from '../../../../domain/types/produtoXml';
 
 // import { Container } from './styles';
 interface ModalProps {
@@ -20,80 +27,65 @@ interface ModalProps {
 
 export const ModalEntrada: React.FC<ModalProps> = (props) => {
   const theme = useContext(ThemeContext);
+  const estabelecimento = useSelector(selectStateEstab);
+  const [notaSelect, setNotaSelect] = useState<MdeType>(props.nota);
   const [showModalProd, setShowModalProd] = useState(false);
   const [showModalPromocao, setShowModalPromocao] = useState(false);
   const [tipoCadastro, setTipoCadastro] = useState(0);
   const [produtoselect, setProdutoSelect] = useState<any>();
+  const [dataSource, setDataSource] = useState<Array<ProdutoXml>>([]);
+  const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
+  const [checkCPF, setCheckCPF] = useState(false);
+
+  useEffect(() => {
+    let nota = {...props.nota};
+
+    if(!nota.dataEntrada){
+      nota.dataEntrada = new Date();
+    }
+
+    if(nota.cnpjCpf.length === 11){
+      setCheckCPF(true);
+    }
+
+    setNotaSelect(nota);
+
+    if(estabelecimento.id){
+      MdeService.getListProdutXml(estabelecimento.id, nota.chaveAcesso).then(response=>{
+        setDataSource(response.data);
+        setDataSourceCopy(response.data);
+      })
+      .catch(err=>{
+        console.error(err);
+        toast.error(err.response.data);
+      });
+    }
+
+  },[props.nota]);
+
 
 
   const eventClose = () => {
     props.closeModal();
   }
 
-  const columns = new Array<ColumnsDataGridType>();
-  columns.push({ dataField: 'codigo', caption: 'Código', alignment: 'left', dataType: 'string', width: 80, cssClass: 'font-bold text-blue-800' });
-  columns.push({ dataField: 'codbarras', caption: 'Cod. Barras', alignment: 'center', dataType: 'string', width: 90, });
-  columns.push({ dataField: 'descricao', caption: 'Descrição', alignment: '', dataType: 'string' });
-  columns.push({ dataField: 'un', caption: 'UN', alignment: 'center', dataType: 'string', format: { type: 'fixedPoint', precision: 2 }, width: 40 });
-  columns.push({ dataField: 'quant', caption: 'Qtde', alignment: 'center', dataType: 'number', format: { type: 'fixedPoint', precision: 3 }, width: 60 });
-  columns.push({ dataField: 'unNota', caption: 'UN NF', alignment: 'center', dataType: 'string', cssClass: 'font-bold', width: 50 });
-  columns.push({ dataField: 'quantNota', caption: 'Qtde NF', alignment: 'center', dataType: 'number', cssClass: 'font-bold', format: { type: 'fixedPoint', precision: 3 }, width: 60 });
-  columns.push({ dataField: 'vlrcusto', caption: 'Vlr. Custo', alignment: 'center', dataType: 'number', cssClass: 'font-bold', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 75 });
-  columns.push({ dataField: 'vlrvenda', caption: 'Vlr. Venda', alignment: 'right', dataType: 'number', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 75 });
-  columns.push({ dataField: 'vlrtotal', caption: 'Vlr. Total', alignment: 'right', dataType: 'number', cssClass: 'font-bold', allowSearch: false, format: { type: 'fixedPoint', precision: 2 }, width: 80 });
-  columns.push({ dataField: 'cstNota', caption: 'CST NF', alignment: 'center', dataType: 'number', cssClass: 'font-bold text-sx', allowSearch: false, width: 52 });
-  columns.push({ dataField: 'cst', caption: 'CST', alignment: 'center', dataType: 'number', allowSearch: false, width: 50 });
-
-  const data = [
-    { codigo: '', codbarras: '123456789125', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'KG', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 99999, cstNota: '', incluida: 'N' },
-    { codigo: '', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UN', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: '', incluida: 'N' },
-    { codigo: '1154889', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: '', incluida: 'N' },
-    { codigo: '1245', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'CTD', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '45687', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'CT', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '697', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'CT', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '1125', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-    { codigo: '12368978', codbarras: '123456789123', descricao: 'PRODUTO TESTE DA FAZENDA', un: 'UND', quant: 999, unNota: 'UND', quantNota: 999, vlrcusto: 1432, vlrvenda: 1539, vlrtotal: 15000, cstNota: 102, cst: 500 },
-  ];
-
-  const [dataSource, setDataSource] = useState(data);
-  const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
-
-  const search = (desc: any) => {
-    if (desc !== '') {
-      let notas = dataSourceCopy;
-      if (!isNaN(parseFloat(desc)) && isFinite(desc)) {
-        if(desc.length < 12){
-          notas = dataSourceCopy.filter(produto => { return produto.codigo.includes(desc) });
-        }else{
-          notas = dataSourceCopy.filter(produto => { return produto.codbarras.includes(desc) });
-        }
-      } else {
-        notas = dataSourceCopy.filter(produto => { return produto.descricao.includes(desc.toUpperCase()) });
-      }
-      setDataSource(notas);
-    } else {
-      setDataSource(dataSourceCopy);
-    }
-  }
+  // const search = (desc: any) => {
+  //   if (desc !== '') {
+  //     let notas = dataSourceCopy;
+  //     if (!isNaN(parseFloat(desc)) && isFinite(desc)) {
+  //       if(desc.length < 12){
+  //         notas = dataSourceCopy.filter(produto => { return produto.codigo.includes(desc) });
+  //       }else{
+  //         notas = dataSourceCopy.filter(produto => { return produto.codbarras.includes(desc) });
+  //       }
+  //     } else {
+  //       notas = dataSourceCopy.filter(produto => { return produto.descricao.includes(desc.toUpperCase()) });
+  //     }
+  //     setDataSource(notas);
+  //   } else {
+  //     setDataSource(dataSourceCopy);
+  //   }
+  // }
 
   const onCadastroNovo = () =>{
     if(!produtoselect){
@@ -128,39 +120,41 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
 
 
   return <ModalDefault key={"#modalcaixa"} title={'ENTRADA DE NOTA'} isOpen={props.showModal} onRequestClose={eventClose} width='100%' height='100%'>
-    <ContainerEntradaNota className='p-2 flex'>
+    <ContainerEntradaNota className='p-1 flex' style={{marginTop:'-8px'}}>
       <div className='left' style={{ width: '30%' }}>
-        {/* <p className="text-left text-xs font-bold ">Dados fornecedor</p>
-        <hr className="mb-2" style={{ border: '1px solid' + theme.colors.gray }} /> */}
         <div className='flex'>
-          <InputDefault className="w-6/12 mr-5 mb-3" label="Número da nota" type="number" />
+          <InputDefault className="w-6/12 mr-5 mb-3" label="Número da nota" type="number" value={notaSelect.numNota} onChange={(e)=>setNotaSelect({...notaSelect, numNota:e.target.value})} readOnly={props.tipo===1?true:false}/>
           <div className='text-left font-bold mt-1 text-xs'>
             <p className='text-xs mb-1' style={{color:theme.title==='drak'? theme.colors.textLabel: theme.colors.primary}}>Tipo da entrada</p>
             <InputRadio label='Nota Eletronica' checked={props.tipo===1?true:false} disabled={props.tipo===1?false:true} />
             <InputRadio label='Nota Avulsa' checked={props.tipo===1?false:true} disabled={props.tipo===1?true:false}/>
           </div>
         </div>
-        <InputDefault className="mr-5 mb-5 text-xs" label="Chave acesso" type="number" />
+        <InputDefault className="mr-5 mb-5 text-xs" label={`Chave acesso`} type="number" value={notaSelect.chaveAcesso} onChange={(e)=>setNotaSelect({...notaSelect, chaveAcesso:e.target.value})} readOnly={props.tipo===1?true:false}/>
         <div className='flex' style={{ marginTop: '-10px' }}>
-          <InputDate className="text-ms w-40 mr-5 text-left" label="Data emissão" />
-          <InputDate className="text-ms w-40 text-left" label="Data entrada" />
+          <InputDate className="text-ms w-40 mr-5 text-left" label="Data emissão" value={moment(notaSelect.dataEmissao).format('YYYY-MM-DD')} onChange={(e)=>setNotaSelect({...notaSelect, dataEmissao:new Date(e.target.value)})} readOnly={props.tipo===1?true:false}/>
+          <InputDate className="text-ms w-40 text-left" label="Data entrada" value={moment(notaSelect.dataEntrada).format('YYYY-MM-DD')} onChange={(e)=>setNotaSelect({...notaSelect, dataEntrada:new Date(e.target.value)})}/>
         </div>
         <div className='flex items-center mt-3 mb-1' style={{ marginTop: '0px' }}>
-          <InputMask className="w-6/12 mr-5 " label="CNPJ" type="number" mask={'99.999.999/9999-99'} />
-          <i><FaUserPlus style={{ fontSize: '40px', marginTop: '25px', color: theme.colors.primary }} /></i>
+          <InputMask className="w-6/12 mr-5 " label="CNPJ/CPF"  mask={checkCPF ? '999.999.999-99':'99.999.999/9999-99'} value={notaSelect.cnpjCpf} onChange={(e)=>setNotaSelect({...notaSelect, cnpjCpf:e.target.value})} readOnly={props.tipo===1?true:false}/>
+          {/* <i><FaUserPlus style={{ fontSize: '40px', marginTop: '25px', color: theme.colors.primary }} /></i> */}
+          {props.tipo===0 ? <InputCheck css="p-5 mt-4" label="usar CPF?"
+              checked={checkCPF}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setCheckCPF(event.currentTarget.checked)}
+          />:<></>}
         </div>
-        <InputDefault className=" mr-5 mb-2" label="Fornecedor" type="text"  value={props.nota.fornecedor}/>
+        <InputDefault className=" mr-5 mb-2" label="Fornecedor" type="text"  value={notaSelect.fornecedor} onChange={(e)=>setNotaSelect({...notaSelect, fornecedor:e.target.value})} readOnly={props.tipo===1?true:false}/>
         <p className="text-left text-xs font-bold ">Cálculo do imposto</p>
         <hr className="" style={{ border: '1px solid' + theme.colors.gray }} />
         <div className='grid grid-cols-3 gap-2 p-2'>
-          <InputNumber label='Base ICMS' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
-          <InputNumber label='Valor ICMS' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
-          <InputNumber label='Base Substituição' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
-          <InputNumber label='Valor Substituição' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
-          <InputNumber label='Valor IPI' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
-          <InputNumber label='Valor COFINS' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
-          <InputNumber label='Frete' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
-          <InputNumber label='Desconto' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal />
+          <InputNumber label='Base ICMS' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal value={notaSelect.valorBaseIcms} onChange={(e)=>setNotaSelect({...notaSelect, valorBaseIcms:Number(e.target.value)})} readOnly={props.tipo===1?true:false}/>
+          <InputNumber label='Valor ICMS' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal value={notaSelect.valorIcms} onChange={(e)=>setNotaSelect({...notaSelect, valorIcms:Number(e.target.value)})} readOnly={props.tipo===1?true:false}/>
+          <InputNumber label='Base Substituição' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal value={notaSelect.valorBaseSubTributa} onChange={(e)=>setNotaSelect({...notaSelect, valorBaseSubTributa:Number(e.target.value)})} readOnly={props.tipo===1?true:false}/>
+          <InputNumber label='Valor Substituição' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal value={notaSelect.valorSubTributa} onChange={(e)=>setNotaSelect({...notaSelect, valorSubTributa:Number(e.target.value)})} readOnly={props.tipo===1?true:false}/>
+          <InputNumber label='Valor IPI' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal value={notaSelect.valorIpi} onChange={(e)=>setNotaSelect({...notaSelect, valorIpi:Number(e.target.value)})} readOnly={props.tipo===1?true:false}/>
+          <InputNumber label='Valor COFINS' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal value={notaSelect.valorCofins} onChange={(e)=>setNotaSelect({...notaSelect, valorCofins:Number(e.target.value)})} readOnly={props.tipo===1?true:false}/>
+          <InputNumber label='Frete' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal value={notaSelect.valorFrete} onChange={(e)=>setNotaSelect({...notaSelect, valorFrete:Number(e.target.value)})} readOnly={props.tipo===1?true:false}/>
+          <InputNumber label='Desconto' separadorDecimal=',' casaDecimal={2} separadorMilhar='.' prefixo='' fixedZeroFinal value={notaSelect.valorDesc} onChange={(e)=>setNotaSelect({...notaSelect, valorDesc:Number(e.target.value)})} readOnly={props.tipo===1?true:false}/>
         </div>
 
       </div>
@@ -170,7 +164,7 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
       <div className='right' style={{ width: '70%' }}>
         <div className="h-10 flex ">
           <div className="w-6/12">
-            <InputSearch onChange={(e) => search(e.currentTarget.value)} />
+            {/* <InputSearch onChange={(e) => search(e.currentTarget.value)} /> */}
           </div>
           <ButtonIcon className="green-color mr-5  w-40" label="Criar Promoção"  icon={<GiStarProminences />} width={'20%'} style={{ marginTop: '-3px' }}  color={theme.colors.success} onClick={onCreatePromocao} />
           <ButtonIcon className="mr-5" label="Novo" icon={<FaPlus />} width={'12%'} style={{ marginTop: '-3px' }} onClick={onCadastroNovo} />
@@ -179,7 +173,6 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
         <hr className="mb-3" style={{ marginTop: '-5px' }} />
         <ContainerProdutoSync>
           <DataGridDefault
-            columns={columns}
             dataSource={dataSource}
             paginar={false}
             showBorders
@@ -190,7 +183,22 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
             isSelectRow
             moduloSeletion='single'
             onSelectionChanged={(e) => setProdutoSelect(e.selectedRowsData[0])}
-          />
+          >
+            <Column dataField='codigo' caption='Código' alignment='left' dataType='string' width={60} cssClass='font-bold text-blue-800' />
+            <Column dataField='ean' caption='Cod. Barras' alignment='center' dataType='string' width={100} />
+            <Column dataField='nome' caption='Descrição' alignment='' dataType='string' />
+            <Column dataField='quant' caption='Qtde' alignment='right' dataType='number' format={{type:'fixedPoint', precision:3} } width={60} />
+            <Column dataField='und' caption='UN' alignment='center' dataType='string' format={{type:'fixedPoint', precision:2}} width={40} />
+            <Column dataField='quantCom' caption='Qtde NF' alignment='right' dataType='number' cssClass='font-bold' format={{type:'fixedPoint', precision:3}} width={60} />
+            <Column dataField='uniCom' caption='UN NF' alignment='center' dataType='string' cssClass='font-bold' width={50} />
+            <Column dataField='valorUnit' caption='Vlr. Custo' alignment='right' dataType='number' cssClass='font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={75} />
+            <Column dataField='vlrvenda' caption='Vlr. Venda' alignment='right' dataType='number' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={75} />
+            <Column dataField='valorTotal' caption='Vlr. Total' alignment='right' dataType='number' cssClass='font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={80} />
+            <Column dataField='cstIcms' caption='CST NF' alignment='center' dataType='number' cssClass='font-bold text-sx' allowSearch={false} width={52} />
+            <Column dataField='cst' caption='CST' alignment='center' dataType='number' allowSearch={false} width={50} />
+
+
+          </DataGridDefault>
         </ContainerProdutoSync>
         <div className='text-left grid grid-cols-6 gap-2 mt-2'>
           <div className='w-24 text-xs font-bold '>
@@ -199,11 +207,11 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
           </div>
           <div className='w-24 text-xs font-bold'>
             <p>Total produtos</p>
-            <CountUp end={150000} prefix='R$ ' separator="." decimal=',' decimals={2} />
+            <CountUp end={notaSelect.valorTotalNota} prefix='R$ ' separator="." decimal=',' decimals={2} />
           </div>
           <div className='w-24 text-xs font-bold '>
             <p>Total Nota fiscal</p>
-            <CountUp end={150000} prefix='R$ ' separator="." decimal=',' decimals={2} />
+            <CountUp end={notaSelect.valorTotalNotaLiquido} prefix='R$ ' separator="." decimal=',' decimals={2} />
           </div>
           <div className='col-span-3 text-xs font-bold bg-gray-400 text-center rounded'>
             <p className='text-red-700'>ATENÇÃO</p>

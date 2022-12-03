@@ -33,13 +33,14 @@ function Mde() {
   const [tamanhoIpuntCnpjCpf, setTamanhoIpuntCnpjCpf] = useState(0);
   const [tipoNota, setTipoNota] = useState(0);
   const [notaSelect, setNotaSelect] = useState<MdeType>(mdeInitialState);
+  const [selectRow, setSelectRow] = useState<any>();
   const [arrayErro, setArrayErro] = useState<Array<ErrorImport>>([]);
   const [dataSource, setDataSource] = useState<Array<any>>([]);
   const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
 
   useEffect(()=>{
     if(estabelecimento.id){
-      let dtIni = moment().subtract(60, 'days').format('YYYY-MM-DD');
+      let dtIni = moment().subtract(1000, 'days').format('YYYY-MM-DD');
       let dtFin = moment().format('YYYY-MM-DD');
       MdeService.getList({estabelecimento: estabelecimento.id, dtIni: dtIni, dtFin: dtFin, tipo:1}).then(resp=>{
         setDataSource(resp.data);
@@ -65,6 +66,7 @@ function Mde() {
   }
 
   const renderCell = (element: any) => {
+    // console.log(element);
     if (element.columnIndex === 5 && element.value === "M") {
       return <span className='font-bold text-white' style={{ color: colors.success }}>MANIFESTA</span>
     } else if (element.columnIndex === 5 && element.value === "N") {
@@ -75,8 +77,9 @@ function Mde() {
       return <i className='text-lg cursor-pointer' style={{ color: colors.primary }}><FaRegCheckCircle className='ml-5' title='Nota incluida no sistema' /></i>
     } else if (element.columnIndex === 8 && element.value === "N") {
       return <i className='text-lg cursor-pointer' style={{ color: colors.error }}><FaRegTimesCircle id='buttonAction' className='ml-5' title='Nota não incluida no sistema' /></i>
-    } else {
-      return <i className='text-lg cursor-pointer' style={{ color: colors.primary }} onClick={()=>setShowModalEntrada(true)}><FaFileImport id='buttonAction' className='ml-3' title='Realizar entrada da nota' /></i>
+    } 
+    else {
+      return <i className='text-lg cursor-pointer' style={{ color: colors.primary }} onClick={()=>onEntadaMde(element.row.data)}><FaFileImport id='buttonAction' className='ml-3' title='Realizar entrada da nota' /></i>
     }
   }
 
@@ -189,18 +192,11 @@ function Mde() {
     setShowModalEntrada(true);
   };
 
-  const onEntadaMde = (nota: MdeType) => {
+  const onEntadaMde = (mde: any) => {
     setTipoNota(1);
-    setNotaSelect(nota);
-    if(estabelecimento.id){
-      console.log(nota);
-      MdeService.getListProdutXml(estabelecimento.id, nota.chaveAcesso)
-      .then()
-      .catch();
-    }
-    // setShowModalEntrada(true);
+    setNotaSelect({...mde});
+    setShowModalEntrada(true);
   };
- 
 
   const listaErros = (
     <div className="overflow-y-auto" style={{height:"calc(100vh - 110px)"}}>
@@ -265,7 +261,7 @@ function Mde() {
           <div className="linha-vertical h-8 m-2" style={{ marginTop: '-1px' }}></div>
           <div className="w-20 text-xs font-bold text-center">
             <p>Quantidade</p>
-            <CountUp end={150000} prefix='' separator="" decimal="" decimals={0} />
+            <CountUp end={dataSource.length} prefix='' separator="" decimal="" decimals={0} />
           </div>
           <div className="linha-vertical h-8 m-2" style={{ marginTop: '-1px' }}></div>
           <div className="w-30 text-xs font-bold text-right">
@@ -291,13 +287,14 @@ function Mde() {
           rowAlternationEnabled
           isSelectRow
           moduloSeletion='single'
-          onSelectionChanged={(e) => onEntadaMde(e.selectedRowsData[0])}
+          onSelectionChanged={(e) =>setSelectRow({...e.currentSelectedRowKeys[0]})}
+          onRowDblClick={e=>onEntadaMde(e.data)}
         >
           <Column dataField= 'numNota' caption= 'NÚMERO' alignment= 'left' dataType= 'string' width={100} cssClass= 'font-bold column-1'  />
           <Column dataField= 'dataEmissao' caption= 'EMISSÃO' alignment= 'center' dataType= 'date' width={95} cssClass= 'font-bold' />
           <Column dataField= 'cnpjCpf' caption= 'CNPJ/CPF' alignment= '' dataType= 'string' width={150} />
           <Column dataField= 'fornecedor' caption= 'FORNECEDOR' alignment= 'left' dataType= 'number' />
-          <Column dataField= 'valorTotalNota' caption= 'VLR.BRUTO' alignment= 'center' dataType= 'number' format={{type:'fixedPoint', precision:2}} width={110} />
+          <Column dataField= 'valorTotalNota' caption= 'VLR.BRUTO' alignment= 'right' dataType= 'number' format={{type:'fixedPoint', precision:2}} width={110} cssClass= 'font-bold'/>
           {/* <Column dataField= 'valorIcms' caption= 'VLR.ICMS' alignment= 'center' dataType= 'number' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={110} />
           <Column dataField= 'valorDesc' caption= 'VLR.DESCONTO' alignment= 'right' dataType= 'number' cssClass= 'font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={150} />
           <Column dataField= 'valorTotalNotaLiquido' caption= 'VLR.LÍQUIDO' alignment= 'right' dataType= 'number' cssClass= 'font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={150} /> */}
