@@ -15,7 +15,7 @@ import { MdeService } from '../services/MdeService';
 import { selectStateEstab } from '../../../../store/slices/estabelecimento.slice';
 import { useSelector } from 'react-redux';
 import { response } from 'express';
-import { ProdutoXml } from '../../../../domain/types/produtoXml';
+import { ProdutoXml, produtoXmlInitial } from '../../../../domain/types/produtoXml';
 
 // import { Container } from './styles';
 interface ModalProps {
@@ -32,7 +32,7 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
   const [showModalProd, setShowModalProd] = useState(false);
   const [showModalPromocao, setShowModalPromocao] = useState(false);
   const [tipoCadastro, setTipoCadastro] = useState(0);
-  const [produtoselect, setProdutoSelect] = useState<any>();
+  const [produtoselect, setProdutoSelect] = useState<ProdutoXml>();
   const [dataSource, setDataSource] = useState<Array<ProdutoXml>>([]);
   const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
   const [checkCPF, setCheckCPF] = useState(false);
@@ -97,12 +97,13 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
   }
 
   const onCadastroSincronizar = () =>{
+    console.log(produtoselect);
     if(!produtoselect){
       toast.error("Selecione um produto para sincronizar.");
       return
     }
-    setShowModalProd(true); 
     setTipoCadastro(1);
+    setShowModalProd(true); 
   }
 
   const onCreatePromocao = () =>{
@@ -182,7 +183,7 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
             rowAlternationEnabled
             isSelectRow
             moduloSeletion='single'
-            onSelectionChanged={(e) => setProdutoSelect(e.selectedRowsData[0])}
+            onSelectionChanged={(e) => setProdutoSelect({...e.currentSelectedRowKeys[0]})}
           >
             <Column dataField='codigo' caption='Código' alignment='left' dataType='string' width={60} cssClass='font-bold text-blue-800' />
             <Column dataField='ean' caption='Cod. Barras' alignment='center' dataType='string' width={100} />
@@ -194,8 +195,8 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
             <Column dataField='valorUnit' caption='Vlr. Custo' alignment='right' dataType='number' cssClass='font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={75} />
             <Column dataField='vlrvenda' caption='Vlr. Venda' alignment='right' dataType='number' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={75} />
             <Column dataField='valorTotal' caption='Vlr. Total' alignment='right' dataType='number' cssClass='font-bold' allowSearch={false} format={{type:'fixedPoint', precision:2}} width={80} />
-            <Column dataField='cstIcms' caption='CST NF' alignment='center' dataType='number' cssClass='font-bold text-sx' allowSearch={false} width={52} />
-            <Column dataField='cst' caption='CST' alignment='center' dataType='number' allowSearch={false} width={50} />
+            <Column dataField='cstIcms' caption='CST NF' alignment='center' dataType='string' cssClass='font-bold text-sx' allowSearch={false} width={52} />
+            <Column dataField='cst' caption='CST' alignment='center' dataType='string' allowSearch={false} width={50} />
 
 
           </DataGridDefault>
@@ -246,7 +247,7 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
       </div>
     </ModalDefault>
 
-    <ModalSincronizarProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} tipo={tipoCadastro} />
+    <ModalSincronizarProduto showModal={showModalProd} closeModal={() => setShowModalProd(false)} tipo={tipoCadastro} produto={produtoselect ? produtoselect : produtoXmlInitial} />
 
     {/* <ToastDefault /> */}
 

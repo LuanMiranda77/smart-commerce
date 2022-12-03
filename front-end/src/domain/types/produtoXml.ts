@@ -16,25 +16,62 @@ export type ProdutoXml = {
 	outro: number;
 	
 //	impostos
-	
 	vTotTrib: number;
 	
-	cstIcms: number;
-	pIcms: number;
-	vIcms: number;
-	pIcmsSt: number;
-	vIcmsSt: number;
+	cstIcms: string;
+	porcIcms: number;
+	valorIcms: number;
+	porcIcmsSt: number;
+	valorIcmsSt: number;
 	
-	cstIpi: number;
-	pIpi: number;
-	vIpi: number;
+	cstIpi: string;
+	porcIpi: number;
+	valorIpi: number;
 	
-	cstPis: number;
-	pPis: number;
-	vPis: number;
+	cstPis: string;
+	porcPis: number;
+	valorPis: number;
 	
-	cstCofins: number;
-	pCofins: number;
-	vCofins: number;
+	cstCofins: string;
+	porcCofins: number;
+	valorCofins: number;
+
+    quantVend?: number;
+    uniVend?: string;
+    valorVend?: number;
+    cstVend?: string;
 
 }
+
+export const produtoXmlInitial: ProdutoXml = {
+    codigo: "",
+    nome: "",
+    ean: "",
+    ncm: "",
+    cest: "",
+    cfop: "",
+    uniCom: "",
+    quantCom: 0,
+    valorUnit: 0,
+    valorTotal: 0,
+    eanTrib: "",
+    uniTrib: "",
+    quantTrib: 0,
+    desc: 0,
+    outro: 0,
+    vTotTrib: 0,
+    cstIcms: "",
+    porcIcms: 0,
+    valorIcms: 0,
+    porcIcmsSt: 0,
+    valorIcmsSt: 0,
+    cstIpi: "",
+    porcIpi: 0,
+    valorIpi: 0,
+    cstPis: "",
+    porcPis: 0,
+    valorPis: 0,
+    cstCofins: "",
+    porcCofins: 0,
+    valorCofins: 0
+};

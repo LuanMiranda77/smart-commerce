@@ -101,8 +101,8 @@ export const ContainerProdutoSync  = styled.div`
 
 export const ContainerFoto  = styled.div`
         position: absolute;
-        top:9%;
-        left:calc(200vh - 60px);
+        top:8%;
+        left:calc(200vh - 25px);
 `;
 
 
