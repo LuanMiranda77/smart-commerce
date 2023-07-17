@@ -3,13 +3,11 @@ import styled from "styled-components";
 export const Container = styled.header`
   display: flex;
   margin: 0 auto;
-  width: 70vw;
+  /* width: 70vw; */
   height: 100vh;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
 
-  img {
+  .logo {
     width: 30%;
     margin: 5% 35% auto;
     margin-bottom: 2rem;
@@ -29,43 +27,44 @@ export const Container = styled.header`
 
   .div-left {
     background: ${(color) => color.theme.colors.white};
-    align-items: center;
-    width: 50%;
-    border-radius: 10px 0px 0px 10px;
-    margin-left: 1rem;
-    padding: 1rem;
+    width: 60%;
+    padding: 1.5rem;
+
+    .caixa-imge{
+      position: absolute;
+      bottom: 0px;
+      margin-left: -25px;
+      width: calc(300px + 5vw);
+      max-width: 380px;
+    }
   }
 
   .div-right {
-    background: ${(color) => color.theme.colors.black};
+    display: flex;
+    /* margin: 0 auto; */
+    background: ${(color) => color.theme.colors.primary};
     align-items: center;
-    text-align: center;
+    justify-content: center;
     color: white;
-    width: 50%;
-    border-radius: 0 10px 10px 0;
-    padding: 1rem;
-    margin-right: 1rem;
+    width: 40%;
+    padding: 3rem;
   }
 
   .olho {
     font-size: 24px;
-    /* position:absolute; */
-    /* margin-left:12.5em ; */
-    margin-top: 0px;
+    position: absolute;
+    margin-left: 12.5em;
+    margin-top: -28px;
     border: 0;
-    height: 100%;
-    border-bottom: 2px solid ${(color) => color.theme.colors.primary};
-    border-radius: 0px 0px 5px 0px;
     outline: 0;
     /* font-size: 1.3rem; */
-    color: ${(color) => color.theme.colors.black};
-    background: ${(color) => color.theme.colors.gray};
+    color: ${(color) => color.theme.colors.primary};
     cursor: pointer;
   }
 
-  .label-senha{
+  .label-senha {
     cursor: pointer;
-    &:hover{
+    &:hover {
       color: ${(color) => color.theme.colors.gray};
       font-weight: 100;
     }
@@ -98,64 +97,6 @@ export const Container = styled.header`
 
     a {
       text-decoration: none;
-    }
-  }
-
-  .input_line__field {
-    font-family: inherit;
-    width: 100%;
-    border: 0;
-    border-bottom: 2px solid ${(color) => color.theme.colors.primary};
-    border-radius: 0px 5px 5px 5px;
-    outline: 0;
-    /* font-size: 1.3rem; */
-    color: ${(color) => color.theme.colors.black};
-    padding: 7px 9px;
-    background: ${(color) => color.theme.colors.gray};
-    transition: border-color 0.2s;
-
-    &:placeholder-shown ~ .input_line__label {
-      /* font-size: 1.3rem; */
-      cursor: text;
-      top: 20px;
-    }
-  }
-
-  .input_line__label {
-    position: absolute;
-    top: -7px;
-    display: block;
-    transition: 0.2s;
-    font-size: 1rem;
-    color: ${(color) => color.theme.colors.primary};
-    font-weight: bold;
-  }
-
-  .input_line__field:focus {
-    ~ .input_line__label {
-      position: absolute;
-      top: 0;
-      display: block;
-      transition: 0.2s;
-      font-size: 1rem;
-      color: ${(color) => color.theme.colors.primary};
-      font-weight: 700;
-    }
-    padding-bottom: 6px;
-    font-weight: 700;
-    border-width: 3px;
-    border-image: linear-gradient(
-      to right,
-      ${(color) => color.theme.colors.primary},
-      ${(color) => color.theme.colors.secondary}
-    );
-    border-image-slice: 1;
-  }
-  /* reset input */
-  .input_line__field {
-    &:required,
-    &:invalid {
-      box-shadow: none;
     }
   }
 

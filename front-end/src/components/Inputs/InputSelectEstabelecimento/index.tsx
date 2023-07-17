@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Select from 'react-select';
+import Select, { components, DropdownIndicatorProps } from 'react-select';
 import { toast } from 'react-toastify';
 import { ThemeContext } from 'styled-components';
 import { api } from "../../../config/api";
@@ -15,6 +15,7 @@ import { UtilsUserLocal } from '../../../utils/utils_userLocal';
 import { ModalLoad } from '../../Modal/ModalLoad';
 import { ToastDefault } from '../../ToastDefault';
 import { Container } from './styles';
+import {BiSearch} from 'react-icons/bi'
 
 interface InputSelectEstabelecimentoProps {
   //adicionar os props
@@ -78,6 +79,7 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
     }
   }
 
+
   return <Container className='font-bold'>
 
     {options.length > 1 ?
@@ -89,6 +91,11 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
         isClearable={true}
         onChange={(e) => { onSelect(e) }}
         // defaultValue={options[0]}
+        components={{
+          DropdownIndicator: () => (
+            <BiSearch className='ml-2 mr-2' color={colors.primary} size={20}/>
+          ),
+        }}
       />
       :
       <div className='ml-1' style={{marginTop:'-3px'}}>

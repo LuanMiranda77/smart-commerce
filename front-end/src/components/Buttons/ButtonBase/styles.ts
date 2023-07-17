@@ -65,7 +65,7 @@ export const Container  = styled.div`
   box-shadow: 0 2px 3px 0 rgba(0,0,0,0.5);
   
   &:hover {
-    transform: translateX(5px) translateY(-7px);
+    /* transform: translateX(5px) translateY(-7px); */
     opacity : 0.8;
     box-shadow: 0px 8px 16px 0 rgba(0,0,0,0.5);
   }

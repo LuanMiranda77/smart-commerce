@@ -7,7 +7,7 @@ interface ButtonIconProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   icon: React.ReactNode;
   color?: string;
-  width: string;
+  width?: string;
 }
 
 export const ButtonIcon: React.FC<ButtonIconProps> = (props) => {

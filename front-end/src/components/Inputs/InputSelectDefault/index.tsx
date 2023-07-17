@@ -6,7 +6,7 @@ import { ThemeContext } from 'styled-components';
 interface InputSelectDefaultProps{
   //adicionar os props
   options: Array<Object>;
-  label:string;
+  label?:string;
   placeholder?: string;
   isClearable?: boolean;
   isSearchable?: boolean;
@@ -19,6 +19,7 @@ interface InputSelectDefaultProps{
   required?: boolean;
   valid?:any
   errorMessage?:any;
+  height?:number;
 }
 
 export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => {
@@ -33,17 +34,17 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       // none of react-select's styles are passed to <Control />
       display:'flex',
       width: '100%',
-      height: 32,
+      height: props.height? props.height : 32,
       border:0,
-      borderBottom: '2px solid '+theme.colors.primary,
-      borderRadius: '0px 5px 5px 5px',
+      borderBottom: '2px solid '+theme.colors.gray,
+      // borderRadius: '0px 5px 5px 5px',
       outline: 0,
-      color: 'red',
-      background:theme.colors.gray,
+      color: theme.colors.primary,
+      background:'transparent',
     }),
   }
-  return <Container className='font-bold text-left input_line_group'>
-    <label className='input_line__label' htmlFor="">{props.label}<span className='text-red-500 font-bold'>{props.required ? " *" : ''}</span></label>
+  return <Container className={`font-bold text-left ${props.label ? 'input_line_group': ''}`}>
+    {props.label &&<label className='input_line__label' htmlFor="">{props.label}<span className='text-red-500 font-bold'>{props.required ? " *" : ''}</span></label>}
     <Select
       id={'input-select'+props.label}
       className={'input ' + props.className}

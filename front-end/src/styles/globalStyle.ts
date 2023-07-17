@@ -55,7 +55,7 @@ button {
 }
 
 .row{
-  display: flex ;
+  display: flex;
 }
 
 /* remover o incrementador de input do type number */
@@ -75,14 +75,14 @@ input::-webkit-outer-spin-button,
 .input_line__field {
   width: 100%;
   border: 0;
-  border-bottom: 2px solid ${color => color.theme.colors.primary};
-  border-radius: 0px 5px 5px 5px;
+  border-bottom: 2px solid ${color => color.theme.colors.gray};
+  border-radius: 0px;
   outline: 0;
   height: var(--max-height-button);
   /* font-size: 1.3rem; */
   color: ${color => color.theme.colors.black};;
   padding: 7px 9px;
-  background: ${color => color.theme.colors.gray};
+  background: transparent;
   transition: border-color 0.2s;
 
   
@@ -116,7 +116,7 @@ input::-webkit-outer-spin-button,
   padding-bottom: 6px;  
   font-weight: 700;
   border-width: 3px;
-  border-image: linear-gradient(to right, ${color => color.theme.colors.primary},${color => color.theme.colors.secondary});
+  border-image: linear-gradient(to right, ${color => color.theme.colors.primary},${color => color.theme.colors.dns_info});
   border-image-slice: 1;
 }
 /* reset input */
@@ -148,7 +148,7 @@ input::-webkit-outer-spin-button,
 
 .card-local{
   background: var(--white);
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 .react-modal-content{
@@ -178,7 +178,7 @@ input::-webkit-outer-spin-button,
 }
 
 ::-webkit-scrollbar-thumb{
-    background-color:${props => props.theme.colors.secondary};
+    background-color:${props => props.theme.title === 'dark' ? props.theme.colors.warning : props.theme.colors.secondary};
     border-radius:5px;
 }
 

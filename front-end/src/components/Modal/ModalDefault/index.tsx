@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { IoClose } from "react-icons/io5";
+import ReactModal from "react-modal";
 import Modal from "react-modal";
 import { ThemeContext } from "styled-components";
 import { Container, HeaderModal } from "./styles";
@@ -21,11 +22,11 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
   const { colors, title } = useContext(ThemeContext);
 
   return (
-    <Container>
-      <Modal
+    // <Container onClick={() => props.onRequestClose}>
+      <ReactModal
         id={props.title}
         isOpen={props.isOpen}
-        ariaHideApp={true}
+        // ariaHideApp={true}
         style={{
           overlay: {
             backgroundColor: "rgba(78, 76, 76, 0.75)",
@@ -46,6 +47,7 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
         // closeTimeoutMS={800}
         contentElement={(props, children) => <div {...props}>{children}</div>}
         onRequestClose={() => props.onRequestClose}
+        shouldCloseOnOverlayClick={true}
       >
         <HeaderModal className="p-2 flex justify-between">
           <label htmlFor="" className="font-bold" style={{ color: colors.textLabel }}>
@@ -62,7 +64,7 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
         <div className="w-full p-2" style={{ marginTop: "10px" }}>
           <div className="w-full h-20 text-center">{props.children}</div>
         </div>
-      </Modal>
-    </Container>
+      </ReactModal>
+    // </Container>
   );
 };

@@ -4,9 +4,7 @@ export const Container  = styled.div`
 
     //adicionar stylos
     display: flex;
-    margin: 0 auto;
-    width: 70vw;
-    height: 100vh;
+    margin: 0;
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -14,81 +12,22 @@ export const Container  = styled.div`
     .div-left {
     background: ${(color) => color.theme.colors.white};
     align-items: center;
-    width: 70%;
-    border-radius: 10px 0px 0px 10px;
-    margin-left: 1rem;
+    width: 60%;
     padding: 1rem;
+    height: 100vh;
   }
 
   .div-right {
-    background: ${(color) => color.theme.colors.black};
+    display: flex;
+    background: ${(color) => color.theme.colors.primary};
     align-items: center;
     text-align: center;
     color: white;
-    width: 30%;
-    border-radius: 0 10px 10px 0;
-    padding: 1rem;
-    margin-right: 1rem;
+    width: 40%;
+    padding: 3rem;
+    height: 100vh;
   }
 
-
-    .input_line__field {
-    font-family: inherit;
-    width: 100%;
-    border: 0;
-    border-bottom: 2px solid ${(color) => color.theme.colors.primary};
-    border-radius: 0px 5px 5px 5px;
-    outline: 0;
-    /* font-size: 1.3rem; */
-    color: ${(color) => color.theme.colors.black};
-    padding: 7px 9px;
-    background: ${(color) => color.theme.colors.gray};
-    transition: border-color 0.2s;
-
-    &:placeholder-shown ~ .input_line__label {
-      /* font-size: 1.3rem; */
-      cursor: text;
-      top: 20px;
-    }
-  }
-
-  .input_line__label {
-    position: absolute;
-    top: -7px;
-    display: block;
-    transition: 0.2s;
-    font-size: 1rem;
-    color: ${(color) => color.theme.colors.primary};
-    font-weight: bold;
-  }
-
-  .input_line__field:focus {
-    ~ .input_line__label {
-      position: absolute;
-      top: 0;
-      display: block;
-      transition: 0.2s;
-      font-size: 1rem;
-      color: ${(color) => color.theme.colors.primary};
-      font-weight: 700;
-    }
-    padding-bottom: 6px;
-    font-weight: 700;
-    border-width: 3px;
-    border-image: linear-gradient(
-      to right,
-      ${(color) => color.theme.colors.primary},
-      ${(color) => color.theme.colors.secondary}
-    );
-    border-image-slice: 1;
-  }
-  /* reset input */
-  .input_line__field {
-    &:required,
-    &:invalid {
-      box-shadow: none;
-    }
-  }
 
 @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
