@@ -28,11 +28,12 @@ export const TableContainer  = styled.div`
 `;
 
 export const ContainerFoto  = styled.div`
-        position: absolute;
+        /* position: absolute;
         top:10vh;
-        left:46vh;
+        left:46vh; */
+        width:40% ;
 
-        @media screen and (max-height: 768px) {
+        /* @media screen and (max-height: 768px) {
             //adicionar o stylo responsivo
             top:12vh;
             left:calc(56.5vh - 60px);
@@ -42,7 +43,7 @@ export const ContainerFoto  = styled.div`
             //adicionar o stylo responsivo
             top:12vh;
             left:calc(20vh - 60px);
-        }
+        } */
 `;
 
 

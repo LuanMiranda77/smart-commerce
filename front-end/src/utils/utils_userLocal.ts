@@ -21,11 +21,12 @@ export class UtilsUserLocal{
         +user.token+'&'+this.geraStringAleatoria(15)+'&'
         +user.status+"&"+this.geraStringAleatoria(8)+'&'
         +user.estabelecimento+"&"+this.geraStringAleatoria(8));
-        persistLocalStorage("@TOKEN_KEY", data, 'set');
+        // persistLocalStorage("@TOKEN_KEY", data, 'set');
+        sessionStorage.setItem("@TOKEN_KEY", JSON.stringify(data));
     }
 
     public static getTokenLogin() : UserAplicationType {
-        let key = persistLocalStorage("@TOKEN_KEY", '', 'get');
+        let key = sessionStorage.getItem("@TOKEN_KEY");
         let userLogado = {} as UserAplicationType;
         if(key != null){
             const array = this.decrypt(key).split('&');
@@ -59,7 +60,8 @@ export class UtilsUserLocal{
 
     public static logout(){
         // persistLocalStorage("@user-data", '', 'remove');
-        persistLocalStorage("@TOKEN_KEY", '', 'remove');
+        // persistLocalStorage("@TOKEN_KEY", '', 'remove');
+        sessionStorage.removeItem("@TOKEN_KEY");
     }
 
     private static  encrypt(dados: string){

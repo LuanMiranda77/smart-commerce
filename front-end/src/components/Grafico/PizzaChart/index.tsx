@@ -22,7 +22,7 @@ export const PizzaChart: React.FC<PizzaChartProps> = (props) => {
     );
   };
   return <Container className='grid p-2'>
-    <label htmlFor={props.label} className='font-bold'>{props.label}</label>
+    <label htmlFor={props.label} className='title-responsive'>{props.label}</label>
     <SideRight className='w-full h-full'>
       <ResponsiveContainer>
         <PieChart>

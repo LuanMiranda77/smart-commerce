@@ -17,7 +17,7 @@ export default{
 
         success:'#15AB8D',
         info:'#2C73D2',
-        warning:'#EDAB00',
+        warning:'#FF7200',
         error:'#8B0000',
 
         dns_success:'#66CDAA',

@@ -1,70 +1,112 @@
-import React, { useContext } from "react";
-import { IoClose } from "react-icons/io5";
-import ReactModal from "react-modal";
-import Modal from "react-modal";
+import { DialogTitle } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+
+import IconButton from "@mui/material/IconButton";
+import Slide from "@mui/material/Slide";
+import { TransitionProps } from "@mui/material/transitions";
+import React, { forwardRef, useContext } from "react";
+import { FaSave } from "react-icons/fa";
 import { ThemeContext } from "styled-components";
-import { Container, HeaderModal } from "./styles";
+import { ButtonBase } from "../../Buttons/ButtonBase";
+import { ButtonIcon } from "../../Buttons/ButtonIcon";
+import { Container } from "./styles";
+
 interface ModalDefaultProps {
   //adicionar os props
   title: string;
   isOpen: boolean;
   children?: React.ReactNode;
-  width?: '98%' | string;
-  left?: '0%' | string;
-  right?: '0%' | string;
-  height?: '98%' | string;
+  width?: "98%" | string;
+  left?: "0%" | string;
+  right?: "0%" | string;
+  height?: "98%" | string;
   margin?: string;
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
   onRequestClose: () => void;
+  onClickAction?: () => void;
 }
 
 export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
-
   const { colors, title } = useContext(ThemeContext);
+  const transition = forwardRef(function Transition(
+    props: TransitionProps & {
+      children: React.ReactElement;
+    },
+    ref: React.Ref<unknown>
+  ) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
   return (
-    // <Container onClick={() => props.onRequestClose}>
-      <ReactModal
-        id={props.title}
-        isOpen={props.isOpen}
-        // ariaHideApp={true}
-        style={{
-          overlay: {
-            backgroundColor: "rgba(78, 76, 76, 0.75)",
-          },
-          content: {
-            height: props.height ? props.height: '100%',
-            width: props.width ? props.width: '100%',
-            left: props.left,
-            right: props.right,
-            top: 0,
-            bottom: 0,
-            border: 0,
-            padding: 0,
-            margin: props.margin ? props.margin: '0',
-            backgroundColor: (title === 'dark'? colors.secondary : colors.white),
-          },
+    <Container className="w-full">
+      <Dialog
+        className="m-0"
+        open={props.isOpen}
+        onClose={props.onRequestClose}
+        // TransitionComponent={transition}
+        maxWidth={props.maxWidth ? props.maxWidth : false}
+        fullWidth
+        sx={{
+          height: props.height ? props.height : "100%",
+          width: props.width ? props.width : "100%",
+          margin: props.margin ? props.margin : "0px",
+          left: props.left,
         }}
-        // closeTimeoutMS={800}
-        contentElement={(props, children) => <div {...props}>{children}</div>}
-        onRequestClose={() => props.onRequestClose}
-        shouldCloseOnOverlayClick={true}
       >
-        <HeaderModal className="p-2 flex justify-between">
-          <label htmlFor="" className="font-bold" style={{ color: colors.textLabel }}>
-            {props.title}
-          </label>
-          <IoClose
-            style={{ cursor: "pointer" }}
+        <DialogTitle
+          sx={{
+            m: 0,
+            p: 0.5,
+            background: title === "dark" ? colors.secondary : colors.primary,
+            color: "#fff",
+            paddingLeft: "1rem",
+            boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          {props.title}
+          {props.onRequestClose ? (
+            <IconButton
+              aria-label="close"
+              onClick={props.onRequestClose}
+              sx={{
+                position: "absolute",
+                right: 15,
+                top: -6,
+                color: colors.white,
+              }}
+            >
+              x
+            </IconButton>
+          ) : null}
+        </DialogTitle>
+        <DialogContent
+          dividers
+          style={{
+            backgroundColor: title === "dark" ? colors.secondary : colors.white,
+          }}
+        >
+          {props.children}
+        </DialogContent>
+        <DialogActions sx={{ border: "1px solid silver", p: 1.8 }}>
+          <ButtonBase
+            label="CANCELAR"
+            model="btn_line"
+            className="primary-color mr-5  w-32"
+            size="large"
             onClick={props.onRequestClose}
-            color={colors.textLabel}
-            title={'Fechar tela'}
-            size={'22px'}
           />
-        </HeaderModal>
-        <div className="w-full p-2" style={{ marginTop: "10px" }}>
-          <div className="w-full h-20 text-center">{props.children}</div>
-        </div>
-      </ReactModal>
-    // </Container>
+          <ButtonIcon
+            className="mr-3"
+            label="SALVAR"
+            icon={<FaSave />}
+            width={"120px"}
+            type="submit"
+            onClick={props.onClickAction}
+          />
+        </DialogActions>
+      </Dialog>
+    </Container>
   );
 };

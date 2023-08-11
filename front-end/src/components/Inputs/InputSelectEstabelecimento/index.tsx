@@ -38,6 +38,10 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
       user.estabelecimento = 0;
     }
     api.get(`api/estabelecimento/estabelecimentos/${user.estabelecimento}/${user.cargo}`).then(resp => {
+
+      if(typeof resp.data === 'string'){
+        UtilsUserLocal.logout();
+      }
       if (resp.data.length === 1) {
         dispatch(load(resp.data[0]));
       } 

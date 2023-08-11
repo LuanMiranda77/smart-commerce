@@ -22,7 +22,7 @@ interface BarraChartProps {
 
 export const BarraChart: React.FC<BarraChartProps> = (props) => (
   <Container className='grid p-2'>
-    <div className='w-full font-bold'>
+    <div className='w-full title-responsive'>
       <label htmlFor="">{props.label}</label>
     </div>
     <div className='w-full h-full'>

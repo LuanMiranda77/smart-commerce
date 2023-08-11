@@ -427,12 +427,12 @@ function Usuario() {
     {/* =============modal =========================== */}
     <ModalDefault
       isOpen={showModal}
-      title='FICHA DO USUÁRIO'
+      title='Ficha do usúario'
       onRequestClose={closeModal}
-      width='90%'
-      margin='1%'
-      height='95%'
-      left='5%'
+      // width='85vw'
+      // margin='1%'
+      // height='95%'
+      // left='5%'
     >
       <FormContainer onSubmit={handleSubmit(onSave)}>
         <div className='p-2 flex'>
@@ -573,12 +573,12 @@ function Usuario() {
             </div>
 
           </div>
-          <footer className=''>
+          {/* <footer className=''>
             <div className="flex justify-end" style={{ bottom: 25, right: 15, position: 'absolute' }}>
               <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={() => setShowModal(false)} />
               <ButtonIcon className="mr-3" label="SALVAR" icon={<FaSave />} width={'50%'} type='submit' />
             </div>
-          </footer>
+          </footer> */}
         </div>
       </FormContainer>
     </ModalDefault>

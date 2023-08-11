@@ -21,7 +21,7 @@ interface LinhaChartProps {
 }
 
 export const LinhaChart: React.FC<LinhaChartProps> = (props) => (<Container className='grid p-2'>
-  <div className='w-full font-bold'>
+  <div className='w-full title-responsive'>
     <label htmlFor="">{props.label}</label>
   </div>
   <div className='w-full h-full'>

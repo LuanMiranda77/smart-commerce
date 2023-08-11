@@ -1,6 +1,6 @@
-import React, { InputHTMLAttributes, useContext } from 'react';
+import React, { InputHTMLAttributes, useContext } from "react";
 import { ThemeContext } from "styled-components";
-import { Container } from './styles';
+import { Container } from "./styles";
 
 interface InputDateProps extends InputHTMLAttributes<HTMLInputElement> {
   //adicionar os props
@@ -9,8 +9,23 @@ interface InputDateProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const InputDate: React.FC<InputDateProps> = (props) => {
   const theme = useContext(ThemeContext);
-  return <Container className='input-group' {...props}>
-    <label className='font-bold input-label' htmlFor={props.label} style={{ color: (theme.title === 'dark' ? theme.colors.textLabel : theme.colors.primary) }}>{props.label}</label>
-    <input id={props.label} className='input-field' type='date' />
-  </Container>;
-}
+  return (
+    <Container
+      className={`input_line_group ${props.className ? props.className : ""}`}
+    >
+      <label
+        className="font-bold input_line__label"
+        htmlFor={props.label}
+        style={{
+          color:
+            theme.title === "dark"
+              ? theme.colors.textLabel
+              : theme.colors.primary,
+        }}
+      >
+        {props.label}
+      </label>
+      <input id={props.label} className="input_line__field" type="date" />
+    </Container>
+  );
+};

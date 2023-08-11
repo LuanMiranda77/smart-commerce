@@ -53,7 +53,7 @@ export const ContainerFiltro = styled.div`
 `;
 
 export const ContainerEntradaNota = styled.div`
-  height: calc(100vh - 60px);
+  height: calc(100vh - 140px);
   margin-top: -0.5rem;
   border-radius: 5px;
   background-color: ${(color) =>

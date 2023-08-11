@@ -3,7 +3,7 @@ import { createGlobalStyle } from "styled-components";
 export const GlobalStyle = createGlobalStyle`
 :root{
   //variaveis do tema de cores
-  --background: ${color => color.theme.colors.background};
+  --background: ${(color) => color.theme.colors.background};
   --white: #FFF;
   --text-label: #fff;
  
@@ -51,7 +51,10 @@ button {
 }
 
 .column-1{
-        color: ${props => props.theme.title ==='dark' ? props.theme.colors.textLabel: props.theme.colors.error };
+        color: ${(props) =>
+          props.theme.title === "dark"
+            ? props.theme.colors.textLabel
+            : props.theme.colors.error};
 }
 
 .row{
@@ -75,12 +78,12 @@ input::-webkit-outer-spin-button,
 .input_line__field {
   width: 100%;
   border: 0;
-  border-bottom: 2px solid ${color => color.theme.colors.gray};
+  border-bottom: 2px solid ${(color) => color.theme.colors.gray};
   border-radius: 0px;
   outline: 0;
   height: var(--max-height-button);
   /* font-size: 1.3rem; */
-  color: ${color => color.theme.colors.black};;
+  color: ${(color) => color.theme.colors.black};;
   padding: 7px 9px;
   background: transparent;
   transition: border-color 0.2s;
@@ -95,11 +98,14 @@ input::-webkit-outer-spin-button,
 
 .input_line__label {
   position: absolute;
-  top: -7px;
+  top: -2px;
   display: block;
   transition: 0.2s;
   font-size: 14px;
-  color: ${color=>(color.theme.title === 'dark' ? color.theme.colors.textLabel : color.theme.colors.primary)};
+  color: ${(color) =>
+    color.theme.title === "dark"
+      ? color.theme.colors.textLabel
+      : color.theme.colors.primary};
   font-weight:bold;
 }
 
@@ -110,13 +116,14 @@ input::-webkit-outer-spin-button,
     display: block;
     transition: 0.2s;
     font-size: 1rem;
-    color: ${color => color.theme.colors.primary};;
+    color: ${(color) => color.theme.colors.primary};;
     font-weight:700;    
   }
   padding-bottom: 6px;  
   font-weight: 700;
   border-width: 3px;
-  border-image: linear-gradient(to right, ${color => color.theme.colors.primary},${color => color.theme.colors.dns_info});
+  border-image: linear-gradient(to right, ${(color) =>
+    color.theme.colors.primary},${(color) => color.theme.colors.dns_info});
   border-image-slice: 1;
 }
 /* reset input */
@@ -151,9 +158,14 @@ input::-webkit-outer-spin-button,
   border-radius: 8px;
 }
 
+.MuiPaper-root-MuiDialog-paper{
+    max-width:100vw !important;  
+    width:100vw !important;  
+}
+
 .react-modal-content{
-  width: 100%;
-  max-width: 70rem;
+  /* width: 100%; */
+  /* max-width: 70rem; */
   background-color: var(--background);
   padding: 1.5rem;
   position: relative;
@@ -178,15 +190,41 @@ input::-webkit-outer-spin-button,
 }
 
 ::-webkit-scrollbar-thumb{
-    background-color:${props => props.theme.title === 'dark' ? props.theme.colors.warning : props.theme.colors.secondary};
+    background-color:${(props) =>
+      props.theme.title === "dark"
+        ? props.theme.colors.warning
+        : props.theme.colors.primary};
     border-radius:5px;
 }
 
 ::-webkit-scrollbar-track{
-    background-color:${props => props.theme.colors.tertiary};
+    background-color:${(props) => props.theme.colors.tertiary};
     border-radius:5px;
     margin:0rem;
 }
 
+.title-responsive{
+  font-size: calc(5px +0.6vw);
+  font-weight: bold;
+  color:${(props) => props.theme.colors.tertiary};
+  
+}
 
-`
+.subtitle-responsive{
+  font-size: calc(5px +0.5vw);
+  font-weight: 500;
+  color:${(props) => props.theme.colors.gray};
+}
+
+@media (min-width: 1920px){
+  .title-responsive{
+    font-size: 20px;
+  }
+  .subtitle-responsive{
+    font-size: 16px;
+    font-weight: bold;
+  }
+  }
+
+
+`;

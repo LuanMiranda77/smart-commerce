@@ -16,8 +16,8 @@ export const SummaryDefault: React.FC<SummaryDefaultProps> = (props) => {
   return <Container className={"card-local " + props.className} 
     id={props.label} 
     style={{ borderTop: '2px solid ' + props.colorBorder, background:props.backgroundColor }} >
-    <div className="w-full p-1">
-      <label className="font-bold" htmlFor="">{props.label}</label>
+    <div className="w-full p-1 ml-1">
+      <label className="title-responsive" htmlFor="">{props.label}</label>
     </div>
     <div className="flex font-bold lg:text-2xl justify-between p-2">
       {props.icon}
