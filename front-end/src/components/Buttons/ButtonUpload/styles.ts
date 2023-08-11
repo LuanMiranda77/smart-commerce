@@ -31,13 +31,12 @@ export const Container  = styled.label<ButtonIconProps>`
     font-weight: bold;
     overflow: hidden;
     border: 2px solid  ${porps => porps.borderColor ? porps.borderColor : porps.theme.colors.white};
-    border-radius: 8px;
     box-shadow: 0 2px 3px 0 rgba(0,0,0,0.5);
     
     &:hover {
-        transform: translateX(5px) translateY(-7px);
-        opacity : 0.8;
-        box-shadow: 0px 8px 16px 0 rgba(0,0,0,0.5);
+        /* transform: translateX(5px) translateY(-7px); */
+        opacity : 0.9;
+        box-shadow: 0px 4px 8px 0 rgba(0,0,0,0.5);
     }
 
 @media screen and (max-width: 40em) {

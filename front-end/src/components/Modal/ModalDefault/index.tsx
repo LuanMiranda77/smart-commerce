@@ -24,6 +24,7 @@ interface ModalDefaultProps {
   height?: "98%" | string;
   margin?: string;
   maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
+  textBtnAction?: string;
   onRequestClose: () => void;
   onClickAction?: () => void;
 }
@@ -91,19 +92,19 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
         </DialogContent>
         <DialogActions sx={{ border: "1px solid silver", p: 1.8 }}>
           <ButtonBase
-            label="CANCELAR"
+            label="Cancelar"
             model="btn_line"
             className="primary-color mr-5  w-32"
             size="large"
             onClick={props.onRequestClose}
           />
           <ButtonIcon
-            className="mr-3"
-            label="SALVAR"
+            className="mr-3 w-32"
+            label={props.textBtnAction ?  props.textBtnAction : 'Salvar'}
             icon={<FaSave />}
-            width={"120px"}
             type="submit"
             onClick={props.onClickAction}
+            background={colors.primary}
           />
         </DialogActions>
       </Dialog>

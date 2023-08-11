@@ -20,6 +20,7 @@ interface InputSelectDefaultProps{
   valid?:any
   errorMessage?:any;
   height?:number;
+  fontSize?:string;
 }
 
 export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => {
@@ -29,6 +30,7 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       ...provided,
       // borderBottom: '1px dotted pink',
       // color: state.isSelected ? 'red' : 'blue',
+      fontSize:'12px'
     }),
     control: () => ({
       // none of react-select's styles are passed to <Control />
@@ -41,6 +43,7 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       outline: 0,
       color: theme.colors.primary,
       background:'transparent',
+      fontSize:props.fontSize ? props.fontSize : '15px'
     }),
   }
   return <Container className={`font-bold text-left ${props.label ? 'input_line_group': ''}`}>

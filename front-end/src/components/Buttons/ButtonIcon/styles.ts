@@ -2,8 +2,10 @@ import { ButtonIcon } from './index';
 import styled from "styled-components";
 
 interface ButtonIconProps{
-    color?:string;
+    background?:string;
     width?: string;
+    borderColor?: string;
+    color?: string;
 }
 
 export const Container  = styled.button<ButtonIconProps>`
@@ -17,16 +19,16 @@ export const Container  = styled.button<ButtonIconProps>`
     text-align: center;
     align-items: center ;
     justify-content: space-between;
-    background-color: ${porps => porps.color ? porps.color : porps.theme.colors.primary};
+    background-color: ${props => props.background ? props.background : props.theme.colors.primary};
     cursor: pointer;
     border-radius: 8px;
     height:var(--max-height-button);
-    color: ${color => color.theme.colors.textLabel};
+    color: ${props => props.color?  props.color : props.theme.colors.textLabel};
     transition: all 0.3s;
     /* position: relative; */
     font-weight: bold;
     overflow: hidden;
-    border: 1px solid ${color=>(color.theme.title === 'dark' ? color.theme.colors.textLabel : 'transparent')};
+    border: 2px solid ${props => props.borderColor?  props.borderColor : props.background};
     font-size:15px;
     border-radius: 5px;
     box-shadow: 0 2px 3px 0 rgba(0,0,0,0.5);
@@ -36,6 +38,10 @@ export const Container  = styled.button<ButtonIconProps>`
         opacity : 0.8;
         box-shadow: 0px 4px 8px 0 rgba(0,0,0,0.5);
     }
+
+
+
+    
 @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
 }

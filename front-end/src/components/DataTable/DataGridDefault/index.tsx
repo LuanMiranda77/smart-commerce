@@ -2,13 +2,12 @@ import DataGrid, {
   GroupPanel,
   IColumnProps,
   Pager,
-  Paging
-} from 'devextreme-react/data-grid';
-import { Selection } from 'devextreme-react/tree-list';
-import React, { useState } from 'react';
-import { InputSearch } from '../../Inputs/InputSearch';
-import { Container, Header } from './styles';
-
+  Paging,
+} from "devextreme-react/data-grid";
+import { Selection } from "devextreme-react/tree-list";
+import React, { useState } from "react";
+import { InputSearch } from "../../Inputs/InputSearch";
+import { Container, Header } from "./styles";
 
 interface DataGridDefaultProps {
   //adicionar os props
@@ -24,12 +23,11 @@ interface DataGridDefaultProps {
   columnGroup?: boolean;
   paginar?: boolean;
   isSelectRow?: boolean;
-  isHeader?: boolean;
-  cssSearch?:string;
+  cssSearch?: string;
   hoverStateEnabled?: boolean;
   rowAlternationEnabled?: boolean;
   showColumnLines?: boolean;
-  moduloSeletion?: 'single' | 'multiple';
+  moduloSeletion?: "single" | "multiple";
   children?: React.ReactNode;
   headerChildren?: React.ReactNode;
   onRowClick?: (element: any) => void;
@@ -41,51 +39,54 @@ interface DataGridDefaultProps {
   onEditorPrepared?: (element: any) => void;
 
   // styleCellColumn?: (data: any)=> React.ReactNode;
-
-};
+}
 
 export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
   // Specifying a currency globally
   const [gridInstance, setGridInstance] = useState<any>();
   const onSearch = (text: string) => {
-    gridInstance?.option('searchPanel', { visible: false, text: text });
-  }
-  return <Container>
-    {props.isHeader ? <Header className='flex p-2 card-local'>
-      {props.isSearch ?
-        <div className={props.cssSearch}>
-          <InputSearch onChange={(e) => onSearch(e.currentTarget.value)} autoFocus />
-        </div>
-        : <></>}
-      {props.headerChildren}
-    </Header>
-      : <></>}
-    <DataGrid id="gridContainer"
-      dataSource={props.dataSource}
-      allowColumnReordering={true}
-      rowAlternationEnabled={props.rowAlternationEnabled}
-      showBorders={props.showBorders}
-      showRowLines={props.showRowLines}
-      showColumnLines={props.showColumnLines}
-      hoverStateEnabled={props.hoverStateEnabled}
-      height={'100%'}
-      onSelectionChanged={props.onSelectionChanged}
-      onInitialized={(e)=>setGridInstance(e.component)}
-      onInitNewRow={props.onInitNewRow}
-      onEditorPrepared={props.onEditorPrepared}
-      onRowClick={props.onRowClick}
-      onRowDblClick={props.onRowDblClick}
-      onCellPrepared={props.onCellPrepared}
-      noDataText={''}
-      // dateSerializationFormat='dd/MM/yyyyTHH:mm:ss' 
-    >
-      {props.isSelectRow ? <Selection mode={props.moduloSeletion} /> : null}
-      <GroupPanel visible={props.columnGroup} />
-      {/* <SearchPanel visible={props.isSearch} /> */}
-      {/* <Grouping autoExpandAll={true} /> */}
-      {props.children}
+    gridInstance?.option("searchPanel", { visible: false, text: text });
+  };
+  return (
+    <Container>
+      {props.isSearch && (
+        <Header className="flex p-2 card-local justify-between">
+          <div className={props.cssSearch}>
+            <InputSearch
+              onChange={(e) => onSearch(e.currentTarget.value)}
+              autoFocus
+            />
+          </div>
+          {props.headerChildren}
+        </Header>
+      )}
+      <DataGrid
+        id="gridContainer"
+        dataSource={props.dataSource}
+        allowColumnReordering={true}
+        rowAlternationEnabled={props.rowAlternationEnabled}
+        showBorders={props.showBorders}
+        showRowLines={props.showRowLines}
+        showColumnLines={props.showColumnLines}
+        hoverStateEnabled={props.hoverStateEnabled}
+        height={"100%"}
+        onSelectionChanged={props.onSelectionChanged}
+        onInitialized={(e) => setGridInstance(e.component)}
+        onInitNewRow={props.onInitNewRow}
+        onEditorPrepared={props.onEditorPrepared}
+        onRowClick={props.onRowClick}
+        onRowDblClick={props.onRowDblClick}
+        onCellPrepared={props.onCellPrepared}
+        noDataText={""}
+        // dateSerializationFormat='dd/MM/yyyyTHH:mm:ss'
+      >
+        {props.isSelectRow ? <Selection mode={props.moduloSeletion} /> : null}
+        <GroupPanel visible={props.columnGroup} />
+        {/* <SearchPanel visible={props.isSearch} /> */}
+        {/* <Grouping autoExpandAll={true} /> */}
+        {props.children}
 
-      {/* {props.columns.map((column, key) => {
+        {/* {props.columns.map((column, key) => {
         return <Column
           key={key}
           dataField={column.dataField}
@@ -106,10 +107,12 @@ export const DataGridDefault: React.FC<DataGridDefaultProps> = (props) => {
 
       })} */}
 
-
-
-      <Paging defaultPageSize={props.defaultPageSize} enabled={props.paginar} />
-      <Pager allowedPageSizes={props.pageSizes} showPageSizeSelector={true} />
-    </DataGrid>
-  </Container>;
-}
+        <Paging
+          defaultPageSize={props.defaultPageSize}
+          enabled={props.paginar}
+        />
+        <Pager allowedPageSizes={props.pageSizes} showPageSizeSelector={true} />
+      </DataGrid>
+    </Container>
+  );
+};

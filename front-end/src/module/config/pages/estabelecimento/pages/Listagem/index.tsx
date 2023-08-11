@@ -141,7 +141,6 @@ function ListEstabelecimentos() {
     return <>
         <TableContainer>
             <DataGridDefault
-                isHeader
                 isSearch
                 cssSearch='w-11/12'
                 headerChildren={

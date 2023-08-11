@@ -26,6 +26,6 @@ export const ButtonUpload: React.FC<InputFileProdutoProps> = (props) => (
   >
     <input id='file' type="file" accept=".xml" name='file' multiple={props.multiple}  onChange={(event) => props.upload(event)} />
       <FaFileUpload style={{ fontSize: '18px', marginRight:'8px' }}/>
-    <label htmlFor="file" className='cursor-pointer' >{props.label}</label>
+    <label htmlFor="file" className='cursor-pointer' style={{fontSize:'15px'}}>{props.label}</label>
   </Container>
 )

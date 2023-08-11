@@ -7,7 +7,6 @@ export const HeaderModal  = styled.header`
 `;
 
 export const Container  = styled.div`
-
     //adicionar stylos
 .ReactModal__Content{
     width:'100vw';

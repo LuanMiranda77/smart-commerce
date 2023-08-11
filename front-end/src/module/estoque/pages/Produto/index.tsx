@@ -1012,6 +1012,7 @@ function Produto() {
             icon={<FaPlus />}
             width={"100%"}
             onClick={() => setShowModal(true)}
+            background={colors.primary}
           />
         </div>
         <div className="w-2/12">
@@ -1020,7 +1021,9 @@ function Produto() {
             icon={<FaPlus />}
             width={"100%"}
             onClick={() => setShowModal(true)}
-            color={colors.warning}
+            color={colors.primary}
+            background={colors.white}
+            borderColor={colors.primary}
           />
         </div>
       </div>

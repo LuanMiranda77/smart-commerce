@@ -1,6 +1,11 @@
 import { Table } from "./../../../venda/pages/Pdv/styles";
 import styled from "styled-components";
 
+interface Statusprops{
+  color: string;
+  backgroundColor: string;
+}
+
 export const Container  = styled.div`
     //adicionar stylos
     label{
@@ -29,7 +34,7 @@ export const Body = styled.div`
 export const ContainerTable = styled.div`
   //adicionar stylos
   width: 100%;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 210px);
   background-color: transparent;
 
   .column-1 {
@@ -53,7 +58,7 @@ export const ContainerFiltro = styled.div`
 `;
 
 export const ContainerEntradaNota = styled.div`
-  height: calc(100vh - 140px);
+  height: calc(100vh - 135px);
   margin-top: -0.5rem;
   border-radius: 5px;
   background-color: ${(color) =>
@@ -80,6 +85,10 @@ export const ContainerEntradaNota = styled.div`
       background-color: ${(color) => color.theme.colors.gray}!important;
     }
   }
+
+  .show-impost{
+    color: red;
+  }
 `;
 
 export const ContainerProdutoSync = styled.div`
@@ -93,12 +102,15 @@ export const ContainerProdutoSync = styled.div`
 `;
 
 export const ContainerFoto  = styled.div`
-        position: absolute;
-        top:8%;
-        left:calc(200vh - 25px);
+        /* position: absolute; */
+        /* top:8%; */
+        /* left:calc(200vh - 25px); */
+        width: 100%;
 `;
 
 export const ButtonFilter = styled.div`
+  display:flex;
+  align-items:center;
   transition: all 0.3s;
   padding: 0.25rem;
   cursor: pointer;
@@ -107,4 +119,15 @@ export const ButtonFilter = styled.div`
     opacity: 0.8;
     box-shadow: 0px 3px 6px 0 rgba(0, 0, 0, 0.5);
   }
+`;
+
+export const StatusNota = styled.div<Statusprops>`
+  border: 1px solid ${props => props.color};
+  background-color: ${props => props.backgroundColor};
+  color: ${props => props.color};
+  padding: .1rem;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight:bold;
+  width: 100%;
 `;

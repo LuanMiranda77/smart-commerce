@@ -393,7 +393,6 @@ function Usuario() {
     </div> */}
     <TableContainer>
       <DataGridDefault
-        isHeader
         isSearch
         cssSearch='w-11/12'
         headerChildren={

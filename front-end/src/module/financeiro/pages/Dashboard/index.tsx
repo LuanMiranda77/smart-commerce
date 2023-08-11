@@ -239,6 +239,7 @@ function Dashboard() {
               icon={<FaFunnelDollar />}
               label="Filtrar"
               width="80%"
+              background={theme.colors.primary}
             />
           </div>
         </div>

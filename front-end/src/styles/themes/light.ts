@@ -20,9 +20,9 @@ export default{
         warning:'#FF7200',
         error:'#8B0000',
 
-        dns_success:'#66CDAA',
+        dns_success:'#A6D8CE',
         dns_info:'#87CEFA',
-        dns_warning:'#EDDE5A',
+        dns_warning:'#FFC597',
         dns_error:'#F08080',
     }
     
