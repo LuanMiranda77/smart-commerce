@@ -68,6 +68,7 @@ function Usuario() {
       setListCargos(lista);
     }
     if (estabelecimento.id) {
+      console.log(estabelecimento);
       service.getUsuarios(estabelecimento.id).then(response => {
         setDataSource(response);
         setDataSourceCopy(response);
@@ -324,11 +325,11 @@ function Usuario() {
   const onSave = (form: FieldValues) => {
 
     if (user.cpf.length > 0 && !UtilsValid.isValidCPF(UtilsGeral.removeMask(user.cpf))) {
-      toast.error(UtilsGeral.getEmogi()[3] + 'Você digitou um CPF inválido');
+      toast.error(UtilsGeral.getEmoji(2)+ 'Você digitou um CPF inválido');
       return
     }
     if (user.cargo == null) {
-      toast.error(UtilsGeral.getEmogi()[3] + 'Você esqueceu de selecionar o cargo.');
+      toast.error(UtilsGeral.getEmoji(2)+ 'Você esqueceu de selecionar o cargo.');
       return
     }
 
@@ -350,9 +351,9 @@ function Usuario() {
         array.push(response);
         setDataSource(array);
         setShowModal(false);
-        toast.success(UtilsGeral.getEmogi()[1] + " Cadastrado com sucesso.");
+        toast.success(UtilsGeral.getEmoji(1) + " Cadastrado com sucesso.");
       }).catch(error => {
-        toast.error(UtilsGeral.getEmogi()[2] + error.mensagemUsuario);
+        toast.error(UtilsGeral.getEmoji(2)+ error.mensagemUsuario);
       });
     } else {
       userData.dataCriacao = moment(userData.dataCriacao).toDate();
@@ -367,9 +368,9 @@ function Usuario() {
         });
         setDataSource(array);
         setShowModal(false);
-        toast.success(UtilsGeral.getEmogi()[1] + " Atualizado com sucesso.");
+        toast.success(UtilsGeral.getEmoji(1) + " Atualizado com sucesso.");
       }).catch(error => {
-        toast.error(UtilsGeral.getEmogi()[2] + error.mensagemUsuario);
+        toast.error(UtilsGeral.getEmoji(2) + error.mensagemUsuario);
       });
     }
 

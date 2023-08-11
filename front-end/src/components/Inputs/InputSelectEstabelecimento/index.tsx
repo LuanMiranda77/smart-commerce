@@ -1,7 +1,9 @@
+import { response } from 'express';
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Select, { components, DropdownIndicatorProps } from 'react-select';
+import { useNavigate } from 'react-router-dom';
+import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { ThemeContext } from 'styled-components';
 import { api } from "../../../config/api";
@@ -23,6 +25,7 @@ interface InputSelectEstabelecimentoProps {
 }
 
 export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProps> = () => {
+  const navegate = useNavigate();
   const [options, setOptions] = useState(new Array<any>());
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [selectedEstabelecimento, setSelectedEstabelecimento] = useState<any>();
@@ -36,12 +39,17 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
     let user = UtilsUserLocal.getTokenLogin();
     if (user.cargo == Cargo.MASTER || user.cargo == Cargo.REVENDA) {
       user.estabelecimento = 0;
+      let est =  persistLocalStorage('@selected-est', "", 'get');
+      dispatch(load(est));
+    }else{
+      persistLocalStorage('@selected-est', "", 'remove');
     }
     api.get(`api/estabelecimento/estabelecimentos/${user.estabelecimento}/${user.cargo}`).then(resp => {
 
       if(typeof resp.data === 'string'){
         UtilsUserLocal.logout();
       }
+      resp.data = [..._.orderBy(resp.data,['nome'], ['asc'])];
       if (resp.data.length === 1) {
         dispatch(load(resp.data[0]));
       } 
@@ -58,27 +66,25 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
           })
         });
         setOptions(lista);
-        dispatch(load(lista[0]));
-        // let selectEstabelecimento = persistLocalStorage('@selected-est', '', 'get');
-        // if(selectEstabelecimento){
-        //   setSelectedEstabelecimento(selectedEstabelecimento);
-        //   dispatch(load(selectEstabelecimento));
-        // }
         dispatch(loadEstabelecimentos(resp.data));
       }
       setModalShow(false);
       return options;
     }).catch(error => {
       console.log(error.response.data);
-      return toast.error(UtilsGeral.getEmogi()[3] + " " + error.response.data[0].mensagemUsuario);
+        UtilsUserLocal.logout();
+        navegate("/");
+      return toast.error(UtilsGeral.getEmoji(2) + " " + error.response.data.message);
     });
   }, [selectedEstabelecimento])
 
   const onSelect = (event: any) => {
     let selectEstabelecimento = _.find(estabelecimentos, { 'id': event.value });
     if (selectEstabelecimento) {
-      // persistLocalStorage('@selected-est', selectEstabelecimento, 'set');
-      // setSelectedEstabelecimento(selectEstabelecimento);
+      let user = UtilsUserLocal.getTokenLogin();
+      if (user.cargo == Cargo.MASTER || user.cargo == Cargo.REVENDA) {
+          persistLocalStorage('@selected-est', selectEstabelecimento, 'set');
+      }
       dispatch(load(selectEstabelecimento));
     }
   }
@@ -100,11 +106,12 @@ export const InputSelectEstabelecimento: React.FC<InputSelectEstabelecimentoProp
             <BiSearch className='ml-2 mr-2' color={colors.primary} size={20}/>
           ),
         }}
+        value={_.find(options, {'value':estabelecimento.id})}
       />
       :
       <div className='ml-1' style={{marginTop:'-3px'}}>
         <p className='text-lg font-bold' style={{color: colors.textLabel}}>{estabelecimento.nome}</p>
-        <p className='text-xs' style={{color: colors.warning}}>CNPJ: {estabelecimento.cnpj}</p>
+        <p className='text-xs' style={{color: colors.warning}}>CNPJ/CPF: {estabelecimento.cnpjCpf}</p>
       </div>
     }
     <ModalLoad isOpen={modalShow} mensage='Carregando dados iniciais do estabelecimento aguarde...' onRequestClose={()=>setModalShow(false)}/>

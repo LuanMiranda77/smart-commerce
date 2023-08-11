@@ -3,6 +3,7 @@ import { UserAplicationType } from '../domain/types/user_aplication';
 import { persistLocalStorage } from './persistLocalStorage';
 
 export class UtilsUserLocal{
+    
     public static setTokenLogin(user: UserAplicationType){
         let data = this.encrypt(
         this.geraStringAleatoria(10)+'&'

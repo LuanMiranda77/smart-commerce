@@ -18,7 +18,7 @@ Modal.setAppElement('#root');
 
 
 function App() {
-  config({ defaultCurrency: 'PT' });
+  config({ defaultCurrency: 'BRL' });
   locale('pt');
   const root = ThemeContext.ThemeProvider();
 

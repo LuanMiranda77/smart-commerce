@@ -1,3 +1,7 @@
+import { ProdutoType } from "../domain";
+import { produtoinitial } from "../domain/types/produto";
+import { ProdutoXml } from "../domain/types/produtoXml";
+
 export class UtilsConvert {
     static fileConvertSizeByte = (bytes: number) => {
         const si = true, dp = 1
@@ -84,4 +88,32 @@ export class UtilsConvert {
         return valor;
     }
 
+    static convertProdutoXmlToProduto(produtoXml: ProdutoXml):ProdutoType{
+        let produto: ProdutoType = produtoinitial;
+        produto.ean = produtoXml.ean;
+        produto.nome = produtoXml.nome;
+        produto.unid = produtoXml.uniCom;
+        produto.precoCusto = produtoXml.valorUnit;
+        produto.fatorConversao = 1;
+        produto.cfop = produtoXml.cfop;
+        produto.ncm = produtoXml.ncm;
+        produto.cest = produtoXml.cest;
+        produto.cstIcms = produtoXml.cstIcms;
+        produto.porcIcms = produtoXml.porcIcms;
+        produto.valorIcms = produtoXml.valorIcms;
+        produto.cstIpi = produtoXml.cstIpi;
+        produto.porcIpi = produtoXml.porcIpi;
+        produto.valorIpi = produtoXml.valorIpi;
+        produto.cstPis = produtoXml.cstIpi;
+        produto.porcPis = produtoXml.porcPis;
+        produto.valorPis = produtoXml.valorPis;
+        produto.cstCofins = produtoXml.cstCofins;
+        produto.porcConfis = produtoXml.porcCofins;
+        produto.valorCofins = produtoXml.valorCofins;
+        return produto;
+    }
+
+    static DecimalToNumber (numero: string){
+        return Number(numero.replaceAll(',', '.'));
+    }
 } 

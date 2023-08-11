@@ -1,23 +1,33 @@
 import { useContext, useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+
+import caixa from "../../../../assets/img-caixa.svg";
+import icon from "../../../../assets/Logo/icon.svg";
+import { InputDefault, } from "../../../../components";
+import { ButtonBase } from "../../../../components/Buttons/ButtonBase";
+import { SizeLogo } from "../../../../domain/enums";
+import { FaEnvelope, FaExpeditedssl, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FcHighPriority } from "react-icons/fc";
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ThemeContext } from "styled-components";
-import caixa from "../../../../assets/img-caixa.svg";
-import icon from "../../../../assets/Logo/icon.svg";
-import { InputDefault, Logo } from "../../../../components";
-import { ButtonBase } from "../../../../components/Buttons/ButtonBase";
-import { SizeLogo } from "../../../../domain/enums";
-import { RootState } from "../../../../store/index.store";
+import bannerInferior from '../../../../assets/banner_inferior.svg';
+import bannerSuperior from '../../../../assets/banner_superior.svg';
+import { DialogPopupInfo } from "../../../../components";
+import { RootState } from '../../../../store/index.store';
 import { UsuarioService } from "../services/usuarioService";
 import { Container } from "./styles";
+import logo from '../../../../assets/Logo/logo.svg';
+import { Logo } from "../../../../components/Logo";
+
 
 function Login() {
   const theme = useContext(ThemeContext);
   const navegate = useNavigate();
   const [showPass, setShowPass] = useState(false);
-  const [user, setUser] = useState<Object>({ email: "", password: "" });
+  const [showInfo, setShowInfo] = useState(false);
+
+  const [user, setUser] = useState<Object>({ email: '', password: '' });
   const dispatch = useDispatch();
   const userAplication = useSelector(
     (state: RootState) => state.userAplication

@@ -33,10 +33,10 @@ function Dashboard() {
     <div className="p-2">
       <header className="w-full">
         <p className="lg:text-4xl title-responsive">
-          Faturamento Total {UtilsGeral.getEmogi()[0]}
+          Faturamento Total {UtilsGeral.getEmoji(0)}
         </p>
         <p className="subtitle-responsive">
-          Fique de olho na sua empresa! {UtilsGeral.getEmogi()[2]}
+          Fique de olho na sua empresa! {UtilsGeral.getEmoji(2)}
         </p>
       </header>
       <div className="h-full text-right">

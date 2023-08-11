@@ -19,6 +19,7 @@ export const InputMask: React.FC<InputMaskProps> = (props) => (
       mask={props.mask}
       value={props.value}
       onChange={props.onChange}
+      readOnly={props.readOnly ? props.readOnly:false}
       placeholder={props.placeholder}
       required={props.required}
       {...props.register}

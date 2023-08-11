@@ -1,37 +1,42 @@
+import { Upload } from "devextreme-react/file-manager";
+import moment from "moment";
+import { BsDownload } from "react-icons/bs";
 import { api } from "../../../../config/api";
 
-/**
-*@Author
-*@Issue
-*/
-export class MdeService {
+const  url='api/mde';
+const  urlUpload='api/upload';
+
+export const MdeService = {
 
     //end-point da api
-    url='api/mde';
+   
 
     //modelo de request post
-    async post(pEntity: String){
-      const response = await api.post(this.url, pEntity).then( resp =>{
-            return resp.data;
-        })
-        .catch(error => {
-            console.log(error.response.data);
-            return Promise.reject(error.response.data[0]);
-        });;
-      return response;
-    }
+    post(pEntity: String){
+      return api.post(url, pEntity);
+    },
 
     //modelo de request get
-    async get(){
-      const response = await api.get(this.url).then( resp =>{
-            return resp.data;
-        })
-        .catch(error => {
-            console.log(error.response.data);
-            return Promise.reject(error.response.data[0]);
-        });;
-      return response;
+    getList(data: any){
+      return api.get(url+`/${data.estabelecimento}/${data.dtIni}/${data.dtFin}/${data.tipo}`);
+    },
+
+    upload(files: Array<File>){
+      let resp;
+      for (let f of files) {
+        if (f && f.size < 5e6) {
+          const formData = new FormData();
+          formData.append('file', f);
+          console.log(formData);
+          resp = api.post(urlUpload, formData);
+        }
+
+      }
+      return resp;
+    },
+
+    async getListProdutXml(estabelecimento: number, chave: string){
+        return await api.get(`${url+'/produtosxml?est='+estabelecimento}&chave=${chave}`);
     }
-    
   
 }

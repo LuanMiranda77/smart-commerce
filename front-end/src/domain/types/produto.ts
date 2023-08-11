@@ -1,13 +1,16 @@
 import { CategoriaType } from './categoria';
 
 export type ProdutoType = {
-    id: number | null | undefined;
-    codBarras: string,
-    descricao:string;
-    categoria: CategoriaType;
-    dtCreate:Date | null| undefined;
-    dtUpdate: Date | null| undefined;
-    dtVencimento: Date | null| undefined;
+    id?: number;
+    estabelecimento: number;
+    codigo: number;
+    ean: string;
+    nome:string;
+    categoria?: CategoriaType;
+    dtCreate:Date | null;
+    dtUpdate: Date | null;
+    dtVencimento: Date | null;
+    unid: string;
     saldo: number;
     fatorConversao: number;
     saldoMinimo: number;
@@ -19,24 +22,58 @@ export type ProdutoType = {
     status: "S" | "N";
 
     // impostos
-    cfop:string | null | undefined;
-    cst:string| null| undefined;
+    cfop:string;
+    ncm:string;
+    cest: string;
 
-    cstICMS:string | null| undefined;
-    pICMS:string | null| undefined;
-    vICMS:string | null| undefined;
+    cstIcms:string;
+    porcIcms:number;
+    valorIcms:number;
 
-    cstIPI:string | null| undefined;
-     pIPI:string | null| undefined;
-     vIPI:string | null| undefined;
+    cstIpi:string;
+    porcIpi:number;
+    valorIpi:number;
 
-    cstPIS:string | null| undefined;
-    pPIS:string | null| undefined;
-    vPIS:string | null| undefined;
+    cstPis:string;
+    porcPis:number;
+    valorPis:number;
 
-    cstCOFINS:string | null| undefined;
-    pCOFINS:string | null| undefined;
-    vCOFINS:string | null| undefined;
+    cstCofins:string;
+    porcConfis:number;
+    valorCofins:number;
+}
 
-    
+export const produtoinitial: ProdutoType = {
+    estabelecimento: 0,
+    codigo: 0,
+    ean: '',
+    nome: '',
+    dtCreate: null,
+    dtUpdate: null,
+    dtVencimento: null,
+    unid: '',
+    saldo: 0,
+    fatorConversao: 0,
+    saldoMinimo: 0,
+    quantMinAtacado: 0,
+    precoCusto: 0,
+    precoVenda: 0,
+    precoAtacado: 0,
+    image: '',
+    status: 'S',
+    cfop: '',
+    ncm: '',
+    cest: '',
+    cstIcms: '',
+    porcIcms: 0,
+    valorIcms: 0,
+    cstIpi: '',
+    porcIpi: 0,
+    valorIpi: 0,
+    cstPis: '',
+    porcPis: 0,
+    valorPis: 0,
+    cstCofins: '',
+    porcConfis: 0,
+    valorCofins: 0
 }

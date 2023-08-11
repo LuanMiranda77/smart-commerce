@@ -1,12 +1,14 @@
-import { logout } from "../service/auth";
 
 export class UtilsValid {
-    public static isValidEmail(email: string) {
+
+    public static isValidEmail(email: string) : boolean {
+        console.log(email);
         if (email.length >= 5) {
             if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
                 return false;
             }
         }
+        return true;
     }
 
     /**

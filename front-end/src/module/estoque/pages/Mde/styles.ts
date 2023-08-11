@@ -1,14 +1,14 @@
 import { Table } from "./../../../venda/pages/Pdv/styles";
 import styled from "styled-components";
 
-export const Container = styled.div`
-  //adicionar stylos
-  label {
-    /* color: ${(color) =>
-      color.theme.title === "dark"
-        ? color.theme.colors.textLabel
-        : color.theme.colors.primary} */
-  }
+export const Container  = styled.div`
+    //adicionar stylos
+    label{
+        /* color: ${color => (color.theme.title === 'dark' ? color.theme.colors.textLabel : color.theme.colors.primary)} */
+    }
+    input[type='file']{
+        display: none;
+    }
 
   @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo
@@ -92,10 +92,10 @@ export const ContainerProdutoSync = styled.div`
   }
 `;
 
-export const ContainerFoto = styled.div`
-  position: absolute;
-  top: 9%;
-  left: calc(200vh - 60px);
+export const ContainerFoto  = styled.div`
+        position: absolute;
+        top:8%;
+        left:calc(200vh - 25px);
 `;
 
 export const ButtonFilter = styled.div`

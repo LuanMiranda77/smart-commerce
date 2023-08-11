@@ -60,7 +60,8 @@ export const DialogPopupConfirme: React.FC<DialogPoupConfirmeProps> = (props) =>
         </div>
         <div className="w-full p-1">
           <div className="w-full h-full mb-2 p-2 text-center">{props.children}</div>
-          <Footer className="w-full p-2 grid grid-cols-2 gap-2 text-center">
+        </div>
+        <Footer className="w-full p-2 grid grid-cols-2 gap-2 text-center absolute" style={{top:"10%"}}>
             <ButtonBase
               label="Não"
               model="btn_base"
@@ -77,7 +78,6 @@ export const DialogPopupConfirme: React.FC<DialogPoupConfirmeProps> = (props) =>
               onClick={props.onClickSim}
             />
           </Footer>
-        </div>
       </Modal>
     </Container>
   );

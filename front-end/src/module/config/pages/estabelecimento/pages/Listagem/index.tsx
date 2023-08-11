@@ -5,98 +5,96 @@ import { FaFileContract, FaPenSquare, FaPlayCircle, FaPlus, FaRegPauseCircle, Fa
 import { toast } from 'react-toastify';
 import {
     ButtonIcon,
-    DataGridDefault
-} from "../../../../components";
-import { EstabelecimentoType } from '../../../../domain';
-import { EstabelecimentoService } from '../services/EstabelecimentoService';
+    DataGridDefault,
+    DialogPopupConfirme
+} from "../../../../../../components";
+import { EstabelecimentoType } from '../../../../../../domain';
+import { get, setStatus } from '../../../services/EstabelecimentoService';
 import { TableContainer } from './styles';
 import { ThemeContext } from 'styled-components';
-import { RegimeTributario } from '../../../../domain/enums';
-import {initialState} from '../../../../store/slices/estabelecimento.slice';
+import { RegimeTributario } from '../../../../../../domain/enums';
+import {initialState} from '../../../../../../store/slices/estabelecimento.slice';
 import _ from 'lodash';
-import { UtilsConvert } from '../../../../utils/utils_convert';
-import Estabelecimento from '.';
+import { UtilsConvert } from '../../../../../../utils/utils_convert';
+
+import FormEstabelecimento from '../Form';
+import { UtilsGeral } from '../../../../../../utils/utils_geral';
+import ModalConfigModulo from '../config';
 
 
-function Estabelecimentos() {
+
+function ListEstabelecimentos() {
 
     const [dataSource, setDataSource] = useState<Array<EstabelecimentoType>>([]);
     const [estabelecimento, setEstabelecimento] = useState<EstabelecimentoType>(initialState);
-    const service = new EstabelecimentoService();
     const { colors, title } = useContext(ThemeContext);
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [showModalModulo, setShowModalModulo] = useState<boolean>(false);
+    const [showPoupAtivo, setShowPopupAtivo] = useState<boolean>(false);
+    const [showPoupInativo, setShowPopupInativo] = useState<boolean>(false);
 
     useEffect(() => {
-        service.get().then(response => {
-            let data = _.map(response, (est)=>{
-                if(est.cpf){
-                    est.doc = est.cpf;
-                    return est
-                }
-                if(est.cnpj){
-                    est.doc = est.cnpj;
-                    return est
-                }
-            });
-            console.log(UtilsConvert.setMaskFone('83996366694'));
-            setDataSource(data);
+        get().then(response => {
+            let lista = [...response]
+            setDataSource(lista);
         }).catch(error => {
             toast.error(error.mensagemUsuario);
         });
 
-    }, []);
+    }, [estabelecimento]);
 
-    const showPopupConfirmeAction = (user: any, tipo: number) => {
-        // setUser(user);
-        // (tipo === 1 ? setShowPopupAtivo(true) : setShowPopupInativo(true));
+    const showPopupConfirmeAction = (estabelecimento: EstabelecimentoType, tipo: number) => {
+        setEstabelecimento(estabelecimento);
+        (tipo === 1 ? setShowPopupAtivo(true) : setShowPopupInativo(true));
       }
     
-      const onAtive = (user: any) => {
-        // service.setStatus(user.id, "S").then(response => {
-        //   let data = _.map(dataSourceCopy, (value) => {
-        //     if (user.id === value.id) {
-        //       value.status = 'S';
-        //     }
-        //     return value;
-        //   });
-        //   setDataSource(data);
-        //   setShowPopupAtivo(false);
-        // }).catch(error => {
-        //   setShowPopupAtivo(false);
-        //   toast.error(error.mensagemUsuario);
-        // });
+      const onAtive = (estabelecimento: EstabelecimentoType) => {
+        setStatus(estabelecimento.id, "S").then(response => {
+          let data = _.map(dataSource, (value) => {
+            if (estabelecimento.id === value.id) {
+              value.status = 'S';
+            }
+            return value;
+          });
+          setDataSource(data);
+          setShowPopupAtivo(false);
+          toast.success(UtilsGeral.getEmoji(1)+'Bloqueado com sucesso');
+        }).catch(error => {
+          setShowPopupAtivo(false);
+          toast.error(UtilsGeral.getEmoji(1)+error.mensagemUsuario);
+        });
       }
     
-      const onInative = (user: any) => {
-        // service.setStatus(user.id, "N").then(response => {
-        //   let data = _.map(dataSourceCopy, (value) => {
-        //     if (user.id === value.id) {
-        //       value.status = 'N';
-        //     }
-        //     return value;
-        //   });
-        //   setDataSource(data);
-        //   setShowPopupInativo(false);
-        // }).catch(error => {
-        //   setShowPopupInativo(false);
-        //   toast.error(error.mensagemUsuario);
-        // });
+      const onInative = (estabelecimento: EstabelecimentoType) => {
+        setStatus(estabelecimento.id, "N").then(response => {
+          let data = _.map(dataSource, (value) => {
+            if (estabelecimento.id === value.id) {
+              value.status = 'N';
+            }
+            return value;
+          });
+          setDataSource(data);
+          setShowPopupInativo(false);
+        }).catch(error => {
+          setShowPopupInativo(false);
+          toast.error(error.mensagemUsuario);
+        });
       }
 
     const onNovo = () => {
-        setShowModal(true);
-
+      setEstabelecimento({...initialState});
+      setShowModal(true);
     };
 
     const onEdit = (estabelecimento: EstabelecimentoType) => {
-        setShowModal(true);
-        // reset({ ...user });
-        // setValue('confirmePass', user.password);
-        // setUser(user);
-        // testRoles(user);
-        // setShowModal(true);
-      }
-    
+      setEstabelecimento({...estabelecimento});
+      setShowModal(true);
+    };
+
+    const onShowModalModulo= (estabelecimento: EstabelecimentoType) => {
+      setEstabelecimento({...estabelecimento});
+      setShowModalModulo(true);
+    };
 
     const renderCell = (element: any) => {
 
@@ -134,7 +132,7 @@ function Estabelecimentos() {
                   }
                   
                   <i className='text-2xl cursor-pointer  mr-3' style={{ color: colors.primary }}><FaFileContract id='buttonAction1' className='' title='Adicionar o certificado' onClick={() => onEdit(element.data)} /></i>
-                  <i className='text-2xl cursor-pointer  mr-3' style={{ color: colors.primary }}><FaRegSun id='buttonAction2' className='' title='Adicionar o certificado' onClick={() => onEdit(element.data)} /></i>
+                  <i className='text-2xl cursor-pointer  mr-3' style={{ color: colors.primary }}><FaRegSun id='buttonAction2' className='' title='Configuração de módulos' onClick={() => onShowModalModulo(element.data)} /></i>
                   <i className='text-2xl cursor-pointer' style={{ color: colors.primary }}><FaPenSquare id='buttonAction3' className='' title='Editar estabelecimento' onClick={() => onEdit(element.data)} /></i>
                 </div>
         }
@@ -160,10 +158,9 @@ function Estabelecimentos() {
                 showColumnLines
                 hoverStateEnabled
                 isSelectRow
-            // onInitialized={(e) => setGridInstance(e.component)}
             >
                 <Column dataField='id' caption='CÓDIGO' alignment='center' dataType='string' width={100} cssClass='font-bold column-1' sortOrder={'asc'} />
-                <Column dataField='doc' caption='CPF/CNPJ' alignment='left' dataType='' width={150} cellRender={renderCell} allowSearch={false} />
+                <Column dataField='cnpjCpf' caption='CPF/CNPJ' alignment='left' dataType='' width={150} cellRender={renderCell}  />
                 <Column dataField='nome' caption='NOME' alignment='left' dataType='string' cssClass='font-bold' />
                 <Column dataField='regime' caption='REGIME' alignment='left' dataType='string' cssClass='font-bold column-2' cellRender={renderCell} width={150} />
                 <Column dataField='uf' caption='ESTADO' alignment='center' dataType='string' width={90} allowSearch={false} />
@@ -174,8 +171,22 @@ function Estabelecimentos() {
                 <Column dataField='' caption='' alignment='center' dataType='' width={150} cellRender={renderCell} allowSearch={false} />
             </DataGridDefault>
         </TableContainer>
-        <Estabelecimento showModal={showModal} closeModal={()=>setShowModal(false)} tipo={1}/>
+
+
+        <DialogPopupConfirme title="Confirme" isOpen={showPoupInativo} onRequestClose={() => setShowPopupInativo(false)} onClickSim={() => onInative(estabelecimento)}>
+            <p className="font-bold text-xl">Tem certeza que deseja bloquear o estabelecimento? </p>
+            <p className="font-bold text-xs" style={{ color: colors.error }}>Todos os usuários do mesmo não poderão acessar o sistema até ser liberado!</p>
+        </DialogPopupConfirme>
+
+        <DialogPopupConfirme title="Confirme" isOpen={showPoupAtivo} onRequestClose={() => setShowPopupAtivo(false)} onClickSim={() => onAtive(estabelecimento)}>
+            <p className="font-bold text-xl">Tem certeza que deseja liberar o estabelecimento? </p>
+            <p className="font-bold text-xs" style={{ color: colors.error }}>Todos os usuários do mesmo acessarão o sistema normalmente</p>
+        </DialogPopupConfirme>
+
+        <FormEstabelecimento showModal={showModal} closeModal={()=>setShowModal(false)} tipo={1} estabelecimento={estabelecimento}/>
+
+        <ModalConfigModulo showModal={showModalModulo} closeModal={()=>setShowModalModulo(false)} estabelecimento={estabelecimento} />
     </>
 
 }
-export default Estabelecimentos;
+export default ListEstabelecimentos;
