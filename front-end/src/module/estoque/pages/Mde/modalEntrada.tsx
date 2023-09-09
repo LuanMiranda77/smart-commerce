@@ -2,26 +2,30 @@
 import { Column } from "devextreme-react/data-grid";
 import moment from "moment";
 import React from "react";
-import CountUp from "react-countup";
-import { FaPlus, FaSave, FaSync } from "react-icons/fa";
+import { FaCamera, FaPlus, FaSave, FaSync, FaTasks } from "react-icons/fa";
 import { GiStarProminences } from "react-icons/gi";
 import {
   ButtonBase,
   ButtonIcon,
   DataGridDefault,
-  InputCheck,
+  Divider,
   InputDate,
-  InputDefault,
-  InputMask,
   InputNumber,
-  InputRadio,
   ModalDefault,
 } from "../../../../components";
 import { MdeType } from "../../../../domain/types/nfe_entrada";
 import { produtoXmlInitial } from "../../../../domain/types/produtoXml";
 import useModalEntrada from "../../../../hooks/mde/useModalEntrada";
+import { UtilsDate } from "../../../../utils/utils_date";
+import { TitleMDe } from './components';
 import { ModalSincronizarProduto } from "./modalSincronizarProduto";
-import { ContainerEntradaNota, ContainerProdutoSync } from "./styles";
+import {
+  ContainerEntradaNota,
+  ContainerProdutoSync,
+  HeaderNota,
+} from "./styles";
+import { UtilsConvert } from "../../../../utils/utils_convert";
+import { FaPlusSquare } from 'react-icons/fa';
 
 // import { Container } from './styles';
 interface ModalProps {
@@ -62,253 +66,53 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
       height="110vh"
       margin="-30px"
     >
-      <ContainerEntradaNota className="flex pt-1">
-        <div className="left" style={{ width: "30%" }}>
+      <HeaderNota className="mb-5">
+        <div className="flex justify-between">
           <div className="flex">
-            <InputDefault
-              className="w-6/12 mr-5 mb-3"
-              label="Número da nota"
-              type="number"
-              value={notaSelect.numNota}
-              onChange={(e) =>
-                setNotaSelect({ ...notaSelect, numNota: e.target.value })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            />
-            <div className="text-left font-bold mt-1 text-xs">
-              <p
-                className="text-xs mb-1"
-                style={{
-                  color:
-                    theme.title === "drak"
-                      ? theme.colors.textLabel
-                      : theme.colors.primary,
-                }}
-              >
-                Tipo da entrada
-              </p>
-              <InputRadio
-                label="Nota Eletronica"
-                checked={props.tipo === 1 ? true : false}
-                disabled={props.tipo === 1 ? false : true}
-              />
-              <InputRadio
-                label="Nota Avulsa"
-                checked={props.tipo === 1 ? false : true}
-                disabled={props.tipo === 1 ? true : false}
-              />
-            </div>
+            <TitleMDe className="mr-5" text="Número da nota" value={notaSelect.numNota} color="color-error"/>
+            <TitleMDe className="mr-5" text="CNPJ/CPF" value={notaSelect.cnpjCpf}/>
+            <TitleMDe className="mr-5" text="Fornecedor" value={notaSelect.fornecedor}/>
           </div>
-          <InputDefault
-            className="mr-5 mb-5 text-xs"
-            label={`Chave acesso`}
-            type="number"
-            value={notaSelect.chaveAcesso}
-            onChange={(e) =>
-              setNotaSelect({ ...notaSelect, chaveAcesso: e.target.value })
-            }
-            readOnly={props.tipo === 1 ? true : false}
-          />
-          <div className="flex" style={{ marginTop: "-10px" }}>
-            <InputDate
-              className="text-ms w-40 mr-5 text-left"
-              label="Data emissão"
-              value={moment(notaSelect.dataEmissao).format("YYYY-MM-DD")}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  dataEmissao: new Date(e.target.value),
-                })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            />
-            <InputDate
-              className="text-ms w-40 text-left"
-              label="Data entrada"
-              value={moment(notaSelect.dataEntrada).format("YYYY-MM-DD")}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  dataEntrada: new Date(e.target.value),
-                })
-              }
-            />
-          </div>
-          <div
-            className="flex items-center mt-3 mb-1"
-            style={{ marginTop: "0px" }}
-          >
-            <InputMask
-              className="w-6/12 mr-5 "
-              label="CNPJ/CPF"
-              mask={checkCPF ? "999.999.999-99" : "99.999.999/9999-99"}
-              value={notaSelect.cnpjCpf}
-              onChange={(e) =>
-                setNotaSelect({ ...notaSelect, cnpjCpf: e.target.value })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            />
-            {/* <i><FaUserPlus style={{ fontSize: '40px', marginTop: '25px', color: theme.colors.primary }} /></i> */}
-            {props.tipo === 0 ? (
-              <InputCheck
-                css="p-5 mt-4"
-                label="usar CPF?"
-                checked={checkCPF}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setCheckCPF(event.currentTarget.checked)
+          <div className="flex">
+            <TitleMDe className="mr-5" text="Número da nota" value={UtilsDate.formatByDDMMYYYYSemHora(notaSelect.dataEmissao)} color="color-error"/>
+            <div style={{marginTop:'-15px'}}>
+              <InputDate
+                className="text-ms w-40 text-left"
+                label="Data entrada"
+                value={moment(notaSelect.dataEntrada).format("YYYY-MM-DD")}
+                onChange={(e) =>
+                  setNotaSelect({
+                    ...notaSelect,
+                    dataEntrada: new Date(e.target.value),
+                  })
                 }
               />
-            ) : (
-              <></>
-            )}
-          </div>
-          <InputDefault
-            className=" mr-5 mb-2"
-            label="Fornecedor"
-            type="text"
-            value={notaSelect.fornecedor}
-            onChange={(e) =>
-              setNotaSelect({ ...notaSelect, fornecedor: e.target.value })
-            }
-            readOnly={props.tipo === 1 ? true : false}
-          />
-          <p className="text-left text-xs font-bold mt-5">Cálculo do imposto</p>
-          <div className="grid grid-cols-3 gap-2 w-11/12">
-            {/* <InputNumber
-              label="Base ICMS"
-              separadorDecimal=","
-              casaDecimal={2}
-              separadorMilhar="."
-              prefixo=""
-              fixedZeroFinal
-              value={notaSelect.valorBaseIcms}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  valorBaseIcms: Number(e.target.value),
-                })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            /> */}
-            <InputNumber
-              label="Valor ICMS"
-              separadorDecimal=","
-              casaDecimal={2}
-              separadorMilhar="."
-              prefixo=""
-              fixedZeroFinal
-              value={notaSelect.valorIcms}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  valorIcms: Number(e.target.value),
-                })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            />
-            {/* <InputNumber
-              label="Base Substituição"
-              separadorDecimal=","
-              casaDecimal={2}
-              separadorMilhar="."
-              prefixo=""
-              fixedZeroFinal
-              value={notaSelect.valorBaseSubTributa}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  valorBaseSubTributa: Number(e.target.value),
-                })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            /> */}
-            <InputNumber
-              label="Valor Substituição"
-              separadorDecimal=","
-              casaDecimal={2}
-              separadorMilhar="."
-              prefixo=""
-              fixedZeroFinal
-              value={notaSelect.valorSubTributa}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  valorSubTributa: Number(e.target.value),
-                })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            />
-            <InputNumber
-              label="Valor IPI"
-              separadorDecimal=","
-              casaDecimal={2}
-              separadorMilhar="."
-              prefixo=""
-              fixedZeroFinal
-              value={notaSelect.valorIpi}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  valorIpi: Number(e.target.value),
-                })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            />
-            <InputNumber
-              label="Valor COFINS"
-              separadorDecimal=","
-              casaDecimal={2}
-              separadorMilhar="."
-              prefixo=""
-              fixedZeroFinal
-              value={notaSelect.valorCofins}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  valorCofins: Number(e.target.value),
-                })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            />
-            <InputNumber
-              label="Frete"
-              separadorDecimal=","
-              casaDecimal={2}
-              separadorMilhar="."
-              prefixo=""
-              fixedZeroFinal
-              value={notaSelect.valorFrete}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  valorFrete: Number(e.target.value),
-                })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            />
-            <InputNumber
-              label="Desconto"
-              separadorDecimal=","
-              casaDecimal={2}
-              separadorMilhar="."
-              prefixo=""
-              fixedZeroFinal
-              value={notaSelect.valorDesc}
-              onChange={(e) =>
-                setNotaSelect({
-                  ...notaSelect,
-                  valorDesc: Number(e.target.value),
-                })
-              }
-              readOnly={props.tipo === 1 ? true : false}
-            />
+            </div>
           </div>
         </div>
-        <div className="right" style={{ width: "70%" }}>
-          <div className="h-10 flex ">
-            <div className="w-6/12">
-              {/* <InputSearch onChange={(e) => search(e.currentTarget.value)} /> */}
+        <div className="flex justify-between mt-2">
+            <div className="flex">
+              <TitleMDe className="mr-5" text="Chave de acesso" value={notaSelect.chaveAcesso} color="color-error"/>
             </div>
+            <div className="flex text-right">
+              <TitleMDe className="mr-5" text="Valor ICMS" value={UtilsConvert.formatCurrency(notaSelect.valorIcms).replaceAll('R$', '')} />
+              <TitleMDe className="mr-5" text="Valor Substitução" value={UtilsConvert.formatCurrency(notaSelect.valorSubTributa).replaceAll('R$', '')} />
+              <TitleMDe className="mr-5" text="Valor COFINS" value={UtilsConvert.formatCurrency(notaSelect.valorCofins).replaceAll('R$', '')} />
+              <TitleMDe className="mr-5" text="Valor IPI" value={UtilsConvert.formatCurrency(notaSelect.valorIpi).replaceAll('R$', '')} />
+              <TitleMDe className="mr-5" text="Frete" value={UtilsConvert.formatCurrency(notaSelect.valorFrete).replaceAll('R$', '')} />
+              <TitleMDe className="mr-5" text="Valor Produto" value={UtilsConvert.formatCurrency(notaSelect.valorTotalNotaLiquido).replaceAll('R$', '')}/>
+              <TitleMDe className="mr-5" text="Desconto" value={UtilsConvert.formatCurrency(notaSelect.valorDesc).replaceAll('R$', '')} />
+              <TitleMDe className="mr-5" text="Valor Total" color="color-error" value={UtilsConvert.formatCurrency(notaSelect.valorTotalNota).replaceAll('R$', '')}/>
+            </div>
+        </div>
+        <Divider tipo="horizontal" size='1px'/>
+      </HeaderNota>
+      <ContainerEntradaNota className="flex">
+        <div className="left" style={{ width: "70%" }}>
+          <div className="h-10 flex ">
+            {/* <div className="w-6/12">
+              <InputSearch onChange={(e) => search(e.currentTarget.value)} />
+            </div> */}
             <ButtonIcon
               className="green-color mr-5  w-40"
               label="Criar Promoção"
@@ -461,44 +265,13 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
               />
             </DataGridDefault>
           </ContainerProdutoSync>
-          <div className="text-left grid grid-cols-6 gap-2 mt-2">
-            <div className="w-24 text-xs font-bold ">
-              <p>Quantidade</p>
-              <CountUp
-                end={dataSourceCopy.length}
-                prefix=""
-                separator=""
-                decimal=""
-                decimals={0}
-              />
-            </div>
-            <div className="w-24 text-xs font-bold">
-              <p>Total produtos</p>
-              <CountUp
-                end={notaSelect.valorTotalNota}
-                prefix="R$ "
-                separator="."
-                decimal=","
-                decimals={2}
-              />
-            </div>
-            <div className="w-24 text-xs font-bold ">
-              <p>Total Nota fiscal</p>
-              <CountUp
-                end={notaSelect.valorTotalNotaLiquido}
-                prefix="R$ "
-                separator="."
-                decimal=","
-                decimals={2}
-              />
-            </div>
-            <div className="col-span-3 text-xs font-bold bg-gray-400 text-center rounded">
-              <p className="text-red-700">ATENÇÃO</p>
-              <p className="flex items-center justify-center">
-                <div className="bg-red-700 h-2 w-2 mr-2"></div>Items em vermelho
-                não estão cadastrados ou sincronizados
-              </p>
-            </div>
+        </div>
+        <div className="right ml-5" style={{ width: "30%" }}>
+          <div className="rounded-md drop-shadow-md p-2" style={{backgroundColor:'#F6F6F6'}}>
+              <div className="flex justify-between">
+                <FaCamera className='color-error btn' style={{ fontSize: '30px'}} />
+                <FaTasks className='btn' style={{ fontSize: '30px', color: theme.colors.primary }} />
+              </div>
           </div>
         </div>
       </ContainerEntradaNota>

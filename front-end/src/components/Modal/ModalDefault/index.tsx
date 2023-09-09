@@ -98,14 +98,26 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
             size="large"
             onClick={props.onRequestClose}
           />
-          <ButtonIcon
-            className="mr-3 w-32"
-            label={props.textBtnAction ?  props.textBtnAction : 'Salvar'}
-            icon={<FaSave />}
-            type="submit"
-            onClick={props.onClickAction}
-            background={colors.primary}
-          />
+
+          {props.textBtnAction !== "Salvar" ? (
+            <ButtonBase
+              label={props.textBtnAction ? props.textBtnAction : "Salvar"}
+              model="btn_base"
+              className="primary-color mr-5  w-32"
+              size="large"
+              onClick={props.onClickAction}
+              type="submit"
+            />
+          ) : (
+            <ButtonIcon
+              className="mr-3 w-32"
+              label={props.textBtnAction ? props.textBtnAction : "Salvar"}
+              icon={<FaSave />}
+              type="submit"
+              onClick={props.onClickAction}
+              background={colors.primary}
+            />
+          )}
         </DialogActions>
       </Dialog>
     </Container>

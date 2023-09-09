@@ -4,7 +4,7 @@ import { Container } from './styles';
 interface DividerProps {
   //adicionar os props
   tipo: 'vertical' | 'horizontal';
-  size?: number;
+  size?: string | number;
   color?: string;
   className?:string;
   style?:{};

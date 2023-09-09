@@ -1,4 +1,16 @@
-import { createGlobalStyle } from "styled-components";
+import { error } from 'console';
+import styled, { createGlobalStyle } from "styled-components";
+interface LabelProps {
+  color: string;
+}
+export const Label = styled.label<LabelProps>`
+  color: ${(props) => props.color};
+  font-size: calc(5px + 0.5vw);
+
+  @media screen and (min-width: 1920px) {
+    font-size: 12px;
+  }
+`;
 
 export const GlobalStyle = createGlobalStyle`
 :root{
@@ -8,7 +20,7 @@ export const GlobalStyle = createGlobalStyle`
   --text-label: #fff;
  
   //variaveis de tamanho
-  --max-height-button:32px;
+  --max-height-button:30px;
 }
 
 *{
@@ -84,7 +96,7 @@ input::-webkit-outer-spin-button,
   height: var(--max-height-button);
   /* font-size: 1.3rem; */
   color: ${(color) => color.theme.colors.black};;
-  padding: 7px 9px;
+  padding: 2px 4px;
   background: transparent;
   transition: border-color 0.2s;
 
@@ -98,7 +110,7 @@ input::-webkit-outer-spin-button,
 
 .input_line__label {
   position: absolute;
-  top: -2px;
+  top: 3px;
   display: block;
   transition: 0.2s;
   font-size: 14px;
@@ -119,7 +131,7 @@ input::-webkit-outer-spin-button,
     color: ${(color) => color.theme.colors.primary};;
     font-weight:700;    
   }
-  padding-bottom: 6px;  
+  padding-bottom: 0px;  
   font-weight: 700;
   border-width: 3px;
   border-image: linear-gradient(to right, ${(color) =>
@@ -216,6 +228,54 @@ input::-webkit-outer-spin-button,
   color:${(props) => props.theme.colors.gray};
 }
 
+.font-12-responsive{
+  font-size: calc(5px + 0.4vw);
+  color:${(props) => props.theme.colors.primary};
+}
+
+.font-14-responsive{
+  font-size: calc(5px + 0.5vw);
+  color:${(props) => props.theme.colors.primary};
+
+}
+  .font-16-responsive{
+    font-size: calc(5px + 0.6vw);
+    color:${(props) => props.theme.colors.primary};
+  }
+
+  .font-20-responsive{
+    font-size: calc(5px + 0.7vw);
+    color:${(props) => props.theme.colors.primary};
+  }
+
+  .color-primary{
+    color:${(props) => props.theme.colors.primary} !important;
+  }
+  .color-secondary{
+    color:${(props) => props.theme.colors.secondary}!important;
+  }
+  .color-tertiary{
+    color:${(props) => props.theme.colors.tertiary}!important;
+  }
+  .color-error{
+    color:${(props) => props.theme.colors.error}!important;
+  }
+  .color-success{
+    color:${(props) => props.theme.colors.success}!important;
+  }
+
+  .btn{
+    background-color: transparent !important;
+    cursor: pointer;
+    padding: 3px;
+    transition: all 0.5s;
+    border-radius: 4px;
+    &:hover{
+      transform: translateX(2px) translateY(-2px);
+      box-shadow: 0px 2px 4px 0 rgba(0,0,0,0.5);
+    }
+  }
+
 @media (min-width: 1920px){
   .title-responsive{
     font-size: 20px;
@@ -224,6 +284,24 @@ input::-webkit-outer-spin-button,
     font-size: 16px;
     font-weight: bold;
   }
+
+  .font-12-responsive{
+    font-size: 12px;
+
+  }
+  .font-14-responsive{
+    font-size: 14px;
+
+  }
+  .font-16-responsive{
+    font-size: 16px;
+
+  }
+  .font-20-responsive{
+    font-size: 20px;
+
+  }
+  
   }
 
 

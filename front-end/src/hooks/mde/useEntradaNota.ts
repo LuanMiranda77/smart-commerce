@@ -38,6 +38,7 @@ export default function useEntradaNota() {
       })
         .then((resp) => {
           setDataSource(resp.data);
+          setDataSourceCopy(resp.data);
         })
         .catch((error) => {
           toast.error(error.mensagemUsuario);

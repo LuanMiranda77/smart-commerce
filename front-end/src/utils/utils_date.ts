@@ -13,6 +13,12 @@ export class UtilsDate{
         return data;
     } 
 
+    public static formatByDDMMYYYYSemHora = (data: any) =>{
+        // const moment = require('moment');
+        data = moment(data).format('DD/MM/YYYY');
+        return data;
+    } 
+
     public static formatByDDMMYYYY = (data: any) =>{
         // const moment = require('moment');
         data = moment(data).format('DD/MM/YYYY HH:mm:ss');

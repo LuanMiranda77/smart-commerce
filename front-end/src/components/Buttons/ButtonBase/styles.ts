@@ -65,9 +65,9 @@ export const Container  = styled.div`
   box-shadow: 0 2px 3px 0 rgba(0,0,0,0.5);
   
   &:hover {
-    /* transform: translateX(5px) translateY(-7px); */
-    opacity : 0.9;
-    box-shadow: 0px 8px 16px 0 rgba(0,0,0,0.5);
+    transform: translateX(2px) translateY(-2px);
+    /* opacity : 0.9; */
+    box-shadow: 0px 4px 8px 0 rgba(0,0,0,0.5);
   }
 }
 
@@ -80,7 +80,7 @@ export const Container  = styled.div`
   box-shadow: 0 2px 3px 0 rgba(0,0,0,0.5);
   transition: all 0.3s;
   &:hover {
-    /* transform: translateX(5px) translateY(-7px); */
+    transform: translateX(2px) translateY(-2px);
     opacity : 0.9;
     box-shadow: 0px 4px 8px 0 rgba(0,0,0,0.5);
     background-color: ${color => color.theme.title==='dark' ? color.theme.colors.gray : color.theme.colors.dns_info};

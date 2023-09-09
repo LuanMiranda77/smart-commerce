@@ -89,10 +89,14 @@ export const ContainerEntradaNota = styled.div`
   .show-impost{
     color: red;
   }
+
+  .iconButton{
+
+  }
 `;
 
 export const ContainerProdutoSync = styled.div`
-  height: calc(100vh - 230px);
+  height: calc(100vh - 270px);
 
   .image {
     position: absolute;
@@ -131,3 +135,10 @@ export const StatusNota = styled.div<Statusprops>`
   font-weight:bold;
   width: 100%;
 `;
+
+export const HeaderNota = styled.div`
+  display: flex;
+  flex-direction: column; 
+`;
+
+

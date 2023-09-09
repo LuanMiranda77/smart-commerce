@@ -330,7 +330,7 @@ function Mde() {
                 <div className="w-3/12 text-xs font-bold text-right">
                   <p>Valor total</p>
                   <CountUp
-                    end={150000000}
+                    end={dataSource.reduce((total, item) => total + item.valorTotalNota, 0)}
                     prefix="R$ "
                     separator="."
                     decimal=","
@@ -481,6 +481,8 @@ function Mde() {
         left="22%"
         height="75%"
         margin="5%"
+        onClickAction={()=>{}}
+        textBtnAction="Filtrar"
       >
         <ContainerFiltro className="bg-white w-full p-3">
           <div className="text-left font-bold mb-5">
@@ -537,24 +539,6 @@ function Mde() {
                 />
               </div>
             </div>
-          </div>
-          <div
-            className="flex justify-end w-full"
-            style={{ bottom: 25, right: 15, position: "absolute" }}
-          >
-            <ButtonBase
-              label="CANCELAR"
-              model="btn_line"
-              className="primary-color mr-5  w-32"
-              size="large"
-              onClick={() => setShowModalFiltro(false)}
-            />
-            <ButtonBase
-              label="FILTAR"
-              model="btn_base"
-              className="primary-color w-32"
-              size="large"
-            />
           </div>
         </ContainerFiltro>
       </ModalDefault>

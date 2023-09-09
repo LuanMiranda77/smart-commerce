@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 interface PropsColor{
     color?:string;
-    size?:number;
+    size?:string | number;
 }
 
 export const Container  = styled.div<PropsColor>`
