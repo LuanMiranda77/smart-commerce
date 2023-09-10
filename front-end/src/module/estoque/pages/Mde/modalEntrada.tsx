@@ -10,22 +10,23 @@ import {
   DataGridDefault,
   Divider,
   InputDate,
+  InputDefault,
   InputNumber,
+  InputSelectDefault,
   ModalDefault,
 } from "../../../../components";
 import { MdeType } from "../../../../domain/types/nfe_entrada";
 import { produtoXmlInitial } from "../../../../domain/types/produtoXml";
 import useModalEntrada from "../../../../hooks/mde/useModalEntrada";
+import { UtilsConvert } from "../../../../utils/utils_convert";
 import { UtilsDate } from "../../../../utils/utils_date";
-import { TitleMDe } from './components';
+import { TitleMDe } from "./components";
 import { ModalSincronizarProduto } from "./modalSincronizarProduto";
 import {
   ContainerEntradaNota,
   ContainerProdutoSync,
   HeaderNota,
 } from "./styles";
-import { UtilsConvert } from "../../../../utils/utils_convert";
-import { FaPlusSquare } from 'react-icons/fa';
 
 // import { Container } from './styles';
 interface ModalProps {
@@ -54,6 +55,11 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
     onCreatePromocao,
     onCadastroSincronizar,
     onCadastroNovo,
+    produto,
+    setProduto,
+    onConversaoMedida,
+    isAtacado,
+    setIsAtacado,
   } = useModalEntrada(props);
 
   return (
@@ -62,20 +68,37 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
       title={"Entrada de nota"}
       isOpen={props.showModal}
       onRequestClose={props.closeModal}
-      width="105vw"
-      height="110vh"
-      margin="-30px"
+      isFullScreen
+      textBtnAction="Finalizar"
     >
-      <HeaderNota className="mb-5">
+      <HeaderNota className="mb-5 rounded-md px-2 py-1" style={{background:'#f6f6f6'}}>
         <div className="flex justify-between">
           <div className="flex">
-            <TitleMDe className="mr-5" text="Número da nota" value={notaSelect.numNota} color="color-error"/>
-            <TitleMDe className="mr-5" text="CNPJ/CPF" value={notaSelect.cnpjCpf}/>
-            <TitleMDe className="mr-5" text="Fornecedor" value={notaSelect.fornecedor}/>
+            <TitleMDe
+              className="mr-5"
+              text="Número da nota"
+              value={notaSelect.numNota}
+              color="color-error"
+            />
+            <TitleMDe
+              className="mr-5"
+              text="CNPJ/CPF"
+              value={notaSelect.cnpjCpf}
+            />
+            <TitleMDe
+              className="mr-5"
+              text="Fornecedor"
+              value={notaSelect.fornecedor}
+            />
           </div>
           <div className="flex">
-            <TitleMDe className="mr-5" text="Número da nota" value={UtilsDate.formatByDDMMYYYYSemHora(notaSelect.dataEmissao)} color="color-error"/>
-            <div style={{marginTop:'-15px'}}>
+            <TitleMDe
+              className="mr-5"
+              text="Data de emissão"
+              value={UtilsDate.formatByDDMMYYYYSemHora(notaSelect.dataEmissao)}
+              color="color-error"
+            />
+            <div>
               <InputDate
                 className="text-ms w-40 text-left"
                 label="Data entrada"
@@ -91,62 +114,77 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
           </div>
         </div>
         <div className="flex justify-between mt-2">
-            <div className="flex">
-              <TitleMDe className="mr-5" text="Chave de acesso" value={notaSelect.chaveAcesso} color="color-error"/>
-            </div>
-            <div className="flex text-right">
-              <TitleMDe className="mr-5" text="Valor ICMS" value={UtilsConvert.formatCurrency(notaSelect.valorIcms).replaceAll('R$', '')} />
-              <TitleMDe className="mr-5" text="Valor Substitução" value={UtilsConvert.formatCurrency(notaSelect.valorSubTributa).replaceAll('R$', '')} />
-              <TitleMDe className="mr-5" text="Valor COFINS" value={UtilsConvert.formatCurrency(notaSelect.valorCofins).replaceAll('R$', '')} />
-              <TitleMDe className="mr-5" text="Valor IPI" value={UtilsConvert.formatCurrency(notaSelect.valorIpi).replaceAll('R$', '')} />
-              <TitleMDe className="mr-5" text="Frete" value={UtilsConvert.formatCurrency(notaSelect.valorFrete).replaceAll('R$', '')} />
-              <TitleMDe className="mr-5" text="Valor Produto" value={UtilsConvert.formatCurrency(notaSelect.valorTotalNotaLiquido).replaceAll('R$', '')}/>
-              <TitleMDe className="mr-5" text="Desconto" value={UtilsConvert.formatCurrency(notaSelect.valorDesc).replaceAll('R$', '')} />
-              <TitleMDe className="mr-5" text="Valor Total" color="color-error" value={UtilsConvert.formatCurrency(notaSelect.valorTotalNota).replaceAll('R$', '')}/>
-            </div>
+          <div className="flex">
+            <TitleMDe
+              className="mr-5"
+              text="Chave de acesso"
+              value={notaSelect.chaveAcesso}
+              color="color-error"
+            />
+          </div>
+          <div className="flex text-right">
+            <TitleMDe
+              className="mr-5"
+              text="Valor ICMS"
+              value={UtilsConvert.formatCurrency(
+                notaSelect.valorIcms
+              ).replaceAll("R$", "")}
+            />
+            <TitleMDe
+              className="mr-5"
+              text="Valor Substitução"
+              value={UtilsConvert.formatCurrency(
+                notaSelect.valorSubTributa
+              ).replaceAll("R$", "")}
+            />
+            <TitleMDe
+              className="mr-5"
+              text="Valor COFINS"
+              value={UtilsConvert.formatCurrency(
+                notaSelect.valorCofins
+              ).replaceAll("R$", "")}
+            />
+            <TitleMDe
+              className="mr-5"
+              text="Valor IPI"
+              value={UtilsConvert.formatCurrency(
+                notaSelect.valorIpi
+              ).replaceAll("R$", "")}
+            />
+            <TitleMDe
+              className="mr-5"
+              text="Frete"
+              value={UtilsConvert.formatCurrency(
+                notaSelect.valorFrete
+              ).replaceAll("R$", "")}
+            />
+            <TitleMDe
+              className="mr-5"
+              text="Valor Produto"
+              value={UtilsConvert.formatCurrency(
+                notaSelect.valorTotalNotaLiquido
+              ).replaceAll("R$", "")}
+            />
+            <TitleMDe
+              className="mr-5"
+              text="Desconto"
+              value={UtilsConvert.formatCurrency(
+                notaSelect.valorDesc
+              ).replaceAll("R$", "")}
+            />
+            <TitleMDe
+              className="mr-5"
+              text="Valor Total"
+              color="color-error"
+              value={UtilsConvert.formatCurrency(
+                notaSelect.valorTotalNota
+              ).replaceAll("R$", "")}
+            />
+          </div>
         </div>
-        <Divider tipo="horizontal" size='1px'/>
       </HeaderNota>
       <ContainerEntradaNota className="flex">
         <div className="left" style={{ width: "70%" }}>
-          <div className="h-10 flex ">
-            {/* <div className="w-6/12">
-              <InputSearch onChange={(e) => search(e.currentTarget.value)} />
-            </div> */}
-            <ButtonIcon
-              className="green-color mr-5  w-40"
-              label="Criar Promoção"
-              icon={<GiStarProminences />}
-              width={"180px"}
-              style={{ marginTop: "-3px" }}
-              onClick={onCreatePromocao}
-              color={theme.colors.white}
-              background={theme.colors.success}
-              borderColor={theme.colors.primary}
-            />
-            <ButtonIcon
-              className="mr-5"
-              label="Novo"
-              icon={<FaPlus />}
-              width={"120px"}
-              style={{ marginTop: "-3px" }}
-              onClick={onCadastroNovo}
-              color={theme.colors.white}
-              background={theme.colors.primary}
-              borderColor={theme.colors.primary}
-            />
-            <ButtonIcon
-              className="line"
-              label="Sincronizar item"
-              icon={<FaSync />}
-              width={"180px"}
-              style={{ marginTop: "-3px" }}
-              onClick={onCadastroSincronizar}
-              color={theme.colors.primary}
-              background={theme.colors.white}
-              borderColor={theme.colors.primary}
-            />
-          </div>
           {/* <hr className="mb-3" style={{ marginTop: "-5px" }} /> */}
           <ContainerProdutoSync>
             <DataGridDefault
@@ -159,9 +197,50 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
               rowAlternationEnabled
               isSelectRow
               moduloSeletion="single"
-              onSelectionChanged={(e) =>
-                setProdutoSelect({ ...e.currentSelectedRowKeys[0] })
+              isSearch
+              headerChildren={
+                <div className="h-10 flex ">
+                  <ButtonIcon
+                    className="green-color mr-5  w-40"
+                    label="Criar Promoção"
+                    icon={<GiStarProminences />}
+                    width={"180px"}
+                    style={{ marginTop: "-3px" }}
+                    onClick={onCreatePromocao}
+                    color={theme.colors.white}
+                    background={theme.colors.success}
+                    borderColor={theme.colors.primary}
+                  />
+                  <ButtonIcon
+                    className="mr-5"
+                    label="Novo"
+                    icon={<FaPlus />}
+                    width={"120px"}
+                    style={{ marginTop: "-3px" }}
+                    onClick={onCadastroNovo}
+                    color={theme.colors.white}
+                    background={theme.colors.primary}
+                    borderColor={theme.colors.primary}
+                  />
+                  <ButtonIcon
+                    className="line"
+                    label="Sincronizar item"
+                    icon={<FaSync />}
+                    width={"180px"}
+                    style={{ marginTop: "-3px" }}
+                    onClick={onCadastroSincronizar}
+                    color={theme.colors.primary}
+                    background={theme.colors.white}
+                    borderColor={theme.colors.primary}
+                  />
+                </div>
               }
+              onSelectionChanged={(e) => {
+                let selected = UtilsConvert.convertProdutoXmlToProduto({
+                  ...e.currentSelectedRowKeys[0],
+                });
+                setProduto({ ...selected });
+              }}
             >
               <Column
                 dataField="codigo"
@@ -267,11 +346,216 @@ export const ModalEntrada: React.FC<ModalProps> = (props) => {
           </ContainerProdutoSync>
         </div>
         <div className="right ml-5" style={{ width: "30%" }}>
-          <div className="rounded-md drop-shadow-md p-2" style={{backgroundColor:'#F6F6F6'}}>
-              <div className="flex justify-between">
-                <FaCamera className='color-error btn' style={{ fontSize: '30px'}} />
-                <FaTasks className='btn' style={{ fontSize: '30px', color: theme.colors.primary }} />
+          <div
+            className="rounded-md drop-shadow-md p-2"
+            style={{ backgroundColor: "#F6F6F6" }}
+          >
+            <div className="flex justify-between mb-3">
+              <FaCamera
+                className="color-error btn"
+                title="Foto do produto"
+                style={{ fontSize: "30px" }}
+              />
+              <FaTasks
+                className="btn"
+                title="Detalhes de impostos"
+                style={{ fontSize: "30px", color: theme.colors.primary }}
+              />
+            </div>
+            <InputDefault
+              className="col-span-4"
+              type="text"
+              label="Descrição"
+              value={produto?.nome}
+              onChange={(e) => setProduto({ ...produto, nome: e.target.value })}
+            />
+            <div className="w-full flex justify-between">
+              <InputSelectDefault
+                label="Categoria"
+                options={[]}
+                placeholder="Selecione a categoria"
+                isClearable
+                isSearchable
+              />
+              <FaPlus
+                className="mt-6 ml-3 drop-shadow-md btn"
+                size={25}
+                color={theme.colors.primary}
+              />
+            </div>
+            <div className="text-left mb-3 px-2">
+              <p className="text-xs font-bold ">Medidas do seu item</p>
+              <div className="flex text-center w-full font-bold pt-2 align-items-center justifay-between">
+                <InputNumber
+                  placeholder="0,000"
+                  label="Quantidade"
+                  separadorDecimal=","
+                  casaDecimal={3}
+                  separadorMilhar="."
+                  prefixo=""
+                  fixedZeroFinal
+                  value={produto.fatorConversao}
+                  onChange={(e) =>
+                    onConversaoMedida(
+                      UtilsConvert.DecimalToNumber(e.target.value)
+                    )
+                  }
+                />
+                <InputDefault
+                  label="Medida"
+                  type="text"
+                  placeholder="UND"
+                  value={produto.unid}
+                  onChange={(e) =>
+                    setProduto({ ...produto, unid: e.target.value })
+                  }
+                />
+                <InputNumber
+                  placeholder="0,000"
+                  color={theme.colors.error}
+                  label="Saldo Estoque"
+                  separadorDecimal=","
+                  casaDecimal={3}
+                  separadorMilhar="."
+                  prefixo=""
+                  fixedZeroFinal
+                  value={produto.saldo}
+                  onChange={(e) =>
+                    setProduto({ ...produto, saldo: Number(e.target.value) })
+                  }
+                />
               </div>
+              <div className="flex text-center w-full font-bold pt-2 align-items-center justifay-between">
+                <InputNumber
+                  placeholder="0,000"
+                  label="Saldo mínimo"
+                  separadorDecimal=","
+                  casaDecimal={3}
+                  separadorMilhar="."
+                  prefixo=""
+                  fixedZeroFinal
+                  value={produto.saldoMinimo}
+                  onChange={(e) =>
+                    setProduto({
+                      ...produto,
+                      saldoMinimo: Number(e.target.value),
+                    })
+                  }
+                />
+                <InputNumber
+                  placeholder="0,000"
+                  label="Quantidade mini p/atacado"
+                  separadorDecimal=","
+                  casaDecimal={3}
+                  separadorMilhar="."
+                  prefixo=""
+                  fixedZeroFinal
+                  value={produto.quantMinAtacado}
+                  onChange={(e) =>
+                    setProduto({
+                      ...produto,
+                      quantMinAtacado: Number(e.target.value),
+                    })
+                  }
+                />
+              </div>
+
+              <div className="text-left">
+                <p className="text-xs font-bold ">Preços unitários</p>
+                <div className="flex text-center w-full pt-2 align-items-center justifay-between">
+                  {/* <InputNumber
+                    placeholder="00,00"
+                    label="Valor com imposto"
+                    separadorDecimal=","
+                    casaDecimal={2}
+                    separadorMilhar="."
+                    prefixo=""
+                    fixedZeroFinal
+                    readOnly
+                  /> */}
+                  <InputNumber
+                    placeholder="00,00"
+                    label="Valor de custo"
+                    separadorDecimal=","
+                    casaDecimal={2}
+                    separadorMilhar="."
+                    prefixo=""
+                    fixedZeroFinal
+                    value={produto.precoCusto}
+                    onChange={(e) =>
+                      setProduto({
+                        ...produto,
+                        precoCusto: Number(e.target.value),
+                      })
+                    }
+                  />
+                  <InputNumber
+                    placeholder="00,00"
+                    label="% de Lucro"
+                    separadorDecimal=","
+                    casaDecimal={2}
+                    separadorMilhar="."
+                    prefixo=""
+                    fixedZeroFinal
+                    value={produto.precoVenda}
+                    onChange={(e) =>
+                      setProduto({
+                        ...produto,
+                        precoVenda: Number(e.target.value),
+                      })
+                    }
+                  />
+                </div>
+                <div className="flex text-center w-full pt-2 align-items-center justifay-between">
+                  {isAtacado && (
+                    <>
+                      <InputNumber
+                        placeholder="00,00"
+                        label="Preço de venda"
+                        separadorDecimal=","
+                        casaDecimal={2}
+                        separadorMilhar="."
+                        prefixo=""
+                        fixedZeroFinal
+                        color={theme.colors.success}
+                        value={produto.precoVenda}
+                        onChange={(e) =>
+                          setProduto({
+                            ...produto,
+                            precoVenda: Number(e.target.value),
+                          })
+                        }
+                      />
+                      <InputNumber
+                        placeholder="00,00"
+                        label="Preço de atacado"
+                        separadorDecimal=","
+                        casaDecimal={2}
+                        separadorMilhar="."
+                        prefixo=""
+                        fixedZeroFinal
+                        color={theme.colors.success}
+                        value={produto.precoAtacado}
+                        onChange={(e) =>
+                          setProduto({
+                            ...produto,
+                            precoAtacado: Number(e.target.value),
+                          })
+                        }
+                      />
+                    </>
+                  )}
+                </div>
+                <div className="w-full flex justify-end">
+                  <FaSave
+                    className="drop-shadow-md btn"
+                    size={30}
+                    color={theme.colors.primary}
+                    title="Salvar alterações"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </ContainerEntradaNota>

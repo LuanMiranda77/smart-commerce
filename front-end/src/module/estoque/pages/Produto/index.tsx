@@ -1,16 +1,16 @@
-import _ from "lodash";
-import { useContext, useState } from "react";
+import { Column } from "devextreme-react/data-grid";
+import { useState } from "react";
+import { BiPlus } from "react-icons/bi";
 import {
   FaDollarSign,
   FaPauseCircle,
+  FaPen,
   FaPenSquare,
   FaPlayCircle,
   FaPlus,
-  FaPlusSquare,
   FaSearch,
+  FaTrash,
 } from "react-icons/fa";
-import {BiPlus} from "react-icons/bi";
-import { ThemeContext } from "styled-components";
 import {
   ButtonIcon,
   DataGridDefault,
@@ -22,17 +22,18 @@ import {
   InputFileProduto,
   InputMook,
   InputNumber,
-  InputSearch,
   InputSelectDefault,
   ModalDefault,
   SummaryDefault,
   TabsDefault,
 } from "../../../../components";
-import { ColumnsDataGridType } from "../../../../components/types";
 import cfops from "../../../../helpers/help_lista_CFOP.json";
+import useProduct from "../../../../hooks/useProduct";
 import ModalCategoria from "./categoria";
 import { Container, ContainerFoto, TableContainer } from "./styles";
 import { columnsPromocao } from "./types";
+import {GoCircleSlash} from 'react-icons/go';
+import {BiXCircle} from 'react-icons/bi';
 
 /**
  *@Author
@@ -40,13 +41,28 @@ import { columnsPromocao } from "./types";
  */
 
 function Produto() {
-  const { colors, title } = useContext(ThemeContext);
-  const [showModal, setShowModal] = useState(false);
-  const [produto, setProduto] = useState<any>();
-  const [showPoupAtivo, setShowPopupAtivo] = useState(false);
-  const [showPoupInativo, setShowPopupInativo] = useState(false);
-  const [showModalCategoria, setShowModalCategoria] = useState(false);
-  const [isAtado, setIsAtacado] = useState(false);
+  const {
+    dataSource,
+    setDataSource,
+    estabelecimento,
+    title,
+    colors,
+    showModal,
+    setShowModal,
+    produto,
+    setProduto,
+    showPoupAtivo,
+    setShowPopupAtivo,
+    showPoupInativo,
+    setShowPopupInativo,
+    showModalCategoria,
+    setShowModalCategoria,
+    isAtado,
+    setIsAtacado,
+    tableHeaders,
+    onInative,
+    onAtive,
+  } = useProduct();
 
   const renderCell = (element: any) => {
     if (element.value === "S") {
@@ -73,13 +89,14 @@ function Produto() {
           {element.data.status === "N" ? (
             <i
               className="text-2xl cursor-pointer mr-6"
-              style={{ color: colors.success }}
+              style={{ color: colors.error }}
             >
-              <FaPlayCircle
+              <GoCircleSlash
                 id="buttonAtive"
                 className=""
                 title="Ativar usuário"
                 onClick={() => showPopupConfirmeAction(element.data, 1)}
+                size={18}
               />
             </i>
           ) : (
@@ -87,11 +104,12 @@ function Produto() {
               className="text-2xl cursor-pointer mr-6"
               style={{ color: colors.error }}
             >
-              <FaPauseCircle
+              <FaTrash
                 id="buttonInative"
                 className=""
                 title="Desativar usuário"
                 onClick={() => showPopupConfirmeAction(element.data, 2)}
+                size={15}
               />
             </i>
           )}
@@ -99,11 +117,12 @@ function Produto() {
             className="text-2xl cursor-pointer"
             style={{ color: colors.primary }}
           >
-            <FaPenSquare
+            <FaPen
               id="buttonAction"
               className=""
               title="Editar usuário"
               onClick={() => onEdit(element.data)}
+              size={18}
             />
           </i>
         </div>
@@ -221,413 +240,7 @@ function Produto() {
     },
   ];
 
-  const columns = new Array<ColumnsDataGridType>();
-  columns.push({
-    dataField: "codigo",
-    caption: "CÓDIGO",
-    alignment: "center",
-    dataType: "string",
-    width: 70,
-    cssClass: "font-bold column-1",
-  });
-  columns.push({
-    dataField: "codBarras",
-    caption: "Cod. BARRAS",
-    alignment: "center",
-    dataType: "string",
-    cssClass: "font-bold",
-    width: 120,
-  });
-  columns.push({
-    dataField: "descricao",
-    caption: "DESCRIÇÃO",
-    alignment: "left",
-    dataType: "string",
-    cssClass: "font-bold",
-  });
-  columns.push({
-    dataField: "medida",
-    caption: "MEDIDA",
-    alignment: "center",
-    dataType: "string",
-    width: 80,
-  });
-  columns.push({
-    dataField: "estoque",
-    caption: "ESTOQUE",
-    alignment: "center",
-    dataType: "number",
-    format: { type: "fixedPoint", precision: 3 },
-    width: 110,
-  });
-  columns.push({
-    dataField: "precoCusto",
-    caption: "P. CUSTO",
-    alignment: "center",
-    dataType: "number",
-    format: { type: "fixedPoint", precision: 2 },
-    cssClass: "font-bold",
-    width: 100,
-  });
-  columns.push({
-    dataField: "precoVarejo",
-    caption: "P. VAREJO",
-    alignment: "center",
-    dataType: "number",
-    format: { type: "fixedPoint", precision: 2 },
-    width: 100,
-  });
-  columns.push({
-    dataField: "precoAtacado",
-    caption: "P. ATACADO",
-    alignment: "center",
-    dataType: "number",
-    format: { type: "fixedPoint", precision: 2 },
-    cssClass: "font-bold column-2",
-    width: 100,
-  });
-  columns.push({
-    dataField: "status",
-    caption: "STATUS",
-    alignment: "center",
-    dataType: "number",
-    width: 100,
-    styleCell: renderCell,
-  });
-  columns.push({
-    dataField: "",
-    caption: "",
-    alignment: "center",
-    dataType: "",
-    width: 100,
-    styleCell: renderCell,
-  });
-
-  const data = [
-    {
-      codigo: "1",
-      codBarras: "123456789125",
-      descricao: "produto1",
-      medida: "UND",
-      estoque: 100,
-      status: "N",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "2",
-      codBarras: "123456789123",
-      descricao: "tudo",
-      medida: "UND",
-      estoque: 1502,
-      status: "N",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "3",
-      codBarras: "123456789123",
-      descricao: "tudynho",
-      medida: "UND",
-      estoque: 1502,
-      status: "N",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "4",
-      codBarras: "123456789123",
-      descricao: "luto",
-      medida: "UND",
-      estoque: 1502,
-      status: "N",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "5",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "N",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "6",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "N",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "7",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "8",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "9",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "10",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "11",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "12",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "13",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "14",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "15",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "16",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "17",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "18",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "19",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "20",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "21",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "22",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "23",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "24",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "25",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "26",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-    {
-      codigo: "27",
-      codBarras: "123456789123",
-      descricao: "produto",
-      medida: "UND",
-      estoque: 1502,
-      status: "S",
-      precoCusto: 15,
-      precoVarejo: 25.23,
-      precoAtacado: 22.3,
-    },
-  ];
-  const [dataSource, setDataSource] = useState(data);
   const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
-
-  const search = (data: string) => {
-    if (data !== "") {
-      let notas = dataSourceCopy;
-      if (!isNaN(parseFloat(data)) && isFinite(parseFloat(data))) {
-        if (data.length < 12) {
-          notas = dataSourceCopy.filter((produto) => {
-            return produto.codigo.includes(data);
-          });
-        } else {
-          notas = dataSourceCopy.filter((produto) => {
-            return produto.codBarras.includes(data);
-          });
-        }
-      } else {
-        notas = dataSourceCopy.filter((produto) => {
-          return produto.descricao.includes(data.toUpperCase());
-        });
-      }
-      setDataSource(notas);
-    } else {
-      setDataSource(dataSourceCopy);
-    }
-  };
 
   const onEdit = (produto: any) => {
     console.log(produto);
@@ -640,27 +253,27 @@ function Produto() {
     tipo === 1 ? setShowPopupAtivo(true) : setShowPopupInativo(true);
   };
 
-  const onAtive = (produto: any) => {
-    let data = _.map(dataSourceCopy, (value) => {
-      if (produto.codigo === value.codigo) {
-        value.status = "S";
-      }
-      return value;
-    });
-    setDataSource(data);
-    setShowPopupAtivo(false);
-  };
+  // const onAtive = (produto: any) => {
+  //   let data = _.map(dataSourceCopy, (value) => {
+  //     if (produto.codigo === value.codigo) {
+  //       value.status = "S";
+  //     }
+  //     return value;
+  //   });
+  //   setDataSource(data);
+  //   setShowPopupAtivo(false);
+  // };
 
-  const onInative = (produto: any) => {
-    let data = _.map(dataSourceCopy, (value) => {
-      if (produto.codigo === value.codigo) {
-        value.status = "N";
-      }
-      return value;
-    });
-    setDataSource(data);
-    setShowPopupInativo(false);
-  };
+  // const onInative = (produto: any) => {
+  //   let data = _.map(dataSourceCopy, (value) => {
+  //     if (produto.codigo === value.codigo) {
+  //       value.status = "N";
+  //     }
+  //     return value;
+  //   });
+  //   setDataSource(data);
+  //   setShowPopupInativo(false);
+  // };
 
   const tabs = (tab: string) => {
     if (tab === "tab1") {
@@ -887,7 +500,7 @@ function Produto() {
                 className="w-6/12 mr-5"
                 label="Valor das entradas"
                 colorBorder={colors.warning}
-                backgroundColor={''}
+                backgroundColor={""}
                 montante={100}
                 icon={<FaDollarSign style={{ color: colors.warning }} />}
               />
@@ -895,7 +508,7 @@ function Produto() {
                 className="w-6/12"
                 label="Valor das saídas"
                 colorBorder={colors.primary}
-                backgroundColor={''}
+                backgroundColor={""}
                 montante={100}
                 icon={<FaDollarSign style={{ color: colors.primary }} />}
               />
@@ -998,50 +611,70 @@ function Produto() {
   };
 
   return (
-    <Container className="card-local">
-      <div className="flex p-2 card-local">
-        <div className="w-11/12">
-          <InputSearch
-            onChange={(e) => search(e.currentTarget.value)}
-            autoFocus
-          />
-        </div>
-        <div className="w-1/12 mr-5">
-          <ButtonIcon
-            label="Novo"
-            icon={<FaPlus />}
-            width={"100%"}
-            onClick={() => setShowModal(true)}
-            background={colors.primary}
-          />
-        </div>
-        <div className="w-2/12">
-          <ButtonIcon
-            label="Duplicar item"
-            icon={<FaPlus />}
-            width={"100%"}
-            onClick={() => setShowModal(true)}
-            color={colors.primary}
-            background={colors.white}
-            borderColor={colors.primary}
-          />
-        </div>
-      </div>
-      <TableContainer>
+    <Container className="card-local p-2">
         <DataGridDefault
-          columns={columns}
           dataSource={dataSource}
           allowSorting
           paginar={false}
           // showRowLines
           rowAlternationEnabled
           showBorders
-          // showColumnLines
-          // hoverStateEnabled
+          showColumnLines
+          hoverStateEnabled
           isSelectRow
           moduloSeletion="single"
-        />
-      </TableContainer>
+          isSearch
+          headerChildren={
+            <div className="flex w-4/12 justify-end">
+                <ButtonIcon
+                  label="Novo"
+                  icon={<FaPlus />}
+                  width={"100px"}
+                  onClick={() => setShowModal(true)}
+                  background={colors.primary}
+                  className="mr-5"
+                />
+                <ButtonIcon
+                  label="Duplicar item"
+                  icon={<FaPlus />}
+                  width={"150px"}
+                  onClick={() => setShowModal(true)}
+                  color={colors.primary}
+                  background={colors.white}
+                  borderColor={colors.primary}
+                />
+            </div>
+          }
+          cssSearch="w-8/12"
+        >
+          {tableHeaders.map((item, i) => {
+            return (
+              <Column
+                key={i}
+                caption={item.caption}
+                dataField={item.dataField}
+                dataType={"string"}
+                width={i === 0 ? 70 : i === 1 ? 120 : i > 2 ? 100 : null}
+                cssClass={`font-bold ${i === 0 ? "column-1" : ""}`}
+                alignment={
+                  i === 0 || i === 1
+                    ? "center"
+                    : i >= 4 && i <= 7
+                    ? "right"
+                    : ""
+                }
+                format={
+                  i === 5
+                    ? { type: "fixedPoint", precision: 3 }
+                    : i === 4 || (i > 5 && i <= 7)
+                    ? { type: "fixedPoint", precision: 2 }
+                    : ""
+                }
+                cellRender={i > 7 ? renderCell : null}
+              />
+            );
+          })}
+        </DataGridDefault>
 
       {/* ===============================MOdal================ */}
       <ModalDefault

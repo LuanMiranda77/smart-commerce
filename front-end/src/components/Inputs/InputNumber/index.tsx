@@ -23,9 +23,9 @@ interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement>{
 }
 
 export const InputNumber: React.FC<InputNumberProps> = (props) => {
-  return <Container color={props.color}>
-    <label className='input_line__label' htmlFor={props.label}>{props.label}</label>
-    <NumericFormat className={'input_line__field '+props.className}
+  return <Container color={props.color} className={props.className}>
+    <label className='input_line__label' htmlFor={props.label} style={{color:props.color}}>{props.label}</label>
+    <NumericFormat className={'input_line__field '}
       id={props.label}
       type={'text'}
       thousandSeparator={props.separadorMilhar}

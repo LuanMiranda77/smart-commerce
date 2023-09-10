@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const Container  = styled.div`
-
+    height: calc(100vh - 70px);
+    padding-bottom: 45px;
     //adicionar stylos
     .column-1{
         color: ${props => props.theme.title ==='dark' ? props.theme.colors.textLabel: props.theme.colors.primary };
@@ -17,9 +18,9 @@ export const Container  = styled.div`
 `;
 
 export const TableContainer  = styled.div`
-
+    height: calc(100vh - 150px);
     //adicionar stylos
-    height: calc(100vh - 125px);
+    /* height: calc(100vh - 150px); */
 
 @media screen and (max-width: 40em) {
     //adicionar o stylo responsivo

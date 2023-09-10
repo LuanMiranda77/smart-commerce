@@ -1,37 +1,25 @@
 import { api } from "../../../../config/api";
+import { ProdutoType } from "../../../../domain";
 
 /**
-*@Author
-*@Issue
-*/
-export class EstoqueService {
+ *@Author
+ *@Issue
+ */
+//end-point da api
+const url = "api/produto";
+export const ProductService = {
+  //modelo de request post
+  save: async (pEntity: String): Promise<ProdutoType> => {
+    return await api
+      .post(url, pEntity)
+      .then((resp) => resp.data)
+      .catch((error) => error);
+  },
 
-    //end-point da api
-    url='api/produto';
-
-    //modelo de request post
-    async post(pEntity: String){
-      const response = await api.post(this.url, pEntity).then( resp =>{
-            return resp.data;
-        })
-        .catch(error => {
-            console.log(error.response.data);
-            return Promise.reject(error.response.data[0]);
-        });;
-      return response;
-    }
-
-    //modelo de request get
-    async get(){
-      const response = await api.get(this.url).then( resp =>{
-            return resp.data;
-        })
-        .catch(error => {
-            console.log(error.response.data);
-            return Promise.reject(error.response.data[0]);
-        });;
-      return response;
-    }
-    
-  
-}
+  findAll: async (estabelecimento: number): Promise<ProdutoType[]> => {
+    return await api
+      .get(`${url}/estabelecimento/${estabelecimento}`)
+      .then((resp) => resp.data)
+      .catch((error) => error);
+  },
+};

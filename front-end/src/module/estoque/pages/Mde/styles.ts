@@ -58,7 +58,7 @@ export const ContainerFiltro = styled.div`
 `;
 
 export const ContainerEntradaNota = styled.div`
-  height: calc(100vh - 135px);
+  /* height: calc(100vh - 335px); */
   margin-top: -0.5rem;
   border-radius: 5px;
   background-color: ${(color) =>
@@ -72,12 +72,12 @@ export const ContainerEntradaNota = styled.div`
 
     .left {
       width: "30%";
-      height: calc(100vh - 100px);
+      /* height: calc(100vh - 100px); */
       background-color: blue;
     }
     .right {
       width: "70%";
-      height: calc(100vh - 100px);
+      /* height: calc(100vh - 100px); */
       background-color: red;
     }
 
@@ -96,8 +96,8 @@ export const ContainerEntradaNota = styled.div`
 `;
 
 export const ContainerProdutoSync = styled.div`
-  height: calc(100vh - 270px);
-
+  height: calc(100vh - 200px);
+  max-height: 600px;
   .image {
     position: absolute;
     top: 30%auto;

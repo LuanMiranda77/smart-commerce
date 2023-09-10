@@ -9,8 +9,12 @@ export const Container  = styled.div<InputPorps>`
     //adicionar stylos
 
   position: relative;
-  padding: 15px 0 0;
-  margin-top: 10px;
+  padding: 10px 5px;
+  margin-top: 5px;
+
+  label{
+    color:color
+  }
 
 
 

@@ -27,6 +27,7 @@ interface ModalDefaultProps {
   textBtnAction?: string;
   onRequestClose: () => void;
   onClickAction?: () => void;
+  isFullScreen?: boolean;
 }
 
 export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
@@ -48,7 +49,7 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
         onClose={props.onRequestClose}
         // TransitionComponent={transition}
         maxWidth={props.maxWidth ? props.maxWidth : false}
-        fullWidth
+        fullScreen={props.isFullScreen ? props.isFullScreen : false}
         sx={{
           height: props.height ? props.height : "100%",
           width: props.width ? props.width : "100%",

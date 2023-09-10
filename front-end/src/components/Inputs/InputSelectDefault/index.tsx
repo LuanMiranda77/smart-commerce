@@ -36,21 +36,21 @@ export const InputSelectDefault: React.FC<InputSelectDefaultProps> = (props) => 
       // none of react-select's styles are passed to <Control />
       display:'flex',
       width: '100%',
-      height: props.height? props.height : 32,
+      height: props.height? props.height : 30,
       border:0,
-      borderBottom: '2px solid '+theme.colors.gray,
+      borderBottom: '1px solid '+theme.colors.gray,
       // borderRadius: '0px 5px 5px 5px',
       outline: 0,
       color: theme.colors.primary,
       background:'transparent',
-      fontSize:props.fontSize ? props.fontSize : '15px'
+      fontSize:props.fontSize ? props.fontSize : '14px'
     }),
   }
-  return <Container className={`font-bold text-left ${props.label ? 'input_line_group': ''}`}>
+  return <Container className={`w-full font-bold text-left ${props.label ? 'input_line_group': ''}`}>
     {props.label &&<label className='input_line__label' htmlFor="">{props.label}<span className='text-red-500 font-bold'>{props.required ? " *" : ''}</span></label>}
     <Select
       id={'input-select'+props.label}
-      className={'input ' + props.className}
+      className={'input font-14-responsive' + props.className}
       options={props.options}
       placeholder={props.placeholder}
       isSearchable={props.isSearchable}
