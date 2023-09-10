@@ -1,39 +1,29 @@
 import { Column } from "devextreme-react/data-grid";
+import moment from "moment";
 import { useState } from "react";
 import { BiPlus } from "react-icons/bi";
-import {
-  FaDollarSign,
-  FaPauseCircle,
-  FaPen,
-  FaPenSquare,
-  FaPlayCircle,
-  FaPlus,
-  FaSearch,
-  FaTrash,
-} from "react-icons/fa";
+import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
+import { GoCircleSlash } from "react-icons/go";
 import {
   ButtonIcon,
   DataGridDefault,
   DialogPopupConfirme,
   Divider,
-  InputCheck,
-  InputDate,
   InputDefault,
   InputFileProduto,
   InputMook,
-  InputNumber,
   InputSelectDefault,
   ModalDefault,
-  SummaryDefault,
-  TabsDefault,
+  NavTab,
 } from "../../../../components";
-import cfops from "../../../../helpers/help_lista_CFOP.json";
+import { TabItem } from "../../../../components/NavTab";
 import useProduct from "../../../../hooks/useProduct";
 import ModalCategoria from "./categoria";
-import { Container, ContainerFoto, TableContainer } from "./styles";
-import { columnsPromocao } from "./types";
-import {GoCircleSlash} from 'react-icons/go';
-import {BiXCircle} from 'react-icons/bi';
+import TabEstoque from "./components/TabEstoque";
+import TabImposto from "./components/TabImposto";
+import TabMovimentation from "./components/TabMovimentation";
+import TabPromotion from "./components/TabPromotion";
+import { Container, ContainerFoto } from "./styles";
 
 /**
  *@Author
@@ -62,6 +52,14 @@ function Produto() {
     tableHeaders,
     onInative,
     onAtive,
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    setValue,
+    getValues,
+    errors,
+    control,
   } = useProduct();
 
   const renderCell = (element: any) => {
@@ -130,120 +128,10 @@ function Produto() {
     }
   };
 
-  const renderCellMov = (element: any) => {
-    if (element.value < 0) {
-      return (
-        <span className="font-bold" style={{ color: colors.error }}>
-          {element.value}
-        </span>
-      );
-    } else if (element.value > 0) {
-      return (
-        <span className="font-bold" style={{ color: colors.success }}>
-          {element.value}
-        </span>
-      );
-    } else if (element.value.includes("S")) {
-      return (
-        <span className="font-bold" style={{ color: colors.error }}>
-          {element.value}
-        </span>
-      );
-    } else if (element.value.includes("E")) {
-      return (
-        <span className="font-bold" style={{ color: colors.success }}>
-          {element.value}
-        </span>
-      );
-    }
-  };
-
-  const columnsMovimentacao = [
-    {
-      dataField: "dataMov",
-      caption: "DATA MOVIMENTO",
-      alignment: "center",
-      dataType: "date",
-      cssClass: "font-bold column-1",
-    },
-    {
-      dataField: "quant",
-      caption: "QUANT.",
-      alignment: "center",
-      dataType: "number",
-      styleCell: renderCellMov,
-      format: { type: "fixedPoint", precision: 3 },
-    },
-    {
-      dataField: "unit",
-      caption: "UNITÁRIO",
-      alignment: "center",
-      dataType: "number",
-      format: { type: "fixedPoint", precision: 2 },
-    },
-    {
-      dataField: "desconto",
-      caption: "DESCONTO",
-      alignment: "center",
-      dataType: "number",
-      format: { type: "fixedPoint", precision: 2 },
-    },
-    {
-      dataField: "acresimo",
-      caption: "ACRÉSIMO",
-      alignment: "center",
-      dataType: "number",
-      format: { type: "fixedPoint", precision: 2 },
-    },
-    {
-      dataField: "total",
-      caption: "TOTAL",
-      alignment: "center",
-      dataType: "number",
-      format: { type: "fixedPoint", precision: 2 },
-    },
-    {
-      dataField: "tipo",
-      caption: "TIPO",
-      alignment: "center",
-      dataType: "string",
-      styleCell: renderCellMov,
-    },
-  ];
-  const dataMov = [
-    {
-      dataMov: "12/12/2022",
-      quant: -120,
-      unit: 123,
-      desconto: 15,
-      acresimo: 5,
-      total: 50,
-      tipo: "SV",
-    },
-    {
-      dataMov: "12/12/2022",
-      quant: 500,
-      unit: 123,
-      desconto: 15,
-      acresimo: 5,
-      total: 50,
-      tipo: "EX",
-    },
-    {
-      dataMov: "12/12/2022",
-      quant: -120,
-      unit: 123,
-      desconto: 15,
-      acresimo: 5,
-      total: 50,
-      tipo: "SV",
-    },
-  ];
-
   const [dataSourceCopy, setDataSourceCopy] = useState(dataSource);
 
   const onEdit = (produto: any) => {
-    console.log(produto);
+    reset(produto);
     setProduto(produto);
     setShowModal(true);
   };
@@ -253,435 +141,101 @@ function Produto() {
     tipo === 1 ? setShowPopupAtivo(true) : setShowPopupInativo(true);
   };
 
-  // const onAtive = (produto: any) => {
-  //   let data = _.map(dataSourceCopy, (value) => {
-  //     if (produto.codigo === value.codigo) {
-  //       value.status = "S";
-  //     }
-  //     return value;
-  //   });
-  //   setDataSource(data);
-  //   setShowPopupAtivo(false);
-  // };
-
-  // const onInative = (produto: any) => {
-  //   let data = _.map(dataSourceCopy, (value) => {
-  //     if (produto.codigo === value.codigo) {
-  //       value.status = "N";
-  //     }
-  //     return value;
-  //   });
-  //   setDataSource(data);
-  //   setShowPopupInativo(false);
-  // };
-
-  const tabs = (tab: string) => {
-    if (tab === "tab1") {
-      return (
-        <div className="tab1">
-          <div className="w-full flex items-center justify-between mb-5">
-            <div className="w-3/12 text-left mr-5">
-              <InputDate label="Data Vencimento" />
-            </div>
-            <div>
-              <InputNumber
-                className="font-bold"
-                label="MarkUp"
-                prefixo=""
-                casaDecimal={2}
-                separadorDecimal=","
-                fixedZeroFinal
-                placeholder="00,00"
-              />
-            </div>
-            <div className="mt-5 mr-5">
-              <InputCheck
-                label="Preço Atacado?"
-                checked={isAtado}
-                onChange={(e) => setIsAtacado(e.target.checked)}
-              />
-            </div>
-          </div>
-
-          <div className="mb-5 text-left flex">
-            <div className="mr-10">
-              <InputNumber
-                className="font-bold"
-                label="Saldo"
-                prefixo=""
-                casaDecimal={3}
-                separadorMilhar="."
-                separadorDecimal=","
-                fixedZeroFinal
-                placeholder="00,000"
-              />
-            </div>
-            <InputNumber
-              className="font-bold"
-              label="Fator de conversão"
-              prefixo=""
-              casaDecimal={3}
-              separadorMilhar="."
-              separadorDecimal=","
-              fixedZeroFinal
-              placeholder="00,000"
-            />
-          </div>
-
-          <div className="mb-5 text-left flex">
-            <div className="mr-10">
-              <InputNumber
-                className="font-bold"
-                label="Saldo minimo"
-                prefixo=""
-                casaDecimal={2}
-                separadorMilhar="."
-                separadorDecimal=","
-                fixedZeroFinal
-                placeholder="00,00"
-              />
-            </div>
-            {isAtado ? (
-              <InputNumber
-                className="font-bold"
-                label="Quantidade minima do atacado"
-                prefixo=""
-                casaDecimal={2}
-                separadorMilhar="."
-                separadorDecimal=","
-                fixedZeroFinal
-                placeholder="00,00"
-              />
-            ) : (
-              ""
-            )}
-          </div>
-
-          <div className="mb-5 text-left flex">
-            <div className="mr-10">
-              <InputNumber
-                className="font-bold"
-                label="Preço custo"
-                prefixo=""
-                casaDecimal={2}
-                separadorMilhar="."
-                separadorDecimal=","
-                fixedZeroFinal
-                placeholder="00,00"
-              />
-            </div>
-            <div className="mr-10">
-              <InputNumber
-                className="font-bold"
-                label="Preço venda"
-                prefixo=""
-                casaDecimal={2}
-                separadorMilhar="."
-                separadorDecimal=","
-                fixedZeroFinal
-                placeholder="00,00"
-              />
-            </div>
-            {isAtado ? (
-              <InputNumber
-                className="font-bold"
-                label="Preço atacado"
-                prefixo=""
-                casaDecimal={2}
-                separadorMilhar="."
-                separadorDecimal=","
-                fixedZeroFinal
-                placeholder="00,00"
-              />
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      );
-    } else if (tab === "tab2") {
-      return (
-        <div className="tab2">
-          <div className="mb-5 w-3/12">
-            <InputNumber
-              className="font-bold"
-              label="% Desconto"
-              prefixo=""
-              casaDecimal={2}
-              separadorDecimal=","
-              fixedZeroFinal
-              placeholder="00,00"
-            />
-          </div>
-          <div className="w-full flex items-center mb-5">
-            <div className="w-3/12 text-left mr-5">
-              <InputDate label="Data de inicio" />
-            </div>
-            <div className="w-3/12 text-left mr-5">
-              <InputDate label="Data final" />
-            </div>
-            <div className="mt-6 w-2/12">
-              <ButtonIcon label="Pesquisa" icon={<FaSearch />} width="100%" />
-            </div>
-          </div>
-          <div className="" style={{ height: "calc(100vh - 415px)" }}>
-            <DataGridDefault
-              columns={columnsPromocao}
-              dataSource={[]}
-              allowSorting
-              paginar={false}
-              // showRowLines
-              rowAlternationEnabled
-              showBorders
-              showColumnLines
-              hoverStateEnabled
-              isSelectRow
-              moduloSeletion="single"
-            />
-          </div>
-        </div>
-      );
-    } else if (tab === "tab3") {
-      return (
-        <div className="tab3">
-          <div className="w-full flex items-center mb-5">
-            <div className="w-3/12 text-left mr-5">
-              <InputDate label="Data de inicio" />
-            </div>
-            <div className="w-3/12 text-left mr-5">
-              <InputDate label="Data final" />
-            </div>
-            <div className="mt-6 w-2/12">
-              <ButtonIcon label="Pesquisa" icon={<FaSearch />} width="100%" />
-            </div>
-          </div>
-          <div className="mb-3" style={{ height: "calc(100vh - 440px)" }}>
-            <DataGridDefault
-              columns={columnsMovimentacao}
-              dataSource={dataMov}
-              allowSorting
-              paginar={false}
-              // showRowLines
-              rowAlternationEnabled
-              showBorders
-              showColumnLines
-              hoverStateEnabled
-              isSelectRow
-              moduloSeletion="single"
-            />
-          </div>
-          {/* <Divider tipo="horizontal" className="mb-1" /> */}
-          <div className="flex w-full">
-            <div className="w-6/12 text-left">
-              <p className="font-bold" style={{ color: colors.primary }}>
-                INDICADORES
-              </p>
-              <div className="flex">
-                <div
-                  className="text-xs font-bold mr-5"
-                  style={{ color: colors.success }}
-                >
-                  <p>EX → ENTRA POR XML</p>
-                  <p>EA → ENTRA AVUSO</p>
-                  <p>EM → ENTRA MANUAL</p>
-                </div>
-                <div
-                  className="text-xs font-bold"
-                  style={{ color: colors.error }}
-                >
-                  <p>SV → SAIDA VENDA</p>
-                  <p>SD → SAIDA DESPERDICIO</p>
-                  <p>SM → SAIDA MANUAL</p>
-                </div>
-              </div>
-            </div>
-            <div className="w-6/12 flex text-left h-18">
-              <SummaryDefault
-                className="w-6/12 mr-5"
-                label="Valor das entradas"
-                colorBorder={colors.warning}
-                backgroundColor={""}
-                montante={100}
-                icon={<FaDollarSign style={{ color: colors.warning }} />}
-              />
-              <SummaryDefault
-                className="w-6/12"
-                label="Valor das saídas"
-                colorBorder={colors.primary}
-                backgroundColor={""}
-                montante={100}
-                icon={<FaDollarSign style={{ color: colors.primary }} />}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    } else if (tab === "tab4") {
-      return (
-        <div className="tab4">
-          <div className="grid grid-cols-12 gap-3 mb-5">
-            <InputDefault className="col-span-2" type="number" label="NCM" />
-            <InputDefault className="col-span-2" type="number" label="CEST" />
-          </div>
-
-          <div className="flex mb-10">
-            <div className="w-6/12 mr-5">
-              <InputSelectDefault label="CFOP" options={cfops.entrada} />
-            </div>
-            <InputDefault type="number" label="CST/CSOSN" />
-          </div>
-
-          <div className="grid grid-cols-12 gap-3">
-            <div className="mr-2 col-span-2">
-              <InputNumber
-                placeholder="00,00"
-                label="% ICMS"
-                separadorDecimal=","
-                casaDecimal={2}
-                separadorMilhar="."
-                prefixo=""
-                fixedZeroFinal
-                color={colors.info}
-              />
-            </div>
-            <div className="mr-2 col-span-2">
-              <InputNumber
-                placeholder="00,00"
-                label="ICMS"
-                separadorDecimal=","
-                casaDecimal={2}
-                separadorMilhar="."
-                prefixo=""
-                fixedZeroFinal
-                color={colors.info}
-              />
-            </div>
-            <div className="mr-2 col-span-2">
-              <InputNumber
-                placeholder="00,00"
-                label="% IPI"
-                separadorDecimal=","
-                casaDecimal={2}
-                separadorMilhar="."
-                prefixo=""
-                fixedZeroFinal
-                color={colors.warning}
-              />
-            </div>
-            <div className="mr-2 col-span-2">
-              <InputNumber
-                placeholder="00,00"
-                label="IPI"
-                separadorDecimal=","
-                casaDecimal={2}
-                separadorMilhar="."
-                prefixo=""
-                fixedZeroFinal
-                color={colors.warning}
-              />
-            </div>
-            <div className="mr-2 col-span-2">
-              <InputNumber
-                placeholder="00,00"
-                label="% COFINS"
-                separadorDecimal=","
-                casaDecimal={2}
-                separadorMilhar="."
-                prefixo=""
-                fixedZeroFinal
-                color={colors.error}
-              />
-            </div>
-            <div className="mr-2 col-span-2">
-              <InputNumber
-                placeholder="00,00"
-                label="COFINS"
-                separadorDecimal=","
-                casaDecimal={2}
-                separadorMilhar="."
-                prefixo=""
-                fixedZeroFinal
-                color={colors.error}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-  };
+  const [activeTab, setActiveTab] = useState(0);
 
   return (
     <Container className="card-local p-2">
-        <DataGridDefault
-          dataSource={dataSource}
-          allowSorting
-          paginar={false}
-          // showRowLines
-          rowAlternationEnabled
-          showBorders
-          showColumnLines
-          hoverStateEnabled
-          isSelectRow
-          moduloSeletion="single"
-          isSearch
-          headerChildren={
-            <div className="flex w-4/12 justify-end">
-                <ButtonIcon
-                  label="Novo"
-                  icon={<FaPlus />}
-                  width={"100px"}
-                  onClick={() => setShowModal(true)}
-                  background={colors.primary}
-                  className="mr-5"
-                />
-                <ButtonIcon
-                  label="Duplicar item"
-                  icon={<FaPlus />}
-                  width={"150px"}
-                  onClick={() => setShowModal(true)}
-                  color={colors.primary}
-                  background={colors.white}
-                  borderColor={colors.primary}
-                />
-            </div>
-          }
-          cssSearch="w-8/12"
-        >
-          {tableHeaders.map((item, i) => {
-            return (
-              <Column
-                key={i}
-                caption={item.caption}
-                dataField={item.dataField}
-                dataType={"string"}
-                width={i === 0 ? 70 : i === 1 ? 120 : i > 2 ? 100 : null}
-                cssClass={`font-bold ${i === 0 ? "column-1" : ""}`}
-                alignment={
-                  i === 0 || i === 1
-                    ? "center"
-                    : i >= 4 && i <= 7
-                    ? "right"
-                    : ""
-                }
-                format={
-                  i === 5
-                    ? { type: "fixedPoint", precision: 3 }
-                    : i === 4 || (i > 5 && i <= 7)
-                    ? { type: "fixedPoint", precision: 2 }
-                    : ""
-                }
-                cellRender={i > 7 ? renderCell : null}
-              />
-            );
-          })}
-        </DataGridDefault>
+      <DataGridDefault
+        dataSource={dataSource}
+        allowSorting
+        paginar={false}
+        // showRowLines
+        rowAlternationEnabled
+        showBorders
+        showColumnLines
+        hoverStateEnabled
+        isSelectRow
+        moduloSeletion="single"
+        isSearch
+        headerChildren={
+          <div className="flex w-4/12 justify-end">
+            <ButtonIcon
+              label="Novo"
+              icon={<FaPlus />}
+              width={"100px"}
+              onClick={() => setShowModal(true)}
+              background={colors.primary}
+              className="mr-5"
+            />
+            <ButtonIcon
+              label="Duplicar item"
+              icon={<FaPlus />}
+              width={"150px"}
+              onClick={() => setShowModal(true)}
+              color={colors.primary}
+              background={colors.white}
+              borderColor={colors.primary}
+            />
+          </div>
+        }
+        cssSearch="w-8/12"
+      >
+        {tableHeaders.map((item, i) => {
+          return (
+            <Column
+              key={i}
+              caption={item.caption}
+              dataField={item.dataField}
+              dataType={
+                i === 8 ? "date" : i >= 4 && i <= 7 ? "number" : "string"
+              }
+              width={
+                i === 0
+                  ? 70
+                  : i === 1
+                  ? 100
+                  : i === 2
+                  ? 250
+                  : i === 3
+                  ? 40
+                  : i > 3 && i < 9
+                  ? 80
+                  : i === 11
+                  ? 50
+                  : i === 10
+                  ? 70
+                  : i === tableHeaders.length - 1
+                  ? 70
+                  : null
+              }
+              cssClass={`font-bold ${i === 0 ? "column-1" : ""}`}
+              alignment={
+                i === 0 || i === 1 ? "center" : i >= 4 && i <= 7 ? "right" : ""
+              }
+              format={
+                i === 5
+                  ? {
+                      type: "fixedPoint",
+                      precision: estabelecimento?.config?.numCasaDecimais,
+                    }
+                  : i === 4 || (i > 5 && i <= 7)
+                  ? { type: "fixedPoint", precision: 2 }
+                  : ""
+              }
+              cellRender={
+                i === tableHeaders.length - 1 ? renderCell : undefined
+              }
+            />
+          );
+        })}
+      </DataGridDefault>
 
       {/* ===============================MOdal================ */}
       <ModalDefault
         isOpen={showModal}
         title="Ficha do produto"
         onRequestClose={() => setShowModal(false)}
-        height="100vh"
+        height="calc(100vh - 0px)"
       >
         <div className="p-1 flex">
           <div id="lado-left" className="w-4/12">
@@ -692,7 +246,7 @@ function Produto() {
                     className="w-6/12 mb-5"
                     label="Código"
                     type="text"
-                    value={"01"}
+                    register={register("codigo")}
                   />
                   <div
                     className="rounded-full h-10 text-center p-2 w-6/12 ml-8"
@@ -704,14 +258,20 @@ function Produto() {
                 <InputDefault
                   className="w-8/12 mb-5"
                   label="Código de Barras"
-                  type="number"
+                  register={register("ean")}
+                  type="text"
                 />
               </div>
               <ContainerFoto>
                 <InputFileProduto lado="left" upload={() => {}} />
               </ContainerFoto>
             </div>
-            <InputDefault className="mb-5" label="Descrição" type="text" />
+            <InputDefault
+              className="mb-5"
+              label="Descrição"
+              type="text"
+              register={register("nome")}
+            />
 
             <div className="w-8/12 mb-5 flex justify-between items-center">
               <div className="w-full mr-2">
@@ -755,7 +315,7 @@ function Produto() {
                       color: title === "dark" ? colors.white : colors.primary,
                     }}
                   >
-                    12/12/2021 19:00
+                    {moment(getValues("dtCreate")).format("DD/MM/YYYY")}
                   </p>
                 </div>
                 <Divider
@@ -776,7 +336,7 @@ function Produto() {
                       color: title === "dark" ? colors.white : colors.primary,
                     }}
                   >
-                    12/12/2021 19:00
+                    {moment(getValues("dtUpdate")).format("DD/MM/YYYY")}
                   </p>
                 </div>
               </div>
@@ -786,24 +346,44 @@ function Produto() {
           <Divider tipo="vertical" className="ml-4 mr-4" />
 
           <div id="lado-right" className="w-8/12">
-            <TabsDefault
+            <NavTab
               tabs={[
-                { value: "tab1", label: "Estoque" },
-                { value: "tab2", label: "Promoções" },
-                { value: "tab3", label: "Movimentação" },
-                { value: "tab4", label: "Impostos" },
+                { label: "Estoque" },
+                { label: "Promoções" },
+                { label: "Movimentação" },
+                { label: "Impostos" },
               ]}
-              onSelectTab={tabs}
-            />
+              value={activeTab}
+              setValue={setActiveTab}
+            >
+              <TabItem value={activeTab} index={0}>
+                <TabEstoque
+                  checked={isAtado}
+                  setChecked={setIsAtacado}
+                  product={produto}
+                  setProduct={setProduto}
+                  register={register}
+                  setValue={setValue}
+                  getValues={getValues}
+                  control={control}
+                />
+              </TabItem>
+              <TabItem value={activeTab} index={1}>
+                <TabPromotion
+                  dataSource={[]}
+                  product={produto}
+                  setProduct={setProduto}
+                />
+              </TabItem>
+              <TabItem value={activeTab} index={2}>
+                <TabMovimentation product={produto} setProduct={setProduto} />
+              </TabItem>
+              <TabItem value={activeTab} index={3}>
+                <TabImposto product={produto} setProduct={setProduto} />
+              </TabItem>
+            </NavTab>
           </div>
         </div>
-
-        {/* <footer className=''>
-        <div className="flex justify-end" style={{ bottom: 25, right: 15, position: 'absolute' }}>
-          <ButtonBase label="CANCELAR" model="btn_line" className="primary-color mr-5  w-32" size="large" onClick={() => setShowModal(false)} />
-          <ButtonIcon className="mr-3" label="SALVAR" icon={<FaSave />} width={'50%'} />
-        </div>
-      </footer> */}
       </ModalDefault>
 
       <DialogPopupConfirme

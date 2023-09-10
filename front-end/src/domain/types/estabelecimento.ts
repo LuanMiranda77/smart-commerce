@@ -1,3 +1,4 @@
+import { ConfigModuloType } from './configModulo';
 import { RegimeTributario } from '../enums';
 
 export type EstabelecimentoType ={
@@ -23,4 +24,5 @@ export type EstabelecimentoType ={
     celular2: string| undefined,
     matrizId: string | null| undefined,
     status:string,
+    config:ConfigModuloType
 }

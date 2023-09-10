@@ -1,6 +1,6 @@
 import { EstabelecimentoType } from '../../../../domain/types/estabelecimento';
 import { api } from "../../../../config/api";
-import { ConfigModulo } from '../../../../domain/types/configModulo';
+import { ConfigModuloType } from '../../../../domain/types/configModulo';
 
     //end-point da api
     const url='api/estabelecimento';
@@ -41,7 +41,7 @@ import { ConfigModulo } from '../../../../domain/types/configModulo';
       return response;
     }
 
-    export  async function saveModulo(pEntity: ConfigModulo){
+    export  async function saveModulo(pEntity: ConfigModuloType){
       const response = await api.post(urlModo, pEntity).then( resp =>{
             return resp.data;
         })

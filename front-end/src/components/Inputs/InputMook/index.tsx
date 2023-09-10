@@ -7,6 +7,7 @@ interface InputDefaultProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   autoFocus?: boolean;
   onKeyDownCapture?:(e: any)=>void;
+  register?:any
 }
 
 export const InputMook: React.FC<InputDefaultProps> = (props) => {
@@ -23,6 +24,7 @@ export const InputMook: React.FC<InputDefaultProps> = (props) => {
             autoFocus={props.autoFocus ? props.autoFocus:false}
             value={props.value}
             readOnly
+            {...props.register}
           />
     </Container>
   );

@@ -6,10 +6,12 @@ export type ProdutoType = {
     codigo: number;
     ean: string;
     nome:string;
+    nomeForn:string;
     categoria?: CategoriaType;
     dtCreate:Date | null;
     dtUpdate: Date | null;
     dtVencimento: Date | null;
+    dtUltimaCompra: Date | null;
     unid: string;
     saldo: number;
     fatorConversao: number;
@@ -48,9 +50,11 @@ export const produtoinitial: ProdutoType = {
     codigo: 0,
     ean: '',
     nome: '',
-    dtCreate: null,
-    dtUpdate: null,
+    nomeForn:'',
+    dtCreate: new Date(),
+    dtUpdate: new Date(),
     dtVencimento: null,
+    dtUltimaCompra: new Date(),
     unid: '',
     saldo: 0,
     fatorConversao: 0,

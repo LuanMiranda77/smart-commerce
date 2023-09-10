@@ -1,6 +1,5 @@
-import { EstabelecimentoType } from "./estabelecimento"
 
-export type ConfigModulo = {
+export type ConfigModuloType = {
     // geral
     orcamento: "S" | "N",
     pedido: "S" | "N",
@@ -25,7 +24,5 @@ export type ConfigModulo = {
     // integrações
     balanca:"S" | "N",
 
-    estabelecimento: number,
-    
-
+    numCasaDecimais: number,
 }

@@ -1,4 +1,5 @@
 //export default
+export { NavTab } from './NavTab';
 export { TabsDefault } from './TabsDefault';
 export { MenuAside } from './MenuAside';
 export { Divider } from './Divider';

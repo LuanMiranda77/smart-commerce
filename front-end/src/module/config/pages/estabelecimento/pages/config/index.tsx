@@ -5,7 +5,7 @@ import { FaSave } from 'react-icons/fa';
 import { ThemeContext } from 'styled-components';
 import { ButtonBase, ButtonIcon, Divider, InputCheck, InputSelectDefault, ModalDefault } from '../../../../../../components';
 import { EstabelecimentoType } from '../../../../../../domain';
-import { ConfigModulo } from '../../../../../../domain/types/configModulo';
+import { ConfigModuloType } from '../../../../../../domain/types/configModulo';
 import { UtilsConvert } from '../../../../../../utils/utils_convert';
 import { MenuContainer } from './styles';
 import { dataSource } from './__mocks__';
@@ -37,14 +37,14 @@ const ModalConfigModulo: React.FC<ModalProps> = (props) => {
         controleCaixa:"N",
         transferenciaEstoque:"N",
         balanca:"N",
-        estabelecimento: props.estabelecimento?.id
-    } as ConfigModulo;
+        numCasaDecimais: 1
+    } as ConfigModuloType;
 
     const { colors, title } = useContext(ThemeContext);
     const [showOptions, setShowOptions] = useState('1');
     const op = [{label:'START', value:'1'}, {label:'COMMERCE', value:'2'}, {label:'SUPER LOJA', value:'3'}];
     const [options,setOptions] = useState(op);
-    const [configModulo, setConfigModulo] = useState<ConfigModulo>(config);
+    const [configModulo, setConfigModulo] = useState<ConfigModuloType>(config);
 
     useEffect(()=>{
         console.log(props.estabelecimento?.id);

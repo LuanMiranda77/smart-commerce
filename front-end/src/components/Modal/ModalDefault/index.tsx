@@ -50,12 +50,8 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
         // TransitionComponent={transition}
         maxWidth={props.maxWidth ? props.maxWidth : false}
         fullScreen={props.isFullScreen ? props.isFullScreen : false}
-        sx={{
-          height: props.height ? props.height : "100%",
-          width: props.width ? props.width : "100%",
-          margin: props.margin ? props.margin : "0px",
-          left: props.left,
-        }}
+        fullWidth={true}
+        
       >
         <DialogTitle
           sx={{
@@ -85,8 +81,17 @@ export const ModalDefault: React.FC<ModalDefaultProps> = (props) => {
         </DialogTitle>
         <DialogContent
           dividers
-          style={{
+          // style={{
+          //   backgroundColor: title === "dark" ? colors.secondary : colors.white,
+          // }}
+          sx={{
             backgroundColor: title === "dark" ? colors.secondary : colors.white,
+            height: props.height ? props.height : "100%",
+            width: props.width ? props.width : "100%",
+            margin: props.margin ? props.margin : "0px",
+            left: props.left,
+            // maxHeight:'900px',
+            // maxWidth:'1080px',
           }}
         >
           {props.children}
